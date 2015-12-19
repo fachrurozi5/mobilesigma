@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,14 +17,8 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.GravityEnum;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.fachru.sigmamobile.adapter.ImageAdapter;
-import com.fachru.sigmamobile.service.DateTimeService;
-import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -45,11 +37,11 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                if (intent.hasExtra(Constantas.RESULT_DATE)) {
-                    text_time.setText(bundle.getString(Constantas.RESULT_TIME));
-                    text_date.setText(bundle.getString(Constantas.RESULT_DATE));
-                } else if (intent.hasExtra(Constantas.RESULT_ADDRESS)) {
-                    text_location.setText(bundle.getString(Constantas.RESULT_ADDRESS));
+                if (intent.hasExtra(Constanta.RESULT_DATE)) {
+                    text_time.setText(bundle.getString(Constanta.RESULT_TIME));
+                    text_date.setText(bundle.getString(Constanta.RESULT_DATE));
+                } else if (intent.hasExtra(Constanta.RESULT_ADDRESS)) {
+                    text_location.setText(bundle.getString(Constanta.RESULT_ADDRESS));
                 }
             } else {
                 Toast.makeText(context, "FAILED",
@@ -70,9 +62,9 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
                 getResources().getStringArray(R.array.sub_menus_osc),
                 getResources().obtainTypedArray(R.array.icon_sub_menu_osc)));
         gridview.setOnItemClickListener(this);
-        text_date.setText(intent.getStringExtra(Constantas.RESULT_DATE));
-        text_time.setText(intent.getStringExtra(Constantas.RESULT_TIME));
-        text_location.setText(intent.getStringExtra(Constantas.RESULT_ADDRESS));
+        text_date.setText(intent.getStringExtra(Constanta.RESULT_DATE));
+        text_time.setText(intent.getStringExtra(Constanta.RESULT_TIME));
+        text_location.setText(intent.getStringExtra(Constanta.RESULT_ADDRESS));
     }
 
     @Override
@@ -85,12 +77,12 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
             Toast.makeText(getApplicationContext(),
                     "Format : " + scanFormat + ", Content : " + scanContent,
                     Toast.LENGTH_SHORT).show();
-        } else if (resultCode == Constantas.RESULT_OK
-                && requestCode == Constantas.REQUEST_CODE) {
-            if (data.hasExtra(Constantas.RESULT_DATE)) {
-                text_date.setText(data.getStringExtra(Constantas.RESULT_DATE));
-                text_time.setText(data.getStringExtra(Constantas.RESULT_TIME));
-                text_location.setText(data.getStringExtra(Constantas.RESULT_ADDRESS));
+        } else if (resultCode == Constanta.RESULT_OK
+                && requestCode == Constanta.REQUEST_CODE) {
+            if (data.hasExtra(Constanta.RESULT_DATE)) {
+                text_date.setText(data.getStringExtra(Constanta.RESULT_DATE));
+                text_time.setText(data.getStringExtra(Constanta.RESULT_TIME));
+                text_location.setText(data.getStringExtra(Constanta.RESULT_ADDRESS));
             }
         }
     }
@@ -99,7 +91,7 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                receiver, new IntentFilter(Constantas.SERVICE_RECEIVER)
+                receiver, new IntentFilter(Constanta.SERVICE_RECEIVER)
         );
     }
 
@@ -129,7 +121,7 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home :
-                Log.d(Constantas.TAG, "HOME");
+                Log.d(Constanta.TAG, "HOME");
                 activityResult();
                 return true;
         }
@@ -148,10 +140,10 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
                 break;
             case 1:
                 intent = new Intent(context, ChooseROActivity.class);
-                intent.putExtra(Constantas.RESULT_DATE, text_date.getText().toString());
-                intent.putExtra(Constantas.RESULT_TIME, text_time.getText().toString());
-                intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
-                startActivityForResult(intent, Constantas.REQUEST_CODE);
+                intent.putExtra(Constanta.RESULT_DATE, text_date.getText().toString());
+                intent.putExtra(Constanta.RESULT_TIME, text_time.getText().toString());
+                intent.putExtra(Constanta.RESULT_ADDRESS, text_location.getText().toString());
+                startActivityForResult(intent, Constanta.REQUEST_CODE);
                 break;
             case 2:
 
@@ -175,10 +167,10 @@ public class OSCActivity extends AppCompatActivity implements AdapterView.OnItem
 
     private void activityResult() {
         Intent intent = new Intent();
-        intent.putExtra(Constantas.RESULT_DATE, text_date.getText().toString());
-        intent.putExtra(Constantas.RESULT_TIME, text_time.getText().toString());
-        intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
-        setResult(Constantas.RESULT_OK, intent);
+        intent.putExtra(Constanta.RESULT_DATE, text_date.getText().toString());
+        intent.putExtra(Constanta.RESULT_TIME, text_time.getText().toString());
+        intent.putExtra(Constanta.RESULT_ADDRESS, text_location.getText().toString());
+        setResult(Constanta.RESULT_OK, intent);
         finish();
     }
 }

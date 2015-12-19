@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.model.PicturesPath;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,9 +108,9 @@ public class PhotoAdapter extends BaseAdapter {
                 convertView.setPadding(0, 0, 0, 0);
             holder.imageView.setImageBitmap(createBitmap(p.picture_path));
             holder.tv_address.setText(p.picture_address);
-            holder.tv_time.setText(CommonUtil.dateHelper(p.picture_date, Constantas.TIME));
+            holder.tv_time.setText(CommonUtil.dateHelper(p.picture_date, Constanta.TIME));
         } else {
-            holder.tv_date.setText(CommonUtil.dateHelper(p.picture_date, Constantas.ID));
+            holder.tv_date.setText(CommonUtil.dateHelper(p.picture_date, Constanta.ID));
         }
 
         return convertView;

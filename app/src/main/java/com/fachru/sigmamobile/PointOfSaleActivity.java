@@ -27,7 +27,7 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -164,7 +164,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 orderFragment.setOnDoItemListener(this);
                 if (doHead != null) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(Constantas.KEY_DOC_NO, doHead.docno);
+                    bundle.putString(Constanta.KEY_DOC_NO, doHead.docno);
                     orderFragment.setArguments(bundle);
                 }
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();

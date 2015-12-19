@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView style="@style/DefaultSOItem"
+    <TextView style="@style/DefaultItem"
         android:layout_width="30dp"
         android:id="@+id/tv_item_no"/>
 
-    <TextView style="@style/DefaultSOItem"
+    <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
         android:id="@+id/tv_item_doc_no"/>
 
-    <TextView style="@style/DefaultSOItem"
+    <TextView style="@style/DefaultItem"
         android:layout_width="120dp"
         android:id="@+id/tv_item_doc_date" />
 
-    <TextView style="@style/DefaultSOItem"
+    <TextView style="@style/DefaultItem"
         android:layout_width="100dp"
         android:id="@+id/tv_item_rute" />
 
-    <TextView style="@style/DefaultSOItem"
+    <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
         android:id="@+id/tv_item_salesman"/>
 
-    <TextView style="@style/DefaultSOItem"
+    <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
         android:layout_marginRight="0dp"
         android:id="@+id/tv_item_outlet"/>

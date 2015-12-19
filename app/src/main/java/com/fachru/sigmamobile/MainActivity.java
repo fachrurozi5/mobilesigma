@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.adapter.ImageAdapter;
+import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Outlet;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.Salesman;
@@ -33,7 +33,7 @@ import com.fachru.sigmamobile.service.DateTimeService;
 import com.fachru.sigmamobile.service.LocationTrackerService;
 import com.fachru.sigmamobile.service.SaveMyAppsService;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -63,18 +63,18 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                if (intent.hasExtra(Constantas.RESULT_DATE)) {
-                    text_time.setText(bundle.getString(Constantas.RESULT_TIME));
-                    text_date.setText(bundle.getString(Constantas.RESULT_DATE));
+                if (intent.hasExtra(Constanta.RESULT_DATE)) {
+                    text_time.setText(bundle.getString(Constanta.RESULT_TIME));
+                    text_date.setText(bundle.getString(Constanta.RESULT_DATE));
                 }
 
-                if (intent.hasExtra(Constantas.RESULT_ADDRESS)) {
-                    text_location.setText(bundle.getString(Constantas.RESULT_ADDRESS));
+                if (intent.hasExtra(Constanta.RESULT_ADDRESS)) {
+                    text_location.setText(bundle.getString(Constanta.RESULT_ADDRESS));
                 }
 
-                if (intent.hasExtra(Constantas.LATITUDE)) {
-                    latitude = bundle.getDouble(Constantas.LATITUDE, 0);
-                    longitude = bundle.getDouble(Constantas.LONGITUDE, 0);
+                if (intent.hasExtra(Constanta.LATITUDE)) {
+                    latitude = bundle.getDouble(Constanta.LATITUDE, 0);
+                    longitude = bundle.getDouble(Constanta.LONGITUDE, 0);
                 }
             } else {
                 Toast.makeText(MainActivity.this, "FAILED",
@@ -93,12 +93,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             Toast.makeText(getApplicationContext(),
                     "Format : " + scanFormat + ", Content : " + scanContent,
                     Toast.LENGTH_SHORT).show();
-        } else if (resultCode == Constantas.RESULT_OK
-                && requestCode == Constantas.REQUEST_CODE)
-            if (data.hasExtra(Constantas.RESULT_DATE)) {
-                text_date.setText(data.getStringExtra(Constantas.RESULT_DATE));
-                text_time.setText(data.getStringExtra(Constantas.RESULT_TIME));
-                text_location.setText(data.getStringExtra(Constantas.RESULT_ADDRESS));
+        } else if (resultCode == Constanta.RESULT_OK
+                && requestCode == Constanta.REQUEST_CODE)
+            if (data.hasExtra(Constanta.RESULT_DATE)) {
+                text_date.setText(data.getStringExtra(Constanta.RESULT_DATE));
+                text_time.setText(data.getStringExtra(Constanta.RESULT_TIME));
+                text_location.setText(data.getStringExtra(Constanta.RESULT_ADDRESS));
             }
     }
 
@@ -116,9 +116,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         getSupportActionBar().setLogo(R.drawable.ic_action_bar);
 
         if (savedInstanceState != null) {
-            text_date.setText(savedInstanceState.getString(Constantas.RESULT_DATE));
-            text_time.setText(savedInstanceState.getString(Constantas.RESULT_TIME));
-            text_location.setText(savedInstanceState.getString(Constantas.RESULT_ADDRESS));
+            text_date.setText(savedInstanceState.getString(Constanta.RESULT_DATE));
+            text_time.setText(savedInstanceState.getString(Constanta.RESULT_TIME));
+            text_location.setText(savedInstanceState.getString(Constanta.RESULT_ADDRESS));
         }
 
         gridview.setAdapter(new ImageAdapter(this,
@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         startService(new Intent(context, SaveMyAppsService.class));
         startService(new Intent(context, DateTimeService.class));
 
-
     }
 
     @Override
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                receiver, new IntentFilter(Constantas.SERVICE_RECEIVER)
+                receiver, new IntentFilter(Constanta.SERVICE_RECEIVER)
         );
     }
 
@@ -172,9 +171,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(Constantas.RESULT_DATE, text_date.getText().toString());
-        outState.putString(Constantas.RESULT_TIME, text_time.getText().toString());
-        outState.putString(Constantas.RESULT_ADDRESS, text_location.getText().toString());
+        outState.putString(Constanta.RESULT_DATE, text_date.getText().toString());
+        outState.putString(Constanta.RESULT_TIME, text_time.getText().toString());
+        outState.putString(Constanta.RESULT_ADDRESS, text_location.getText().toString());
 
         super.onSaveInstanceState(outState);
     }
@@ -197,9 +196,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(context, CameraActivity.class);
-            intent.putExtra(Constantas.LATITUDE, latitude);
-            intent.putExtra(Constantas.LONGITUDE, longitude);
-            intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
+            intent.putExtra(Constanta.LATITUDE, latitude);
+            intent.putExtra(Constanta.LONGITUDE, longitude);
+            intent.putExtra(Constanta.RESULT_ADDRESS, text_location.getText().toString());
             startActivity(intent);
             return true;
         }
@@ -214,11 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         switch (position) {
             case 4:
-                intent = new Intent(context, OSCActivity.class);
-                intent.putExtra(Constantas.RESULT_DATE, text_date.getText().toString());
-                intent.putExtra(Constantas.RESULT_TIME, text_time.getText().toString());
-                intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
-                startActivityForResult(intent, Constantas.REQUEST_CODE);
+                startActivity(new Intent(context, CustomerActivity.class));
                 break;
             default:
                 break;
@@ -232,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             mService = binder.getServiceInstance();
             List<String> strings = new ArrayList<>();
             strings.add("memo");
-
             strings.add("contacts");
             strings.add("phone");
             strings.add("telegram");
@@ -327,9 +321,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 .show();
     }
 
-    public void showThemed() {
+    public void showDoalog() {
         new MaterialDialog.Builder(this)
                 .title("OSC")
+                .iconRes(android.R.drawable.ic_dialog_info)
                 .items(R.array.sub_menus_osc)
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
@@ -339,8 +334,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                                 scanBarcode();
                                 break;
                             case 1:
+                                Intent intent = new Intent(context, OSCActivity.class);
+                                intent.putExtra(Constanta.RESULT_DATE, text_date.getText().toString());
+                                intent.putExtra(Constanta.RESULT_TIME, text_time.getText().toString());
+                                intent.putExtra(Constanta.RESULT_ADDRESS, text_location.getText().toString());
+                                startActivityForResult(intent, Constanta.REQUEST_CODE);
                                 break;
-                            case 3:
+                            case 2:
                                 break;
                             default:
                                 break;

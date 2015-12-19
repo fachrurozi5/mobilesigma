@@ -1,6 +1,6 @@
 package com.fachru.sigmamobile.api;
 
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.GsonBuilder;
 
 import retrofit.GsonConverterFactory;
@@ -19,7 +19,7 @@ public class RestApiManager {
                     .registerTypeAdapter(String.class, new StringDesirializer());
 
             customerApi = new Retrofit.Builder()
-                    .baseUrl(Constantas.BASE_URL)
+                    .baseUrl(Constanta.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                     .build()
                     .create(CustomerApi.class);

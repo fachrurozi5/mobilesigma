@@ -19,6 +19,8 @@ public class SessionManager {
     public static final String KEY_PIN = "pin";
     public static final String IS_PIN_SAVED = "is_pin_saved";
     public static final String KEY_LAST_APP_PN = "last_app_pin";
+    public static final String KEY_LAST_CUSTOMER = "last_customer";
+    public static final String KEY_LAST_OUTLET = "last_outlet";
 
     public SessionManager(Context context) {
         this.context = context;
@@ -42,6 +44,16 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void seveLastCustomer(String customer_id) {
+        editor.putString(KEY_LAST_CUSTOMER, customer_id);
+        editor.commit();
+    }
+
+    public void saveLastOutlet(String outlet_id) {
+        editor.putString(KEY_LAST_OUTLET, outlet_id);
+        editor.commit();
+    }
+
     public void unSavePin() {
         editor.putBoolean(IS_PIN_SAVED, false);
         editor.commit();
@@ -51,15 +63,23 @@ public class SessionManager {
         return preferences.getBoolean(KEY_AFTER_INSTALL, true);
     }
 
-    public boolean isPinSaved() {
-        return preferences.getBoolean(IS_PIN_SAVED, false);
-    }
-
     public String getPin() {
         return preferences.getString(KEY_PIN, "");
     }
 
     public String getLastApp() {
         return preferences.getString(KEY_LAST_APP_PN, "");
+    }
+
+    public String getLastCustomer() {
+        return preferences.getString(KEY_LAST_CUSTOMER, "");
+    }
+
+    public String getKeyLastOutlet() {
+        return preferences.getString(KEY_LAST_OUTLET, "");
+    }
+
+    public boolean isPinSaved() {
+        return preferences.getBoolean(IS_PIN_SAVED, false);
     }
 }

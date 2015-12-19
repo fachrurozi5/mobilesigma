@@ -33,7 +33,7 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Outlet;
 import com.fachru.sigmamobile.model.Salesman;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 
@@ -178,7 +178,7 @@ public class HeaderSOFragment extends Fragment implements
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        et_doc_date.setText(CommonUtil.stringToDateHelper(dayOfMonth + "-" + (++monthOfYear) + "-" + year, Constantas.MEDIUM_UK));
+        et_doc_date.setText(CommonUtil.stringToDateHelper(dayOfMonth + "-" + (++monthOfYear) + "-" + year, Constanta.MEDIUM_UK));
 
     }
 
@@ -190,7 +190,7 @@ public class HeaderSOFragment extends Fragment implements
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
-            salesman = Salesman.find(map.get(Constantas.SIMPLE_LIST_ITEM_1));
+            salesman = Salesman.find(map.get(Constanta.SIMPLE_LIST_ITEM_1));
             act_salesman.setText(salesman.salesman_name);
             act_outlet.requestFocus();
         }
@@ -200,7 +200,7 @@ public class HeaderSOFragment extends Fragment implements
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
-            outlet = Outlet.find(map.get(Constantas.SIMPLE_LIST_ITEM_1));
+            outlet = Outlet.find(map.get(Constanta.SIMPLE_LIST_ITEM_1));
             act_outlet.setText(outlet.outlet_name);
             et_doc_no.requestFocus();
             imm.hideSoftInputFromWindow(et_doc_no.getWindowToken(), 0);

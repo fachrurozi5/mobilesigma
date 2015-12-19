@@ -1,19 +1,22 @@
 package com.fachru.sigmamobile.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.fachru.sigmamobile.MainActivity;
+import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -24,10 +27,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by fachru on 19/11/15.
@@ -46,6 +46,7 @@ public class LocationTrackerService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+        createNotification();
         buildGoogleApiClient();
     }
 
@@ -70,7 +71,7 @@ public class LocationTrackerService extends Service implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.i(Constantas.TAG, "Connected to GoogleApiClient");
+        Log.i(Constanta.TAG, "Connected to GoogleApiClient");
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
@@ -81,25 +82,25 @@ public class LocationTrackerService extends Service implements
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i(Constantas.TAG, "Connection suspended");
+        Log.i(Constanta.TAG, "Connection suspended");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i(Constantas.TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorMessage());
+        Log.i(Constanta.TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorMessage());
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
         upDateLocation(location);
-        Log.d(Constantas.TAG, "LATITUDE : " + mCurrentLocation.getLatitude() + " LONGITUDE : " + mCurrentLocation.getLongitude() +
+        Log.d(Constanta.TAG, "LATITUDE : " + mCurrentLocation.getLatitude() + " LONGITUDE : " + mCurrentLocation.getLongitude() +
                 " LAST UPDATE : " + mLastUpdateTime);
     }
 
     protected synchronized void buildGoogleApiClient() {
-        Log.i(Constantas.TAG, "Building GoogleApiClient");
+        Log.i(Constanta.TAG, "Building GoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -134,7 +135,7 @@ public class LocationTrackerService extends Service implements
                 try {
                     publishResult(CommonUtil.getAddress(this, location));
                 } catch (IOException e) {
-                    Log.d(Constantas.TAG, "network or other I/O problems", e);
+                    Log.d(Constanta.TAG, "network or other I/O problems", e);
                 }
 
             }
@@ -151,10 +152,26 @@ public class LocationTrackerService extends Service implements
     }
 
     private void publishResult(String s) {
-        Intent intent = new Intent(Constantas.SERVICE_RECEIVER);
-        intent.putExtra(Constantas.RESULT_ADDRESS, s);
-        intent.putExtra(Constantas.LATITUDE, mCurrentLocation.getLatitude());
-        intent.putExtra(Constantas.LONGITUDE, mCurrentLocation.getLatitude());
+        Intent intent = new Intent(Constanta.SERVICE_RECEIVER);
+        intent.putExtra(Constanta.RESULT_ADDRESS, s);
+        intent.putExtra(Constanta.LATITUDE, mCurrentLocation.getLatitude());
+        intent.putExtra(Constanta.LONGITUDE, mCurrentLocation.getLatitude());
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void createNotification() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
+                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("Mobile Sigma")
+                .setContentText("Android Tracking Service is Running.").setSmallIcon(R.drawable.ic_action_bar)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        manager.notify(0, notification);
     }
 }

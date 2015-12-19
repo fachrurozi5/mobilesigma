@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +41,8 @@ public class Salesman extends Model {
         HashMap<String, String> map;
         for (Salesman salesman : all()) {
             map = new HashMap<>();
-            map.put(Constantas.SIMPLE_LIST_ITEM_1, salesman.salesman_id);
-            map.put(Constantas.SIMPLE_LIST_ITEM_2, salesman.salesman_name);
+            map.put(Constanta.SIMPLE_LIST_ITEM_1, salesman.salesman_id);
+            map.put(Constanta.SIMPLE_LIST_ITEM_2, salesman.salesman_name);
             hashMaps.add(map);
         }
 

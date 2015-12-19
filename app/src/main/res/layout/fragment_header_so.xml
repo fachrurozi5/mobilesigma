@@ -101,27 +101,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="30dp"
                     android:text="@string/no"/>
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
                     android:text="Doc No"/>
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="120dp"
                     android:text="Doc Date" />
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="100dp"
                     android:text="Rute" />
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
                     android:text="Salesman"/>
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="fill_parent"
                     android:layout_marginRight="0dp"
                     android:text="Outlet"/>

@@ -48,11 +48,11 @@ public class CommonUtil {
     public static String stringToDateHelper(String s, int i) {          // dd-MM-yyy, SHORT/MEDIUM/LONG_UK
         try {
             switch (i) {
-                case Constantas.SHORT_UK:
+                case Constanta.SHORT_UK:
                     return dateToStringShort(stringToDateMedium(s));
-                case Constantas.MEDIUM_UK:
+                case Constanta.MEDIUM_UK:
                     return dateToStringMedium(stringToDateMedium(s));
-                case Constantas.LONG_UK:
+                case Constanta.LONG_UK:
                     return dateToStringLong(stringToDateMedium(s));
             }
         } catch (ParseException e) {
@@ -85,17 +85,17 @@ public class CommonUtil {
     * */
     public static String dateHelper(Date date, int i) {             // Date, SHORT_UK/MEDIUM_UK/LONG_UK
         switch (i) {
-            case Constantas.SHORT_UK:
+            case Constanta.SHORT_UK:
                 return dateToStringShort(date);
-            case Constantas.MEDIUM_UK:
+            case Constanta.MEDIUM_UK:
                 return dateToStringMedium(date);
-            case Constantas.LONG_UK:
+            case Constanta.LONG_UK:
                 return dateToStringLong(date);
-            case Constantas.TIME :
+            case Constanta.TIME :
                 return dateToStringTime(date);
-            case Constantas.ID:
+            case Constanta.ID:
                 return dateToStringID(date);
-            case Constantas.ID_LONG:
+            case Constanta.ID_LONG:
                 return dateToStringIDLong(date);
             default:
                 return "";
@@ -236,10 +236,10 @@ public class CommonUtil {
         String dirname = "";
 
         switch (type) {
-            case Constantas.MEDIA_TYPE_IMAGE :
+            case Constanta.MEDIA_TYPE_IMAGE :
                 dirname = "Pictures";
                 break;
-            case Constantas.MEDIA_TYPE_DOCUMENT :
+            case Constanta.MEDIA_TYPE_DOCUMENT :
                 dirname = "Nota";
                 break;
             default:
@@ -254,7 +254,7 @@ public class CommonUtil {
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(Constantas.TAG, "failed to create directory");
+                Log.d(Constanta.TAG, "failed to create directory");
                 return null;
             }
         }
@@ -262,14 +262,14 @@ public class CommonUtil {
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
-        if (type == Constantas.MEDIA_TYPE_IMAGE) {
-            Log.d(Constantas.TAG, mediaStorageDir.getPath());
+        if (type == Constanta.MEDIA_TYPE_IMAGE) {
+            Log.d(Constanta.TAG, mediaStorageDir.getPath());
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_" + timeStamp + ".jpg");
-        } else if (type == Constantas.MEDIA_TYPE_VIDEO) {
+        } else if (type == Constanta.MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_" + timeStamp + ".mp4");
-        } else if (type == Constantas.MEDIA_TYPE_DOCUMENT) {
+        } else if (type == Constanta.MEDIA_TYPE_DOCUMENT) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "NOTA_" + timeStamp + ".pdf");
         } else {
@@ -304,9 +304,9 @@ public class CommonUtil {
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            Log.d(Constantas.TAG, "address " + addresses.toString());
+            Log.d(Constanta.TAG, "address " + addresses.toString());
         } catch (IOException e) {
-            Log.e(Constantas.TAG, "Invalid latitude : " + latitude + " longitude : " + longitude, e);
+            Log.e(Constanta.TAG, "Invalid latitude : " + latitude + " longitude : " + longitude, e);
         }
 
         if (addresses != null && addresses.size() != 0)

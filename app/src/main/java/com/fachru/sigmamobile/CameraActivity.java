@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.fachru.sigmamobile.adapter.PhotoAdapter;
 import com.fachru.sigmamobile.model.PicturesPath;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,11 +64,11 @@ public class CameraActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                if (intent.hasExtra(Constantas.LATITUDE)) {
-                    latitude = bundle.getDouble(Constantas.LATITUDE, 0);
-                    longitude = bundle.getDouble(Constantas.LONGITUDE, 0);
-                    label_address = bundle.getString(Constantas.RESULT_ADDRESS);
-                    Log.d(Constantas.TAG, "Receiver : " + latitude + " " + longitude + " " + label_address);
+                if (intent.hasExtra(Constanta.LATITUDE)) {
+                    latitude = bundle.getDouble(Constanta.LATITUDE, 0);
+                    longitude = bundle.getDouble(Constanta.LONGITUDE, 0);
+                    label_address = bundle.getString(Constanta.RESULT_ADDRESS);
+                    Log.d(Constanta.TAG, "Receiver : " + latitude + " " + longitude + " " + label_address);
                 }
             } else {
                 Toast.makeText(CameraActivity.this, "FAILED",
@@ -86,10 +86,10 @@ public class CameraActivity extends AppCompatActivity
         Intent bundle = getIntent();
 
         if (bundle != null) {
-            latitude = bundle.getDoubleExtra(Constantas.LATITUDE, 0);
-            longitude = bundle.getDoubleExtra(Constantas.LONGITUDE, 0);
-            label_address = bundle.getStringExtra(Constantas.RESULT_ADDRESS);
-            Log.d(Constantas.TAG, "Bundle not null " + latitude + " " + longitude + " " + label_address);
+            latitude = bundle.getDoubleExtra(Constanta.LATITUDE, 0);
+            longitude = bundle.getDoubleExtra(Constanta.LONGITUDE, 0);
+            label_address = bundle.getStringExtra(Constanta.RESULT_ADDRESS);
+            Log.d(Constanta.TAG, "Bundle not null " + latitude + " " + longitude + " " + label_address);
         }
 
         animSlideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
@@ -102,7 +102,7 @@ public class CameraActivity extends AppCompatActivity
 
         int i = 0;
         for (PicturesPath path : picturesPathList) {
-            thisDate = CommonUtil.dateHelper(picturesPathList.get(i++).picture_date, Constantas.ID);
+            thisDate = CommonUtil.dateHelper(picturesPathList.get(i++).picture_date, Constanta.ID);
             if (prevDate == null || !prevDate.equals(thisDate)) {
                 prevDate = thisDate;
                 if (i!=1)
@@ -119,7 +119,7 @@ public class CameraActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PicturesPath path = (PicturesPath) parent.getItemAtPosition(position);
-                Log.d(Constantas.TAG, "Position " + position);
+                Log.d(Constanta.TAG, "Position " + position);
             }
         });
 
@@ -136,7 +136,7 @@ public class CameraActivity extends AppCompatActivity
                     thisPosition = firstVisibleItem;
                     PicturesPath path = (PicturesPath) listView.getItemAtPosition(thisPosition);
 
-                    thisDate = CommonUtil.dateHelper(path.picture_date, Constantas.ID);
+                    thisDate = CommonUtil.dateHelper(path.picture_date, Constanta.ID);
 
                     if (prevDate == null || !prevDate.equals(thisDate)) {
                         prevDate = thisDate;
@@ -160,7 +160,7 @@ public class CameraActivity extends AppCompatActivity
                 // Image captured and saved to fileUri specified in the Intent
                 Date lastModified = new Date(file.lastModified());
 
-                Log.d(Constantas.TAG, "Lat " + latitude + " | Long " + longitude);
+                Log.d(Constanta.TAG, "Lat " + latitude + " | Long " + longitude);
 
                 picturesPath = new PicturesPath();
                 picturesPath.picture_name = file.getName();
@@ -185,7 +185,7 @@ public class CameraActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                receiver, new IntentFilter(Constantas.SERVICE_RECEIVER)
+                receiver, new IntentFilter(Constanta.SERVICE_RECEIVER)
         );
     }
 
@@ -226,7 +226,7 @@ public class CameraActivity extends AppCompatActivity
     private void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        fileUri = CommonUtil.getOutputMediaFileUri(Constantas.MEDIA_TYPE_IMAGE); // create a file to save the image
+        fileUri = CommonUtil.getOutputMediaFileUri(Constanta.MEDIA_TYPE_IMAGE); // create a file to save the image
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
         // start the image capture Intent

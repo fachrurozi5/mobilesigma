@@ -48,7 +48,7 @@
 
     <string-array name="sub_menus_osc">
         <item>Scan Barcode</item>
-        <item>Pilih RO</item>
+        <item>RO</item>
         <item>Outlet Baru</item>
     </string-array>
 
@@ -112,4 +112,8 @@
     <string name="title_location_dialog">GPS</string>
     <string name="content_location_dialog">GPS pada handhel ini tidak aktif, apakah anda akan mengaktifkannya?</string>
     <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_customer">Customer</string>
+    <string name="id">ID.</string>
+    <string name="name">Nama</string>
+    <string name="search">Cari Disini ...</string>
 </resources>

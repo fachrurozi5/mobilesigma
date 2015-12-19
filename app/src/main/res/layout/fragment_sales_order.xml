@@ -159,20 +159,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="30dp"
                     android:text="@string/no"/>
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
                     android:text="@string/header_product"/>
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="90dp"
                     android:layout_gravity="center"
                     android:text="@string/harga_list_rp" />
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="70dp"
                     android:layout_gravity="center"
                     android:text="@string/jumlah" />
@@ -183,7 +183,7 @@
                     android:layout_marginRight="2dp"
                     android:orientation="vertical">
 
-                    <TextView style="@style/DefaultSalesOrder"
+                    <TextView style="@style/DefaultHeader"
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
                         android:layout_marginBottom="2dp"
@@ -194,14 +194,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent">
 
-                        <TextView style="@style/DefaultSalesOrder"
+                        <TextView style="@style/DefaultHeader"
                             android:layout_width="60dp"
                             android:layout_height="fill_parent"
                             android:layout_marginRight="2dp"
                             android:padding="2dp"
                             android:text="@string/persen"/>
 
-                        <TextView style="@style/DefaultSalesOrder"
+                        <TextView style="@style/DefaultHeader"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:gravity="center_vertical"
@@ -218,7 +218,7 @@
                     android:layout_marginRight="2dp"
                     android:orientation="vertical">
 
-                    <TextView style="@style/DefaultSalesOrder"
+                    <TextView style="@style/DefaultHeader"
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
                         android:layout_marginBottom="2dp"
@@ -229,14 +229,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent">
 
-                        <TextView style="@style/DefaultSalesOrder"
+                        <TextView style="@style/DefaultHeader"
                             android:layout_width="60dp"
                             android:layout_height="fill_parent"
                             android:layout_marginRight="2dp"
                             android:padding="2dp"
                             android:text="@string/persen"/>
 
-                        <TextView style="@style/DefaultSalesOrder"
+                        <TextView style="@style/DefaultHeader"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:padding="2dp"
@@ -246,7 +246,7 @@
 
                 </LinearLayout>
 
-                <TextView style="@style/DefaultSalesOrder"
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="100dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="0dp"

@@ -5,7 +5,7 @@ import android.util.Log;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.controller.interfaces.CustomerCallbackListener;
 import com.fachru.sigmamobile.model.Customer;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class CustomerController {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
-                Log.d(Constantas.TAG, response.body());
+                Log.d(Constanta.TAG, response.body());
                 listener.onFetchComplite();
             }
 

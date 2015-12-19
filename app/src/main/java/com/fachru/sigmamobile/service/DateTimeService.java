@@ -1,13 +1,19 @@
 package com.fachru.sigmamobile.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.fachru.sigmamobile.MainActivity;
+import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 public class DateTimeService extends Service {
 
@@ -25,6 +31,7 @@ public class DateTimeService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -32,11 +39,11 @@ public class DateTimeService extends Service {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        Log.e(Constantas.TAG, "ThreadDateTime has been intrrupted", e);
+                        Log.e(Constanta.TAG, "ThreadDateTime has been intrrupted", e);
                     }
                     publishResult(
-                            CommonUtil.dateHelper(Constantas.ID),
-                            CommonUtil.dateHelper(Constantas.TIME)
+                            CommonUtil.dateHelper(Constanta.ID),
+                            CommonUtil.dateHelper(Constanta.TIME)
                     );
                 } while (isServiceRunning);
             }
@@ -57,9 +64,9 @@ public class DateTimeService extends Service {
     }
 
     private void publishResult(String date, String time) {
-        Intent intent = new Intent(Constantas.SERVICE_RECEIVER);
-        intent.putExtra(Constantas.RESULT_DATE, date);
-        intent.putExtra(Constantas.RESULT_TIME, time);
+        Intent intent = new Intent(Constanta.SERVICE_RECEIVER);
+        intent.putExtra(Constanta.RESULT_DATE, date);
+        intent.putExtra(Constanta.RESULT_TIME, time);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

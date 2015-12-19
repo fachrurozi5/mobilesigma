@@ -31,7 +31,7 @@ import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,7 +148,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
         disableForm(layout);
 
         if (bundle != null) {
-            doHead = DoHead.find(bundle.getString(Constantas.KEY_DOC_NO));
+            doHead = DoHead.find(bundle.getString(Constanta.KEY_DOC_NO));
             doItems = doHead.doItems();
             adapterDoItem.update(doItems);
             setButtonEnable(btn_add);
@@ -314,7 +314,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, String> map = (HashMap<String, String>) adapterView.getItemAtPosition(i);
-                product = Product.find(map.get(Constantas.SIMPLE_LIST_ITEM_1));
+                product = Product.find(map.get(Constanta.SIMPLE_LIST_ITEM_1));
                 act_product.setText(product.product_name);
                 et_product_price.setGravity(Gravity.RIGHT);
                 et_product_price.setText(CommonUtil.priceFormat2Decimal(product.price));

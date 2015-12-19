@@ -7,13 +7,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.fachru.sigmamobile.PinActivity;
-import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
 
 import java.io.DataOutputStream;
@@ -96,7 +92,7 @@ public class SaveMyAppsService extends Service {
             ActivityManager.RunningAppProcessInfo processInfo = runningTaskInfos.get(0);
             String activityOnTop = processInfo.processName;
             if (checkPackage(activityOnTop)) {
-                Log.e(Constantas.TAG, activityOnTop);
+                Log.e(Constanta.TAG, activityOnTop);
                 interruptedApp(activityOnTop);
             }
         } else {
@@ -104,7 +100,7 @@ public class SaveMyAppsService extends Service {
             ActivityManager.RunningTaskInfo ar = RunningTask.get(0);
             String activityOnTop = ar.topActivity.getPackageName();
             if (checkPackage(activityOnTop)) {
-                Log.e(Constantas.TAG, activityOnTop);
+                Log.e(Constanta.TAG, activityOnTop);
                 interruptedApp(activityOnTop);
             }
         }
@@ -150,15 +146,15 @@ public class SaveMyAppsService extends Service {
         catch (IOException ex)
         {
             ex.getMessage();
-            Log.e(Constantas.TAG, "IOException : " + ex.getMessage());
+            Log.e(Constanta.TAG, "IOException : " + ex.getMessage());
         }
         catch (SecurityException ex)
         {
-            Log.e(Constantas.TAG, "Can't get root access2");
+            Log.e(Constanta.TAG, "Can't get root access2");
         }
         catch (Exception ex)
         {
-            Log.e(Constantas.TAG, "Can't get root access3");
+            Log.e(Constanta.TAG, "Can't get root access3");
         }
     }
 }

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fachru.sigmamobile.adapter.ImageAdapter;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 public class ChooseROActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -34,11 +34,11 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                if (intent.hasExtra(Constantas.RESULT_DATE)) {
-                    text_time.setText(bundle.getString(Constantas.RESULT_TIME));
-                    text_date.setText(bundle.getString(Constantas.RESULT_DATE));
-                } else if (intent.hasExtra(Constantas.RESULT_ADDRESS)) {
-                    text_location.setText(bundle.getString(Constantas.RESULT_ADDRESS));
+                if (intent.hasExtra(Constanta.RESULT_DATE)) {
+                    text_time.setText(bundle.getString(Constanta.RESULT_TIME));
+                    text_date.setText(bundle.getString(Constanta.RESULT_DATE));
+                } else if (intent.hasExtra(Constanta.RESULT_ADDRESS)) {
+                    text_location.setText(bundle.getString(Constanta.RESULT_ADDRESS));
                 }
             } else {
                 Toast.makeText(context, "FAILED",
@@ -57,16 +57,16 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
         gridview.setAdapter(new ImageAdapter(this, getResources().getStringArray(R.array.sub_menu_c_ro),
                 getResources().obtainTypedArray(R.array.icon_sub_menu_c_ro)));
         gridview.setOnItemClickListener(this);
-        text_date.setText(intent.getStringExtra(Constantas.RESULT_DATE));
-        text_time.setText(intent.getStringExtra(Constantas.RESULT_TIME));
-        text_location.setText(intent.getStringExtra(Constantas.RESULT_ADDRESS));
+        text_date.setText(intent.getStringExtra(Constanta.RESULT_DATE));
+        text_time.setText(intent.getStringExtra(Constanta.RESULT_TIME));
+        text_location.setText(intent.getStringExtra(Constanta.RESULT_ADDRESS));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                receiver, new IntentFilter(Constantas.SERVICE_RECEIVER)
+                receiver, new IntentFilter(Constanta.SERVICE_RECEIVER)
         );
     }
 
@@ -124,9 +124,9 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
 
     private void activityResult() {
         Intent intent = new Intent();
-        intent.putExtra(Constantas.RESULT_DATE, text_date.getText().toString());
-        intent.putExtra(Constantas.RESULT_TIME, text_time.getText().toString());
-        intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
+        intent.putExtra(Constanta.RESULT_DATE, text_date.getText().toString());
+        intent.putExtra(Constanta.RESULT_TIME, text_time.getText().toString());
+        intent.putExtra(Constanta.RESULT_ADDRESS, text_location.getText().toString());
         setResult(2, intent);
         finish();
     }

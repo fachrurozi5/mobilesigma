@@ -11,7 +11,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
-import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,8 +71,8 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
 
         HashMap<String, String> map = (HashMap<String, String>) getItem(i);
 
-        holder.simple_list_item_1.setText(map.get(Constantas.SIMPLE_LIST_ITEM_1));
-        holder.simple_list_item_2.setText(map.get(Constantas.SIMPLE_LIST_ITEM_2));
+        holder.simple_list_item_1.setText(map.get(Constanta.SIMPLE_LIST_ITEM_1));
+        holder.simple_list_item_2.setText(map.get(Constanta.SIMPLE_LIST_ITEM_2));
 
         return view;
     }
@@ -90,8 +90,8 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
             String filterString = charSequence.toString().toLowerCase();
             final List<HashMap<String, String>> mList = new ArrayList<>();
             for (HashMap<String, String> map : datas) {
-                label1 = map.get(Constantas.SIMPLE_LIST_ITEM_2);
-                label2 = map.get(Constantas.SIMPLE_LIST_ITEM_1);
+                label1 = map.get(Constanta.SIMPLE_LIST_ITEM_2);
+                label2 = map.get(Constanta.SIMPLE_LIST_ITEM_1);
                 if (label1.toLowerCase().contains(filterString) ||
                         label2.toLowerCase().toLowerCase().contains(filterString))
                     mList.add(map);
