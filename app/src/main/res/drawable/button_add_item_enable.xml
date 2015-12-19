@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="oval" android:padding="10dp">
+            <gradient
+                android:startColor="#2196F3"
+                android:centerColor="#2196F3"
+                android:endColor="#2196F3"
+                android:angle="90"/>
+            <padding android:left="7dp"
+                android:top="7dp"
+                android:right="7dp"
+                android:bottom="7dp" />
+            <stroke
+                android:width="1dip"
+                android:color="#992196F3" />
+            <corners android:radius= "4dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ic_queue_white_48dp" />
+</layer-list>

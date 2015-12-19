@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <!--<AutoCompleteTextView
+        android:id="@+id/act_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:hint="@string/act_product" />-->
+
+    <EditText
+        android:id="@+id/act_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:hint="@string/act_product" />
+
+    <LinearLayout
+        android:id="@+id/layout_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_product"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_pcs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:hint="@string/hint_pcs" />
+
+        <EditText
+            android:id="@+id/et_cart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:hint="@string/hint_cart" />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/layout_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_quantity"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_ambil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_rb_ambil"/>
+
+        <RadioButton
+            android:id="@+id/rb_proses"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_rb_proses"/>
+
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/et_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/layout_status"
+        android:inputType="textMultiLine"
+        android:fadeScrollbars="true"
+        android:gravity="bottom"
+        android:hint="@string/hint_ket"/>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/button_add"
+        android:layout_below="@id/et_explanation"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:id="@+id/btn_edit"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/button_edit"
+        android:layout_below="@id/et_explanation"
+        android:layout_toLeftOf="@id/btn_add"/>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/button_delete"
+        android:layout_below="@id/et_explanation"
+        android:layout_toLeftOf="@id/btn_edit"/>
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/btn_delete"
+        android:layout_above="@+id/ll_footer">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/header_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView style="@style/DefaultSalesOrder"
+                    android:layout_width="30dp"
+                    android:text="@string/no"/>
+
+                <TextView style="@style/DefaultSalesOrder"
+                    android:layout_width="150dp"
+                    android:text="@string/header_product"/>
+
+                <LinearLayout
+                    android:layout_width="152dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="2dp"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/DefaultSalesOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_marginBottom="2dp"
+                        android:gravity="center"
+                        android:text="@string/quantity"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView style="@style/DefaultSalesOrder"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:layout_marginRight="2dp"
+                            android:padding="2dp"
+                            android:text="@string/pcs"/>
+
+                        <TextView style="@style/DefaultSalesOrder"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:padding="2dp"
+                            android:text="@string/cart"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="152dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="2dp"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/DefaultSalesOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_marginBottom="2dp"
+                        android:gravity="center"
+                        android:text="@string/status"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView style="@style/DefaultSalesOrder"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:layout_marginRight="2dp"
+                            android:padding="2dp"
+                            android:text="@string/ambil"/>
+
+                        <TextView style="@style/DefaultSalesOrder"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:padding="2dp"
+                            android:text="@string/proses"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView style="@style/DefaultSalesOrder"
+                    android:layout_width="300dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="0dp"
+                    android:text="@string/hint_ket"/>
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/lv_returns_product"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</RelativeLayout>

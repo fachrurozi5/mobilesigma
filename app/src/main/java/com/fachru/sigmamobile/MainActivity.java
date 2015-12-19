@@ -1,0 +1,356 @@
+package com.fachru.sigmamobile;
+
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.fachru.sigmamobile.adapter.ImageAdapter;
+import com.fachru.sigmamobile.model.Outlet;
+import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.Salesman;
+import com.fachru.sigmamobile.service.DateTimeService;
+import com.fachru.sigmamobile.service.LocationTrackerService;
+import com.fachru.sigmamobile.service.SaveMyAppsService;
+import com.fachru.sigmamobile.utils.CommonUtil;
+import com.fachru.sigmamobile.utils.Constantas;
+import com.fachru.sigmamobile.utils.SessionManager;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class MainActivity extends AppCompatActivity implements OnItemClickListener{
+
+    protected Context context = this;
+    protected SessionManager sessionManager;
+    private Intent serviceIntent;
+    private SaveMyAppsService mService;
+
+    protected Toolbar toolbar;
+    protected GridView gridview;
+    protected TextView text_time;
+    protected TextView text_date;
+    protected TextView text_location;
+
+    private double latitude = 0;
+    private double longitude = 0;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                if (intent.hasExtra(Constantas.RESULT_DATE)) {
+                    text_time.setText(bundle.getString(Constantas.RESULT_TIME));
+                    text_date.setText(bundle.getString(Constantas.RESULT_DATE));
+                }
+
+                if (intent.hasExtra(Constantas.RESULT_ADDRESS)) {
+                    text_location.setText(bundle.getString(Constantas.RESULT_ADDRESS));
+                }
+
+                if (intent.hasExtra(Constantas.LATITUDE)) {
+                    latitude = bundle.getDouble(Constantas.LATITUDE, 0);
+                    longitude = bundle.getDouble(Constantas.LONGITUDE, 0);
+                }
+            } else {
+                Toast.makeText(MainActivity.this, "FAILED",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanningResult != null) {
+            String scanContent = scanningResult.getContents();
+            String scanFormat = scanningResult.getFormatName();
+            Toast.makeText(getApplicationContext(),
+                    "Format : " + scanFormat + ", Content : " + scanContent,
+                    Toast.LENGTH_SHORT).show();
+        } else if (resultCode == Constantas.RESULT_OK
+                && requestCode == Constantas.REQUEST_CODE)
+            if (data.hasExtra(Constantas.RESULT_DATE)) {
+                text_date.setText(data.getStringExtra(Constantas.RESULT_DATE));
+                text_time.setText(data.getStringExtra(Constantas.RESULT_TIME));
+                text_location.setText(data.getStringExtra(Constantas.RESULT_ADDRESS));
+            }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+        sessionManager = new SessionManager(context);
+        serviceIntent = new Intent(context, SaveMyAppsService.class);
+        initComp();
+
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setLogo(R.drawable.ic_action_bar);
+
+        if (savedInstanceState != null) {
+            text_date.setText(savedInstanceState.getString(Constantas.RESULT_DATE));
+            text_time.setText(savedInstanceState.getString(Constantas.RESULT_TIME));
+            text_location.setText(savedInstanceState.getString(Constantas.RESULT_ADDRESS));
+        }
+
+        gridview.setAdapter(new ImageAdapter(this,
+                getResources().getStringArray(R.array.menus),
+                getResources().obtainTypedArray(R.array.icon_menus)));
+
+        gridview.setOnItemClickListener(this);
+
+        if (sessionManager.getAffterInstall()) {
+            actionAfterInstall();
+            sessionManager.setAfterInstall(false);
+        }
+
+        if (!CommonUtil.isLocationOn(context)) {
+            turnGPSOn();
+        }
+
+        startService(new Intent(context, LocationTrackerService.class));
+        startService(new Intent(context, SaveMyAppsService.class));
+        startService(new Intent(context, DateTimeService.class));
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                receiver, new IntentFilter(Constantas.SERVICE_RECEIVER)
+        );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnection);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(Constantas.RESULT_DATE, text_date.getText().toString());
+        outState.putString(Constantas.RESULT_TIME, text_time.getText().toString());
+        outState.putString(Constantas.RESULT_ADDRESS, text_location.getText().toString());
+
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(context, CameraActivity.class);
+            intent.putExtra(Constantas.LATITUDE, latitude);
+            intent.putExtra(Constantas.LONGITUDE, longitude);
+            intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Intent intent;
+
+        switch (position) {
+            case 4:
+                intent = new Intent(context, OSCActivity.class);
+                intent.putExtra(Constantas.RESULT_DATE, text_date.getText().toString());
+                intent.putExtra(Constantas.RESULT_TIME, text_time.getText().toString());
+                intent.putExtra(Constantas.RESULT_ADDRESS, text_location.getText().toString());
+                startActivityForResult(intent, Constantas.REQUEST_CODE);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            SaveMyAppsService.LocalBinder binder = (SaveMyAppsService.LocalBinder) service;
+            mService = binder.getServiceInstance();
+            List<String> strings = new ArrayList<>();
+            strings.add("memo");
+
+            strings.add("contacts");
+            strings.add("phone");
+            strings.add("telegram");
+            strings.add("samsungapps");
+            strings.add("vending");
+            strings.add("mms");
+            strings.add("call");
+            strings.add("apps.plus");
+            mService.setListPackage(strings);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Toast.makeText(context, "onServiceDisconnected called", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void initComp() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        gridview = (GridView) findViewById(R.id.gridmenu);
+        text_time = (TextView) findViewById(R.id.text_time);
+        text_date = (TextView) findViewById(R.id.text_date);
+        text_location = (TextView) findViewById(R.id.text_locality);
+    }
+
+    private void actionAfterInstall() {
+
+        String[] salesmans = {
+                "Salesman 1", "Salesman 2"
+        };
+
+        String[] outlets = {
+                "Outlet 1", "Outlet 2"
+        };
+
+        String[] product = {
+                "Ekonomi Sabun Cream Lemon 560G",
+                "A Cotton Buds Reguler 100Pcs",
+                "Kapal Api Kopi Special 65G",
+                "Pledge Furniture Polish Liquid Lemon 450ML",
+                "Ambi Pur Car Pink Blossom Started Kid 7ML",
+                "Bagus Zipper Bag",
+                "Pop Mie Soto Ayam",
+                "Lapasta Barbeque Pedas 57G",
+                "Lee Kum Kee Panda Tiram 225G",
+                "Mama Suka Tepung Roti 100G",
+                "Gulaku Gula Tebu Premium 1KG"
+
+        };
+
+        long[] prodcut_price = {
+                5700,
+                6900,
+                4900,
+                23900,
+                54500,
+                36700,
+                4550,
+                3300,
+                22200,
+                6000,
+                13500
+        };
+
+        for (int i=0; i < salesmans.length; i++) {
+            new Salesman("SO00" + (i+1), salesmans[i]).save();
+        }
+
+        for (int i=0; i < outlets.length; i++) {
+            new Outlet("OT00" + (i+1), outlets[i]).save();
+        }
+
+        for (int i=0; i < product.length; i++) {
+            new Product("PRD" + (i+1), product[i], prodcut_price[i], 50).save();
+        }
+
+    }
+
+    private void turnGPSOn(){
+        new MaterialDialog.Builder(context)
+                .title(R.string.title_location_dialog)
+                .content(R.string.content_location_dialog)
+                .positiveText(R.string.agree)
+                .iconRes(R.drawable.ic_location_off_white_48dp)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                })
+                .show();
+    }
+
+    public void showThemed() {
+        new MaterialDialog.Builder(this)
+                .title("OSC")
+                .items(R.array.sub_menus_osc)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+                        switch (i) {
+                            case 0:
+                                scanBarcode();
+                                break;
+                            case 1:
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }).show();
+    }
+
+    private void scanBarcode() {
+        IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+        scanIntegrator.initiateScan();
+    }
+}
