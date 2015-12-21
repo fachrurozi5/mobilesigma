@@ -47,7 +47,7 @@ public class LocationTrackerService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
-        createNotification();
+//        createNotification();
         buildGoogleApiClient();
     }
 
@@ -160,7 +160,7 @@ public class LocationTrackerService extends Service implements
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void createNotification() {
+    /*private void createNotification() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -175,5 +175,5 @@ public class LocationTrackerService extends Service implements
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         manager.notify(0, notification);
-    }
+    }*/
 }
