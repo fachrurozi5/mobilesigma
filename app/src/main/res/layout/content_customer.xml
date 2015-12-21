@@ -40,6 +40,12 @@
                     android:layout_width="180dp"
                     android:text="@string/name"/>
 
+                <TextView
+                    style="@style/DefaultHeader"
+                    android:layout_marginRight="0dp"
+                    android:layout_width="120dp"
+                    android:text="Handphone"/>
+
             </LinearLayout>
 
             <!--<android.support.v7.widget.RecyclerView-->

@@ -58,6 +58,7 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
             holder = new Holder();
             holder.tv_id = (TextView) view.findViewById(R.id.tv_customer_id);
             holder.tv_name = (TextView) view.findViewById(R.id.tv_custom_name);
+            holder.tv_phone = (TextView) view.findViewById(R.id.tv_phone);
             view.setTag(holder);
         } else {
             holder = (Holder) view.getTag();
@@ -65,6 +66,7 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
 
         holder.tv_id.setText(listFiltered.get(position).getId());
         holder.tv_name.setText(listFiltered.get(position).getName());
+        holder.tv_phone.setText(listFiltered.get(position).getPhone());
 
         return view;
     }
@@ -107,5 +109,6 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
     private class Holder {
         public TextView tv_id;
         public TextView tv_name;
+        public TextView tv_phone;
     }
 }

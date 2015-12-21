@@ -11,9 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.fachru.sigmamobile.adapter.adapter.AdapterCustomer;
+import com.fachru.sigmamobile.adapter.AdapterCustomer;
 import com.fachru.sigmamobile.model.Customer;
 
 import java.util.ArrayList;
@@ -28,7 +29,8 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     * */
     private Toolbar toolbar;
     private SearchView searchView;
-    private RecyclerView recyclerView;
+//    private RecyclerView recyclerView;
+    private ListView listview;
     private MenuItem menuItem;
 
     /*
@@ -39,7 +41,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     /*
     * manager
     * */
-    private RecyclerView.LayoutManager layoutManager;
+//    private RecyclerView.LayoutManager layoutManager;
 
     /*
     * arraylist
@@ -54,7 +56,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
         setContentView(R.layout.activity_customer);
         initComp();
 
-        layoutManager = new LinearLayoutManager(this);
+//        layoutManager = new LinearLayoutManager(this);
 
 
         Customer customer = new Customer.Builder()
@@ -87,12 +89,15 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
         list.add(customer);
 
-        adapter = new AdapterCustomer(list);
+//        adapter = new AdapterCustomer(list);
+        adapter = new AdapterCustomer(context,list);
 
         searchView.setOnQueryTextListener(this);
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(adapter);
+
+        listview.setAdapter(adapter);
 
     }
 
@@ -129,7 +134,8 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         searchView = (SearchView) findViewById(R.id.search_view);
-        recyclerView = (RecyclerView) findViewById(R.id.rv_customer);
+//        recyclerView = (RecyclerView) findViewById(R.id.rv_customer);
+        listview = (ListView) findViewById(R.id.lv_customer);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

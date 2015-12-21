@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -167,6 +168,7 @@ public class LocationTrackerService extends Service implements
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("Mobile Sigma")
                 .setContentText("Android Tracking Service is Running.").setSmallIcon(R.drawable.ic_action_bar)
+                .setColor(Color.parseColor("#2196F3"))
                 .setContentIntent(pendingIntent)
                 .build();
 

@@ -13,4 +13,10 @@
         style="@style/DefaultItem"
         android:layout_width="180dp"/>
 
+    <TextView
+        android:id="@+id/tv_phone"
+        style="@style/DefaultItem"
+        android:layout_marginRight="0dp"
+        android:layout_width="120dp"/>
+
 </LinearLayout>
