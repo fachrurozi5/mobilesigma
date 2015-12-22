@@ -15,8 +15,8 @@ public class RestApiManager {
     public CustomerApi getCustomerApi() {
         if (customerApi == null) {
             GsonBuilder gsonBuilder = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                    .registerTypeAdapter(String.class, new StringDesirializer());
+                    .setDateFormat("yyyy-MM-dd HH:mm:ss");
+//                    .registerTypeAdapter(String.class, new StringDesirializer());
 
             customerApi = new Retrofit.Builder()
                     .baseUrl(Constanta.BASE_URL)

@@ -7,10 +7,10 @@ import java.util.List;
 /**
  * Created by fachru on 17/12/15.
  */
-public interface CustomerCallbackListener {
+public interface OnCustomerCallbackListener {
     void onFetchStart();
     void onFetchProgress(Customer customer);
     void onFetchProgress(List<Customer> list);
-    void onFetchComplite();
+    void onFetchComplete();
     void onFetchFailed(Throwable t);
 }

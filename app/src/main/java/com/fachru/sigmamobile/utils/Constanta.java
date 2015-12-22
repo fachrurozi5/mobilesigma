@@ -28,5 +28,5 @@ public final class Constanta {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
-    public static final String BASE_URL = "http://192.168.1.4/sigmamobile/";
+    public static final String BASE_URL = "http://192.168.0.107/sigmamobile/";
 }

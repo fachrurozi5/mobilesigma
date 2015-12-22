@@ -3,7 +3,7 @@ package com.fachru.sigmamobile.controller;
 import android.util.Log;
 
 import com.fachru.sigmamobile.api.RestApiManager;
-import com.fachru.sigmamobile.controller.interfaces.CustomerCallbackListener;
+import com.fachru.sigmamobile.controller.interfaces.OnCustomerCallbackListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.utils.Constanta;
 
@@ -19,20 +19,22 @@ import retrofit.Retrofit;
  */
 public class CustomerController {
 
-    private CustomerCallbackListener listener;
+    private OnCustomerCallbackListener listener;
     private RestApiManager apiManager;
 
-    public CustomerController(CustomerCallbackListener listener) {
+    public CustomerController(OnCustomerCallbackListener listener) {
         this.listener = listener;
         apiManager = new RestApiManager();
     }
 
     public void startFetching() {
+        listener.onFetchStart();
         Call<List<Customer>> call = apiManager.getCustomerApi().getCustomers();
         call.enqueue(new Callback<List<Customer>>() {
             @Override
             public void onResponse(Response<List<Customer>> response, Retrofit retrofit) {
                 listener.onFetchProgress(response.body());
+                listener.onFetchComplete();
             }
 
             @Override
@@ -48,7 +50,7 @@ public class CustomerController {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
                 Log.d(Constanta.TAG, response.body());
-                listener.onFetchComplite();
+                listener.onFetchComplete();
             }
 
             @Override

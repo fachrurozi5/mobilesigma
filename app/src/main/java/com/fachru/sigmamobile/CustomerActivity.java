@@ -9,18 +9,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.fachru.sigmamobile.adapter.AdapterCustomer;
+import com.fachru.sigmamobile.controller.CustomerController;
+import com.fachru.sigmamobile.controller.interfaces.OnCustomerCallbackListener;
 import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class CustomerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, OnCustomerCallbackListener{
 
     private Context context = this;
 
@@ -29,7 +34,6 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     * */
     private Toolbar toolbar;
     private SearchView searchView;
-//    private RecyclerView recyclerView;
     private ListView listview;
     private MenuItem menuItem;
 
@@ -38,10 +42,11 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     * */
     private AdapterCustomer adapter;
 
+
     /*
-    * manager
+    * controller
     * */
-//    private RecyclerView.LayoutManager layoutManager;
+    private CustomerController controller;
 
     /*
     * arraylist
@@ -56,46 +61,11 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
         setContentView(R.layout.activity_customer);
         initComp();
 
-//        layoutManager = new LinearLayoutManager(this);
+        controller = new CustomerController(this);
 
-
-        Customer customer = new Customer.Builder()
-                .setId("9871")
-                .setNama("Jhony Deep")
-                .setInvaadd1("invaadd1")
-                .setCsstatid1("csstatid1")
-                .setSublsg(1.0)
-                .builde();
-
-        list.add(customer);
-
-        customer = new Customer.Builder()
-                .setId("46518")
-                .setNama("Micahel Baptista")
-                .setInvaadd1("invaadd1")
-                .setCsstatid1("csstatid1")
-                .setSublsg(1.0)
-                .builde();
-
-        list.add(customer);
-
-        customer = new Customer.Builder()
-                .setId("19901")
-                .setNama("Rial Charless")
-                .setInvaadd1("invaadd1")
-                .setCsstatid1("csstatid1")
-                .setSublsg(1.0)
-                .builde();
-
-        list.add(customer);
-
-//        adapter = new AdapterCustomer(list);
         adapter = new AdapterCustomer(context,list);
 
         searchView.setOnQueryTextListener(this);
-
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setAdapter(adapter);
 
         listview.setAdapter(adapter);
 
@@ -104,6 +74,7 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_customer, menu);
+        menuItem = menu.findItem(R.id.action_sync);
         return true;
     }
 
@@ -116,13 +87,12 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_sync :
+                controller.startFetching();
                 menuItem = item;
                 menuItem.setActionView(R.layout.progressbar);
                 menuItem.expandActionView();
                 return true;
             case R.id.action_settings :
-                menuItem.collapseActionView();
-                menuItem.setActionView(null);
                 return true;
         }
 
@@ -134,7 +104,6 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         searchView = (SearchView) findViewById(R.id.search_view);
-//        recyclerView = (RecyclerView) findViewById(R.id.rv_customer);
         listview = (ListView) findViewById(R.id.lv_customer);
 
         setSupportActionBar(toolbar);
@@ -151,5 +120,34 @@ public class CustomerActivity extends AppCompatActivity implements SearchView.On
     public boolean onQueryTextChange(String newText) {
         adapter.getFilter().filter(newText);
         return false;
+    }
+
+    @Override
+    public void onFetchStart() {
+        menuItem.setActionView(R.layout.progressbar);
+        menuItem.expandActionView();
+    }
+
+    @Override
+    public void onFetchProgress(Customer customer) {
+
+    }
+
+    @Override
+    public void onFetchProgress(List<Customer> list) {
+        adapter.update(list);
+    }
+
+    @Override
+    public void onFetchComplete() {
+        menuItem.collapseActionView();
+        menuItem.setActionView(null);
+    }
+
+    @Override
+    public void onFetchFailed(Throwable t) {
+        menuItem.collapseActionView();
+        menuItem.setActionView(null);
+        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

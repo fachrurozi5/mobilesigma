@@ -32,6 +32,12 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
         listFiltered = original;
     }
 
+    public void update(List<Customer> list) {
+        original = list;
+        listFiltered = original;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return listFiltered.size();
@@ -56,6 +62,7 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
         if (view == null) {
             view = mInflater.inflate(R.layout.item_customer, null);
             holder = new Holder();
+//            holder.tv_no = (TextView) view.findViewById(R.id.tv_customer_no);
             holder.tv_id = (TextView) view.findViewById(R.id.tv_customer_id);
             holder.tv_name = (TextView) view.findViewById(R.id.tv_custom_name);
             holder.tv_phone = (TextView) view.findViewById(R.id.tv_phone);
@@ -64,6 +71,7 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
             holder = (Holder) view.getTag();
         }
 
+//        holder.tv_no.setText(String.valueOf(position+1));
         holder.tv_id.setText(listFiltered.get(position).getId());
         holder.tv_name.setText(listFiltered.get(position).getName());
         holder.tv_phone.setText(listFiltered.get(position).getPhone());
@@ -107,6 +115,7 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
     }
 
     private class Holder {
+//        public TextView tv_no;
         public TextView tv_id;
         public TextView tv_name;
         public TextView tv_phone;
