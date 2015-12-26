@@ -19,17 +19,30 @@ import android.widget.Toast;
 import com.fachru.sigmamobile.adapter.ImageAdapter;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.utils.Constanta;
+import com.fachru.sigmamobile.utils.SessionManager;
 
 public class ChooseROActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     protected Context context = this;
 
+    /*
+    * widget
+    * */
     protected Toolbar toolbar;
     protected GridView gridview;
     protected TextView text_time;
     protected TextView text_date;
     protected TextView text_location;
-    private Customer customer;
+
+    /*
+    * utils
+    * */
+    SessionManager manager;
+
+    /*
+    * label
+    * */
+    protected long custid;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -41,8 +54,6 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
                     text_date.setText(bundle.getString(Constanta.RESULT_DATE));
                 } else if (intent.hasExtra(Constanta.RESULT_ADDRESS)) {
                     text_location.setText(bundle.getString(Constanta.RESULT_ADDRESS));
-                } else {
-
                 }
             } else {
                 Toast.makeText(context, "FAILED",
@@ -54,8 +65,8 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_ro);
+        manager = new SessionManager(context);
         Intent intent = getIntent();
-        customer = Customer.load(Customer.class, intent.getLongExtra("id", 0));
         initComp();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,6 +76,9 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
         text_date.setText(intent.getStringExtra(Constanta.RESULT_DATE));
         text_time.setText(intent.getStringExtra(Constanta.RESULT_TIME));
         text_location.setText(intent.getStringExtra(Constanta.RESULT_ADDRESS));
+        custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
+        if (custid >= 0)
+            manager.setCustomer(custid);
     }
 
     @Override
@@ -107,17 +121,23 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Intent intent = null;
+
         switch (position) {
             case 2:
-                Intent intent = new Intent(ChooseROActivity.this, PointOfSaleActivity.class);
-                intent.putExtra("id", customer.getId());
-                startActivity(intent);
+                intent = new Intent(context, PointOfSaleActivity.class);
                 break;
             case 4:
-                startActivity(new Intent(ChooseROActivity.this, ReturnsProductActivity.class));
+                intent = new Intent(context, ReturnsProductActivity.class);
                 break;
             default:
                 break;
+        }
+
+        if (intent != null) {
+            intent.putExtra(CustomerActivity.CUSTID, manager.getCustomer());
+            startActivity(intent);
         }
     }
 

@@ -45,7 +45,7 @@
         </activity>
         <activity
             android:name=".PointOfSaleActivity"
-            android:label="@string/title_activity_sales_order"
+            android:label="@string/title_activity_point_of_sale"
             android:parentActivityName=".ChooseROActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

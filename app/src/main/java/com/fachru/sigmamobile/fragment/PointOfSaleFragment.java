@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Created by fachru on 28/10/15.
  */
-public class SalesOrderFragment extends BaseFragmentForm implements OnClickListener {
+public class PointOfSaleFragment extends BaseFragmentForm implements OnClickListener {
 
     protected Activity activity;
     protected Bundle bundle;

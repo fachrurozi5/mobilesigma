@@ -14,12 +14,11 @@ public class SessionManager {
     private Context context;
     private static final int PRIVATE_MODE = 0;
     private static final String PREF_NAME = "sigma_preference";
-
     public static final String KEY_AFTER_INSTALL = "after_install";
     public static final String KEY_PIN = "pin";
     public static final String IS_PIN_SAVED = "is_pin_saved";
     public static final String KEY_LAST_APP_PN = "last_app_pin";
-    public static final String KEY_LAST_CUSTOMER = "last_customer";
+    public static final String KEY_CUSTOMER = "key_customer";
     public static final String KEY_LAST_OUTLET = "last_outlet";
 
     public SessionManager(Context context) {
@@ -44,8 +43,8 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void seveLastCustomer(String customer_id) {
-        editor.putString(KEY_LAST_CUSTOMER, customer_id);
+    public void setCustomer(long customer_id) {
+        editor.putLong(KEY_CUSTOMER, customer_id);
         editor.commit();
     }
 
@@ -71,8 +70,8 @@ public class SessionManager {
         return preferences.getString(KEY_LAST_APP_PN, "");
     }
 
-    public String getLastCustomer() {
-        return preferences.getString(KEY_LAST_CUSTOMER, "");
+    public long getCustomer() {
+        return preferences.getLong(KEY_CUSTOMER, -1);
     }
 
     public String getKeyLastOutlet() {

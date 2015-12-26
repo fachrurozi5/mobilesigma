@@ -19,10 +19,11 @@ import android.widget.EditText;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.fragment.DoneOrderFragment;
-import com.fachru.sigmamobile.fragment.HeaderSOFragment;
-import com.fachru.sigmamobile.fragment.HeaderSOFragment.OnSetDoHeadListener;
-import com.fachru.sigmamobile.fragment.SalesOrderFragment;
-import com.fachru.sigmamobile.fragment.SalesOrderFragment.OnSetDoItemListener;
+import com.fachru.sigmamobile.fragment.HeaderPOSFragment;
+import com.fachru.sigmamobile.fragment.HeaderPOSFragment.OnSetDoHeadListener;
+import com.fachru.sigmamobile.fragment.PointOfSaleFragment;
+import com.fachru.sigmamobile.fragment.PointOfSaleFragment.OnSetDoItemListener;
+import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
@@ -63,8 +64,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     protected long total = 0;
     protected long bonus = 0;
     protected long grand_total = 0;
-
-   private long id;
+    private long custid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +74,9 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initComp();
-
         Intent intent = getIntent();
-        id = intent.getLongExtra("id", -1);
+        custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
         fragmentPosition(0);
-
-        Log.d("PointOfSaleActivity", Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 
     protected void initComp() {
@@ -158,16 +155,16 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         FragmentTransaction fragmentTransaction;
         switch (position) {
             case 0:
-                HeaderSOFragment fragment = new HeaderSOFragment();
+                HeaderPOSFragment fragment = new HeaderPOSFragment();
                 fragment.setOnSetDoHeadListener(this);
                 Bundle bundle = new Bundle();
-                bundle.putLong("id", id);
+                bundle.putLong(CustomerActivity.CUSTID, custid);
                 fragment.setArguments(bundle);
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container, fragment, TAG_DO_HEAD).commit();
                 break;
             case 1:
-                SalesOrderFragment orderFragment = new SalesOrderFragment();
+                PointOfSaleFragment orderFragment = new PointOfSaleFragment();
                 orderFragment.setOnDoItemListener(this);
                 if (doHead != null) {
                     bundle = new Bundle();

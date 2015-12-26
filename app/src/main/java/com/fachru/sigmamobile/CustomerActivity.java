@@ -34,6 +34,9 @@ import java.util.List;
 public class CustomerActivity extends AppCompatActivity implements
         OnQueryTextListener, OnCustomerCallbackListener, OnItemLongClickListener, AdapterView.OnItemClickListener {
 
+
+    public static final String CUSTID = "key_custid";
+
     private Context context = this;
 
     /*
@@ -398,11 +401,10 @@ public class CustomerActivity extends AppCompatActivity implements
                     public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
                         switch (i) {
                             case 0:
-
                                 break;
                             case 1:
                                 Intent intent = new Intent(context, ChooseROActivity.class);
-                                intent.putExtra("id", id);
+                                intent.putExtra(CUSTID, id);
                                 startActivity(intent);
                                 break;
                             case 2:

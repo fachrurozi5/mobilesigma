@@ -2,6 +2,7 @@ package com.fachru.sigmamobile.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.R;
 
 import java.text.ParseException;
@@ -38,7 +40,7 @@ import com.fachru.sigmamobile.utils.Constanta;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 
-public class HeaderSOFragment extends Fragment implements
+public class HeaderPOSFragment extends Fragment implements
         OnClickListener, DatePickerDialog.OnDateSetListener{
 
     protected Activity activity;
@@ -92,7 +94,7 @@ public class HeaderSOFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         activity = getActivity();
         bundle = getArguments();
-        customer = Customer.load(Customer.class, bundle.getLong("id"));
+        customer = Customer.load(Customer.class, bundle.getLong(CustomerActivity.CUSTID));
         salesman = null;
         outlet = null;
         doHeads = new ArrayList<>();
@@ -300,9 +302,15 @@ public class HeaderSOFragment extends Fragment implements
         doHead = null;
         salesman = null;
         outlet = null;
-        btn_add.setBackground(getResources().getDrawable(R.drawable.button_add));
-        btn_edit.setBackground(getResources().getDrawable(R.drawable.button_edit));
-        btn_del.setBackground(getResources().getDrawable(R.drawable.button_delete));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            btn_add.setBackground(getResources().getDrawable(R.drawable.button_add, getContext().getTheme()));
+            btn_edit.setBackground(getResources().getDrawable(R.drawable.button_edit, getContext().getTheme()));
+            btn_del.setBackground(getResources().getDrawable(R.drawable.button_delete, getContext().getTheme()));
+        } else {
+            btn_add.setBackground(getResources().getDrawable(R.drawable.button_add));
+            btn_edit.setBackground(getResources().getDrawable(R.drawable.button_edit));
+            btn_del.setBackground(getResources().getDrawable(R.drawable.button_delete));
+        }
         isUpdate = false;
         isReadyAddItem = false;
     }
@@ -342,7 +350,7 @@ public class HeaderSOFragment extends Fragment implements
     private void actionDPD() {
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(
-                HeaderSOFragment.this,
+                HeaderPOSFragment.this,
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH)
