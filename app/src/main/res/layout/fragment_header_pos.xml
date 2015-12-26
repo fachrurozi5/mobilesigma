@@ -36,10 +36,18 @@
         android:hint="@string/hint_doc_date"/>
 
     <EditText
-        android:id="@+id/et_rute"
+        android:id="@+id/et_customer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_date_picker"
+        android:singleLine="true"
+        android:editable="false"/>
+
+    <EditText
+        android:id="@+id/et_rute"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_customer"
         android:singleLine="true"
         android:hint="@string/hint_rute"/>
 

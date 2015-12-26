@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.fachru.sigmamobile.adapter.AdapterDoHeadItem;
 import com.fachru.sigmamobile.adapter.AdapterFilter;
+import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Outlet;
 import com.fachru.sigmamobile.model.Salesman;
@@ -51,6 +52,7 @@ public class HeaderSOFragment extends Fragment implements
     protected EditText et_doc_no;
     protected EditText et_doc_date;
     protected EditText et_rute;
+    protected EditText et_customer;
     protected AutoCompleteTextView act_salesman;
     protected AutoCompleteTextView act_outlet;
     protected Button btn_date_picker;
@@ -65,6 +67,7 @@ public class HeaderSOFragment extends Fragment implements
     protected DoHead doHead;
     protected Salesman salesman;
     protected Outlet outlet;
+    protected Customer customer;
 
     /*
     * list of object
@@ -89,6 +92,7 @@ public class HeaderSOFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         activity = getActivity();
         bundle = getArguments();
+        customer = Customer.load(Customer.class, bundle.getLong("id"));
         salesman = null;
         outlet = null;
         doHeads = new ArrayList<>();
@@ -104,11 +108,12 @@ public class HeaderSOFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_header_so, container, false);
+        View view = inflater.inflate(R.layout.fragment_header_pos, container, false);
 
         et_doc_no = (EditText) view.findViewById(R.id.et_doc_no);
         et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
         et_rute = (EditText) view.findViewById(R.id.et_rute);
+        et_customer = (EditText) view.findViewById(R.id.et_customer);
         act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
         act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);
         btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);
@@ -128,6 +133,8 @@ public class HeaderSOFragment extends Fragment implements
         act_salesman.setAdapter(salesmanFilter);
         act_outlet.setAdapter(outletFilter);
         lv_do_head_items.setAdapter(adapterDoHeadItem);
+
+        et_customer.setText(customer.getName());
 
         setButtonEnable(btn_add);
 

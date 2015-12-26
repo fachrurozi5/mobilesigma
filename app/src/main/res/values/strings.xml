@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sigma Mobile</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_sales_order">Sales Order</string>
+    <string name="title_activity_sales_order">Point of Sales</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="act_product">Ketik produk</string>
     <string name="hint_product_price">Harga Produk</string>

@@ -64,15 +64,19 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     protected long bonus = 0;
     protected long grand_total = 0;
 
+   private long id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sales_order);
+        setContentView(R.layout.activity_point_of_sale);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initComp();
 
+        Intent intent = getIntent();
+        id = intent.getLongExtra("id", -1);
         fragmentPosition(0);
 
         Log.d("PointOfSaleActivity", Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -156,6 +160,9 @@ public class PointOfSaleActivity extends AppCompatActivity implements
             case 0:
                 HeaderSOFragment fragment = new HeaderSOFragment();
                 fragment.setOnSetDoHeadListener(this);
+                Bundle bundle = new Bundle();
+                bundle.putLong("id", id);
+                fragment.setArguments(bundle);
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container, fragment, TAG_DO_HEAD).commit();
                 break;
@@ -163,7 +170,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 SalesOrderFragment orderFragment = new SalesOrderFragment();
                 orderFragment.setOnDoItemListener(this);
                 if (doHead != null) {
-                    Bundle bundle = new Bundle();
+                    bundle = new Bundle();
                     bundle.putString(Constanta.KEY_DOC_NO, doHead.docno);
                     orderFragment.setArguments(bundle);
                 }

@@ -149,7 +149,7 @@ public class CommonUtil {
         int day_of_month = calendar.get(Calendar.DAY_OF_MONTH);
         int year = calendar.get(Calendar.YEAR);
 
-        return dateToStringTime(calendar) + "\n" + day_of_week + day_of_month + month + year;
+        return day_of_week + day_of_month + month + year + " " + dateToStringTime(calendar);
     }
 
 
@@ -200,17 +200,17 @@ public class CommonUtil {
             case Calendar.MAY :
                 return " Mei ";
             case Calendar.JUNE :
-                return "Juni ";
+                return " Juni ";
             case Calendar.JULY:
-                return "Juli ";
+                return " Juli ";
             case Calendar.AUGUST:
-                return "Agustus ";
+                return " Agustus ";
             case Calendar.SEPTEMBER:
-                return "Septermber ";
+                return " Septermber ";
             case Calendar.OCTOBER:
-                return "Oktober ";
+                return " Oktober ";
             case Calendar.NOVEMBER:
-                return "November ";
+                return " November ";
             case Calendar.DECEMBER :
                 return " Desember ";
             default:

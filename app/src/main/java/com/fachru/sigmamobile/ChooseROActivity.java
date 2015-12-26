@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fachru.sigmamobile.adapter.ImageAdapter;
+import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.utils.Constanta;
 
 public class ChooseROActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
@@ -28,6 +29,7 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
     protected TextView text_time;
     protected TextView text_date;
     protected TextView text_location;
+    private Customer customer;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -39,6 +41,8 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
                     text_date.setText(bundle.getString(Constanta.RESULT_DATE));
                 } else if (intent.hasExtra(Constanta.RESULT_ADDRESS)) {
                     text_location.setText(bundle.getString(Constanta.RESULT_ADDRESS));
+                } else {
+
                 }
             } else {
                 Toast.makeText(context, "FAILED",
@@ -51,6 +55,7 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_ro);
         Intent intent = getIntent();
+        customer = Customer.load(Customer.class, intent.getLongExtra("id", 0));
         initComp();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -104,7 +109,9 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 2:
-                startActivity(new Intent(ChooseROActivity.this, PointOfSaleActivity.class));
+                Intent intent = new Intent(ChooseROActivity.this, PointOfSaleActivity.class);
+                intent.putExtra("id", customer.getId());
+                startActivity(intent);
                 break;
             case 4:
                 startActivity(new Intent(ChooseROActivity.this, ReturnsProductActivity.class));

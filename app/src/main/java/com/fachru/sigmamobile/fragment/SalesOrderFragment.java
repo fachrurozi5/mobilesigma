@@ -117,7 +117,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_sales_order, container, false);
+        final View view = inflater.inflate(R.layout.fragment_point_of_sale, container, false);
         layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_so);
         act_product = (AutoCompleteTextView) view.findViewById(R.id.act_product);
         et_product_price = (EditText) view.findViewById(R.id.et_product_price);

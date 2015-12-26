@@ -1,19 +1,29 @@
 package com.fachru.sigmamobile.model;
 
+import android.database.sqlite.SQLiteConstraintException;
+import android.util.Log;
+
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
+import com.activeandroid.util.SQLiteUtils;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by fachru on 17/12/15.
  */
 @Table(name = "customer", id = "_id")
-public class Customer {
+public class Customer extends Model{
 
     @SerializedName("CUSTID")
-    @Column(name = "id", unique = true)
+    @Column(name = "id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private String id;
 
     @SerializedName("CUSTNAME")
@@ -35,6 +45,18 @@ public class Customer {
     @SerializedName("CSSTATID4")
     @Column(name = "csstatid4")
     private String csstatid4;
+
+    @SerializedName("type_group")
+    @Column(name = "group_type")
+    private String group_type;
+
+    @SerializedName("cs_group")
+    @Column(name = "cs_group")
+    private String cs_group;
+
+    @SerializedName("channel")
+    @Column(name = "channel")
+    private String channel;
 
     @SerializedName("CSSTATID5")
     @Column(name = "csstatid5")
@@ -272,11 +294,11 @@ public class Customer {
         this.invadd4 = builder.invadd4;
     }
 
-    public String getId() {
+    public String getCustomerId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setCustomerId(String id) {
         this.id = id;
     }
 
@@ -326,6 +348,30 @@ public class Customer {
 
     public void setCsstatid5(String csstatid5) {
         this.csstatid5 = csstatid5;
+    }
+
+    public String getGroup_type() {
+        return group_type;
+    }
+
+    public void setGroup_type(String group_type) {
+        this.group_type = group_type;
+    }
+
+    public String getCs_group() {
+        return cs_group;
+    }
+
+    public void setCs_group(String cs_group) {
+        this.cs_group = cs_group;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
     public String getInvadd1() {
@@ -943,6 +989,14 @@ public class Customer {
         }
     }
 
+
+    public static List<Customer> getAll() {
+        return new Select()
+                .from(Customer.class)
+                .orderBy("name ASC")
+                .execute();
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -952,6 +1006,9 @@ public class Customer {
                 ", csstatid2='" + csstatid2 + '\'' +
                 ", csstatid3='" + csstatid3 + '\'' +
                 ", csstatid4='" + csstatid4 + '\'' +
+                ", group_type='" + group_type + '\'' +
+                ", cs_group='" + cs_group + '\'' +
+                ", channel='" + channel + '\'' +
                 ", csstatid5='" + csstatid5 + '\'' +
                 ", invadd1='" + invadd1 + '\'' +
                 ", invadd2='" + invadd2 + '\'' +
