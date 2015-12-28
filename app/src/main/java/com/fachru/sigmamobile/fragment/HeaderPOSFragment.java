@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +28,7 @@ import com.fachru.sigmamobile.R;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -233,17 +236,18 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         if (!errorChecked()) {
             DoHead doHead = new DoHead(
                     et_doc_no.getText().toString(),
+                    new Date(),
                     et_rute.getText().toString(),
                     customer,
                     salesman,
                     outlet,
                     false
             );
-            try {
+            /*try {
                 doHead.setDateFromString(et_doc_date.getText().toString());
             } catch (ParseException e) {
                 e.printStackTrace();
-            }
+            }*/
             long status = doHead.save();
             if (status != -1) {
                 adapterDoHeadItem.add(doHead);
@@ -373,11 +377,11 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 et_doc_no.getText() == null) {
             et_doc_no.setError(getString(R.string.error_input_doc_no));
             return true;
-        } else if (et_doc_date.getText().toString().equals("") ||
+        } /*else if (et_doc_date.getText().toString().equals("") ||
                 et_doc_date.getText() == null) {
             et_doc_date.setError(getString(R.string.error_input_doc_date));
             return true;
-        } else if (et_rute.getText().toString().equals("") ||
+        }*/ else if (et_rute.getText().toString().equals("") ||
                 et_rute.getText() == null) {
             et_rute.setError(getString(R.string.error_input_rute));
             return true;
@@ -401,7 +405,13 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 now.get(Calendar.DAY_OF_MONTH)
         );
         dpd.setThemeDark(true);
-        dpd.setAccentColor(getResources().getColor(R.color.colorAccentDialog));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            dpd.setAccentColor(getResources().getColor(R.color.colorAccentDialog, activity.getTheme()));
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dpd.setAccentColor(ContextCompat.getColor(activity, R.color.colorAccentDialog));
+        } else {
+            dpd.setAccentColor(getResources().getColor(R.color.colorAccentDialog));
+        }
         dpd.show(activity.getFragmentManager(), getString(R.string.tag_date_picker_dialog));
     }
 

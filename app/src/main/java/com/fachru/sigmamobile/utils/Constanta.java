@@ -16,6 +16,7 @@ public final class Constanta {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int MEDIA_TYPE_DOCUMENT = 3;
+    public static final int MEDIA_TYPE_DOCUMENT_TITLE = 4;
 
     public static final String TAG = "com.fachru.sigma";
     public static final String KEY_DOC_NO = "doc_no";
@@ -26,7 +27,7 @@ public final class Constanta {
     public static final String RESULT_TIME = "result_time";
     public static final String RESULT_ADDRESS = "result_address";
     public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
 
+    public static final String LONGITUDE = "longitude";
     public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
 }

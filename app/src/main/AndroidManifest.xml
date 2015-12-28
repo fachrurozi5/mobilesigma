@@ -111,7 +111,8 @@
         </activity>
         <activity
             android:name=".SalesOrderActivity"
-            android:label="@string/title_activity_sales_order"></activity>
+            android:label="@string/title_activity_sales_order"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

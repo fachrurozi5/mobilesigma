@@ -209,11 +209,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        Intent intent;
+//        Intent intent;
 
         switch (position) {
             case 4:
-                startActivity(new Intent(context, CustomerActivity.class));
+                /*startActivity(new Intent(context, CustomerActivity.class));*/
+                showDialog();
                 break;
             default:
                 break;
@@ -321,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 .show();
     }
 
-    public void showDoalog() {
+    public void showDialog() {
         new MaterialDialog.Builder(this)
                 .title("OSC")
                 .iconRes(android.R.drawable.ic_dialog_info)
@@ -334,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                                 scanBarcode();
                                 break;
                             case 1:
-                                Intent intent = new Intent(context, OSCActivity.class);
+                                Intent intent = new Intent(context, CustomerActivity.class);
                                 intent.putExtra(Constanta.RESULT_DATE, text_date.getText().toString());
                                 intent.putExtra(Constanta.RESULT_TIME, text_time.getText().toString());
                                 intent.putExtra(Constanta.RESULT_ADDRESS, text_location.getText().toString());

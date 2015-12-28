@@ -128,6 +128,9 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
             case 2:
                 intent = new Intent(context, PointOfSaleActivity.class);
                 break;
+            case 3:
+                intent = new Intent(context, SalesOrderActivity.class);
+                break;
             case 4:
                 intent = new Intent(context, ReturnsProductActivity.class);
                 break;

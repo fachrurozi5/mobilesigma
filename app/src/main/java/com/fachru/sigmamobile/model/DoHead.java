@@ -70,6 +70,17 @@ public class DoHead extends Model {
         this.status = status;
     }
 
+    public DoHead(String docno, Date docdate, String rute, Customer customer, Salesman salesman, Outlet outlet, boolean status) {
+        super();
+        this.docno = docno;
+        this.docdate = docdate;
+        this.rute = rute;
+        this.customer = customer;
+        this.salesman = salesman;
+        this.outlet = outlet;
+        this.status = status;
+    }
+
     public DoHead(String docno, Date docdate, String rute, long total, long bonus, long grand_total, Customer customer, Salesman salesman, Outlet outlet, boolean status) {
         super();
         this.docno = docno;

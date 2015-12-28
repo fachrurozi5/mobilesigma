@@ -117,4 +117,5 @@
     <string name="name">Nama</string>
     <string name="search">Cari Disini ...</string>
     <string name="title_activity_sales_order">SalesOrderActivity</string>
+    <string name="hint_customer">Customer</string>
 </resources>

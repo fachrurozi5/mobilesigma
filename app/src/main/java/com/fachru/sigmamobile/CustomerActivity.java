@@ -1,9 +1,12 @@
 package com.fachru.sigmamobile;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.adapter.AdapterCustomer;
 import com.fachru.sigmamobile.controller.CustomerController;
@@ -46,6 +50,39 @@ public class CustomerActivity extends AppCompatActivity implements
     private SearchView searchView;
     private ListView listview;
     private MenuItem menuItem;
+    private TextView tv_name;
+    private TextView tv_csstatid1;
+    private TextView tv_csstatid2;
+    private TextView tv_csstatid3;
+    private TextView tv_csstatid4;
+    private TextView tv_csstatid5;
+    private TextView tv_type_group;
+    private TextView tv_cs_group;
+    private TextView tv_channel;
+    private TextView tv_invadd1;
+    private TextView tv_invadd2;
+    private TextView tv_invadd3;
+    private TextView tv_invadd4;
+    private TextView tv_invzip;
+    private TextView tv_created;
+    private TextView tv_updated;
+    private EditText et_id;
+    private EditText et_name;
+    private EditText et_csstatid1;
+    private EditText et_csstatid2;
+    private EditText et_csstatid3;
+    private EditText et_csstatid4;
+    private EditText et_csstatid5;
+    private EditText et_type_group;
+    private EditText et_cs_group;
+    private EditText et_channel;
+    private EditText et_invadd1;
+    private EditText et_invadd2;
+    private EditText et_invadd3;
+    private EditText et_invadd4;
+    private EditText et_invzip;
+    private EditText et_created;
+    private EditText et_updated;
 
     /*
     * adapter
@@ -62,6 +99,36 @@ public class CustomerActivity extends AppCompatActivity implements
     * arraylist
     * */
     private List<Customer> list = new ArrayList<>();
+
+    /*
+    * label
+    * */
+    String text_time = "";
+    String text_date = "";
+    String text_location = "";
+
+    /*
+    * reciever datetime
+    * */
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                if (intent.hasExtra(Constanta.RESULT_DATE)) {
+                    text_time = bundle.getString(Constanta.RESULT_TIME);
+                    text_date = bundle.getString(Constanta.RESULT_DATE);
+                }
+
+                if (intent.hasExtra(Constanta.RESULT_ADDRESS)) {
+                    text_location = bundle.getString(Constanta.RESULT_ADDRESS);
+                }
+            } else {
+                Toast.makeText(context, "FAILED",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
 
     @Override
@@ -83,6 +150,41 @@ public class CustomerActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Constanta.RESULT_OK
+                && requestCode == Constanta.REQUEST_CODE) {
+            if (data.hasExtra(Constanta.RESULT_DATE)) {
+                text_date = data.getStringExtra(Constanta.RESULT_DATE);
+                text_time = data.getStringExtra(Constanta.RESULT_TIME);
+            }
+
+            if (data.hasExtra(Constanta.RESULT_ADDRESS))
+                text_location = data.getStringExtra(Constanta.RESULT_ADDRESS);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                receiver, new IntentFilter(Constanta.SERVICE_RECEIVER)
+        );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        activityResult();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_customer, menu);
         menuItem = menu.findItem(R.id.action_sync);
@@ -95,7 +197,7 @@ public class CustomerActivity extends AppCompatActivity implements
 
         switch (id) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                activityResult();
                 return true;
             case R.id.action_sync:
                 controller.startFetching();
@@ -113,7 +215,6 @@ public class CustomerActivity extends AppCompatActivity implements
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        /*showDetailCustomer((Customer) parent.getItemAtPosition(position));*/
         Customer customer = (Customer) parent.getItemAtPosition(position);
         Log.d(Constanta.TAG, customer.toString());
         showDetailCustomer(customer);
@@ -123,7 +224,8 @@ public class CustomerActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Customer customer = (Customer) parent.getItemAtPosition(position);
-        showDoalog(customer.getId());
+        Log.d(Constanta.TAG, customer.toString());
+        showDetailCustomer(customer);
     }
 
     @Override
@@ -186,48 +288,25 @@ public class CustomerActivity extends AppCompatActivity implements
 
     }
 
-    private EditText et_id;
-    private EditText et_name;
-    private EditText et_csstatid1;
-    private EditText et_csstatid2;
-    private EditText et_csstatid3;
-    private EditText et_csstatid4;
-    private EditText et_csstatid5;
-    private EditText et_type_group;
-    private EditText et_cs_group;
-    private EditText et_channel;
-    private EditText et_invadd1;
-    private EditText et_invadd2;
-    private EditText et_invadd3;
-    private EditText et_invadd4;
-    private EditText et_invzip;
-    private EditText et_created;
-    private EditText et_updated;
 
-    private TextView tv_name;
-    private TextView tv_csstatid1;
-    private TextView tv_csstatid2;
-    private TextView tv_csstatid3;
-    private TextView tv_csstatid4;
-    private TextView tv_csstatid5;
-    private TextView tv_type_group;
-    private TextView tv_cs_group;
-    private TextView tv_channel;
-    private TextView tv_invadd1;
-    private TextView tv_invadd2;
-    private TextView tv_invadd3;
-    private TextView tv_invadd4;
-    private TextView tv_invzip;
-    private TextView tv_created;
-    private TextView tv_updated;
-
-
-    private void showDetailCustomer(Customer customer) {
+    private void showDetailCustomer(final Customer customer) {
         MaterialDialog dialog = new MaterialDialog.Builder(CustomerActivity.this)
                 .title("Customer")
                 .customView(R.layout.detail_customer, true)
                 .negativeText("Tutup")
+                .positiveText("OK")
                 .cancelable(false)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        Intent intent = new Intent(context, ChooseROActivity.class);
+                        intent.putExtra(CUSTID, customer.getId());
+                        intent.putExtra(Constanta.RESULT_DATE, text_date);
+                        intent.putExtra(Constanta.RESULT_TIME, text_time);
+                        intent.putExtra(Constanta.RESULT_ADDRESS, text_location);
+                        startActivityForResult(intent, Constanta.REQUEST_CODE);
+                    }
+                })
                 .build();
 
         View view = dialog.getCustomView();
@@ -391,28 +470,12 @@ public class CustomerActivity extends AppCompatActivity implements
 
     }
 
-    public void showDoalog(final Long id) {
-        new MaterialDialog.Builder(this)
-                .title("OSC")
-                .iconRes(android.R.drawable.ic_dialog_info)
-                .items(R.array.sub_menus_osc)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
-                        switch (i) {
-                            case 0:
-                                break;
-                            case 1:
-                                Intent intent = new Intent(context, ChooseROActivity.class);
-                                intent.putExtra(CUSTID, id);
-                                startActivity(intent);
-                                break;
-                            case 2:
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }).show();
+    private void activityResult() {
+        Intent intent = new Intent();
+        intent.putExtra(Constanta.RESULT_DATE, text_date);
+        intent.putExtra(Constanta.RESULT_TIME, text_time);
+        intent.putExtra(Constanta.RESULT_ADDRESS, text_location);
+        setResult(Constanta.RESULT_OK, intent);
+        finish();
     }
 }

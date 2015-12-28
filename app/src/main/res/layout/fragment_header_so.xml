@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".fragment.HeaderPOSFragment"
-    android:id="@+id/vg_fragment_header_pos">
+    android:id="@+id/vg_fragment_header_so">
 
     <EditText
         android:id="@+id/et_doc_no"
@@ -23,8 +23,7 @@
         android:layout_height="45dp"
         android:layout_below="@id/et_doc_no"
         android:layout_alignParentRight="true"
-        android:background="@drawable/button_date"
-        android:visibility="gone"/>
+        android:background="@drawable/button_date"/>
 
     <EditText
         android:id="@+id/et_doc_date"
@@ -35,8 +34,7 @@
         android:singleLine="true"
         android:editable="false"
         android:focusable="false"
-        android:hint="@string/hint_doc_date"
-        android:visibility="gone"/>
+        android:hint="@string/hint_doc_date"/>
 
     <EditText
         android:id="@+id/et_customer"

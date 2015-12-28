@@ -203,7 +203,6 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                         }
                         doHead.save();
                         actionPrint(doHead.docno);
-                        openPDf(doHead.docno);
                         tabLayout.getTabAt(0).select();
                     }
                 }).build();
@@ -242,15 +241,18 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     private void actionPrint(String title) {
         Rectangle rectangle = new Rectangle(216f, 720f);
         Document doc = new Document(rectangle, 36f, 72f, 108f, 180f); // pagesize,
+        File file = null;
 
         try {
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SIGMA";
+           /* String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SIGMA";
 
             File dir = new File(path);
             if(!dir.exists())
                 dir.mkdirs();
 
-            File file = new File(dir, title + ".pdf");
+            File file = new File(dir, title + ".pdf");*/
+
+            file = CommonUtil.getOutputMediaFile(title);
             FileOutputStream fOut = new FileOutputStream(file);
 
             PdfWriter docWriter = PdfWriter.getInstance(doc, fOut);
@@ -294,6 +296,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         finally
         {
             doc.close();
+            if (file != null)
+                openPDf(file);
         }
     }
 
@@ -325,12 +329,12 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         return pdfPCel;
     }
 
-    private void openPDf(String title) {
+    private void openPDf(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SIGMA";
+        /*String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SIGMA";
 
         File file = new File(path, title + ".pdf");
-
+*/
         intent.setDataAndType( Uri.fromFile(file), "application/pdf" );
         startActivity(intent);
     }

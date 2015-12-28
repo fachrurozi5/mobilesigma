@@ -225,11 +225,15 @@ public class CommonUtil {
 
     /** Create a file Uri for saving an image or video */
     public static Uri getOutputMediaFileUri(int type){
-        return Uri.fromFile(getOutputMediaFile(type));
+        return Uri.fromFile(getOutputMediaFile(type, ""));
+    }
+
+    public static File getOutputMediaFile(String title) {
+        return getOutputMediaFile(Constanta.MEDIA_TYPE_DOCUMENT_TITLE, title);
     }
 
     /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(int type) {
+    private static File getOutputMediaFile(int type, String title) {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
@@ -240,6 +244,7 @@ public class CommonUtil {
                 dirname = "Pictures";
                 break;
             case Constanta.MEDIA_TYPE_DOCUMENT :
+            case Constanta.MEDIA_TYPE_DOCUMENT_TITLE :
                 dirname = "Nota";
                 break;
             default:
@@ -260,7 +265,7 @@ public class CommonUtil {
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         File mediaFile;
         if (type == Constanta.MEDIA_TYPE_IMAGE) {
             Log.d(Constanta.TAG, mediaStorageDir.getPath());
@@ -272,6 +277,9 @@ public class CommonUtil {
         } else if (type == Constanta.MEDIA_TYPE_DOCUMENT) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "NOTA_" + timeStamp + ".pdf");
+        } else if (type == Constanta.MEDIA_TYPE_DOCUMENT_TITLE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "NOTA_" + title + ".pdf");
         } else {
             return null;
         }
