@@ -115,7 +115,7 @@
     <string name="title_activity_customer">Pilih Customer</string>
     <string name="id">ID.</string>
     <string name="name">Nama</string>
-    <string name="search">Cari Disini ...</string>
-    <string name="title_activity_sales_order">SalesOrderActivity</string>
+    <string name="search">Cari Disini …</string>
+    <string name="title_activity_sales_order">Sales Order</string>
     <string name="hint_customer">Customer</string>
 </resources>

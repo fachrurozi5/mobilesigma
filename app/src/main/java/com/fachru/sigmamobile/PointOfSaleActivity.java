@@ -141,7 +141,6 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
     @Override
     public void unSetDoHead() {
-
     }
 
     @Override

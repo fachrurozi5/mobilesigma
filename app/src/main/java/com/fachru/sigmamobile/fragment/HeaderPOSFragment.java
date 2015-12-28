@@ -214,9 +214,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         this.mListener = listener;
     }
 
-
-
-
     private void editDoHead(DoHead doHead) {
         salesman = doHead.salesman;
         outlet = doHead.outlet;

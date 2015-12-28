@@ -112,7 +112,14 @@
         <activity
             android:name=".SalesOrderActivity"
             android:label="@string/title_activity_sales_order"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:parentActivityName=".ChooseROActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fachru.sigmamobile.ChooseROActivity" />
+        </activity>
     </application>
 
 </manifest>
