@@ -74,12 +74,13 @@ public class AdapterDoHeadItem extends BaseAdapter {
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         if (view == null) {
-            view = mInflater.inflate(R.layout.item_so_header, null);
+            view = mInflater.inflate(R.layout.item_pos_header, null);
             holder = new Holder();
             holder.no = (TextView) view.findViewById(R.id.tv_item_no);
             holder.doc_no = (TextView) view.findViewById(R.id.tv_item_doc_no);
             holder.doc_date = (TextView) view.findViewById(R.id.tv_item_doc_date);
             holder.rute = (TextView) view.findViewById(R.id.tv_item_rute);
+            holder.tv_customer = (TextView) view.findViewById(R.id.tv_item_customer);
             holder.tv_salesman = (TextView) view.findViewById(R.id.tv_item_salesman);
             holder.tv_outlet = (TextView) view.findViewById(R.id.tv_item_outlet);
 
@@ -94,6 +95,7 @@ public class AdapterDoHeadItem extends BaseAdapter {
         holder.doc_no.setText(doHead.docno);
         holder.doc_date.setText(CommonUtil.dateToStringMedium(doHead.docdate));
         holder.rute.setText(doHead.rute);
+        holder.tv_customer.setText(doHead.customer.getName());
         holder.tv_salesman.setText(doHead.salesman.salesman_name);
         holder.tv_outlet.setText(doHead.outlet.outlet_name);
 
@@ -105,6 +107,7 @@ public class AdapterDoHeadItem extends BaseAdapter {
         TextView doc_no;
         TextView doc_date;
         TextView rute;
+        TextView tv_customer;
         TextView tv_salesman;
         TextView tv_outlet;
     }

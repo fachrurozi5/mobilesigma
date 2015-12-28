@@ -20,10 +20,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.fragment.DoneOrderFragment;
 import com.fachru.sigmamobile.fragment.HeaderPOSFragment;
-import com.fachru.sigmamobile.fragment.HeaderPOSFragment.OnSetDoHeadListener;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment.OnSetDoItemListener;
-import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
@@ -83,7 +82,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_order), true);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_order_product), false);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_order_view), false);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_order_done), false);
         tabLayout.setOnTabSelectedListener(this);
     }
 

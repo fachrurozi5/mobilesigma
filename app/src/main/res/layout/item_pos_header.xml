@@ -20,6 +20,10 @@
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:id="@+id/tv_item_customer"/>
+
+    <TextView style="@style/DefaultItem"
+        android:layout_width="150dp"
         android:id="@+id/tv_item_salesman"/>
 
     <TextView style="@style/DefaultItem"

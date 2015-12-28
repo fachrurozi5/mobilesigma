@@ -51,6 +51,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     /*
     * widget
     * */
+    protected View view;
     protected RelativeLayout layout;
     protected AutoCompleteTextView act_product;
     protected EditText et_product_price;
@@ -95,6 +96,10 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     double disc_nusantara = 0;
     double disc_principal = 0;
     boolean isUpdate = false;
+
+    /*
+    * mListener
+    * */
     private OnItemClickListener onActProductItemClicked;
     private OnItemLongClickListener onDoItemLongClicked;
     private TextWatcher qtyWatcher;
@@ -117,24 +122,9 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_point_of_sale, container, false);
-        layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_so);
-        act_product = (AutoCompleteTextView) view.findViewById(R.id.act_product);
-        et_product_price = (EditText) view.findViewById(R.id.et_product_price);
-        et_qty = (EditText) view.findViewById(R.id.et_qty);
-        et_disc_nusantara = (EditText) view.findViewById(R.id.et_disc_nusantara);
-        et_disc_nusantara_value = (EditText) view.findViewById(R.id.et_disc_nusantara_value);
-        et_disc_principal = (EditText) view.findViewById(R.id.et_disc_principal);
-        et_disc_principal_value = (EditText) view.findViewById(R.id.et_disc_principal_value);
-        et_sub_total = (EditText) view.findViewById(R.id.et_sub_total);
-        et_total = (EditText) view.findViewById(R.id.et_total);
-        lv_do_items = (ListView) view.findViewById(R.id.lv_do_items);
-        btn_add = (Button) view.findViewById(R.id.btn_add);
-        btn_edit = (Button) view.findViewById(R.id.btn_edit);
-        btn_del = (Button) view.findViewById(R.id.btn_delete);
-
+        view = inflater.inflate(R.layout.fragment_point_of_sale, container, false);
+        iniComp();
         initListener();
-
         et_qty.addTextChangedListener(qtyWatcher);
         et_disc_nusantara.addTextChangedListener(discNusantaraWatcher);
         et_disc_principal.addTextChangedListener(discPrincipalWatcher);
@@ -332,6 +322,23 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             }
         };
 
+    }
+
+    private void iniComp() {
+        layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_pos);
+        act_product = (AutoCompleteTextView) view.findViewById(R.id.act_product);
+        et_product_price = (EditText) view.findViewById(R.id.et_product_price);
+        et_qty = (EditText) view.findViewById(R.id.et_qty);
+        et_disc_nusantara = (EditText) view.findViewById(R.id.et_disc_nusantara);
+        et_disc_nusantara_value = (EditText) view.findViewById(R.id.et_disc_nusantara_value);
+        et_disc_principal = (EditText) view.findViewById(R.id.et_disc_principal);
+        et_disc_principal_value = (EditText) view.findViewById(R.id.et_disc_principal_value);
+        et_sub_total = (EditText) view.findViewById(R.id.et_sub_total);
+        et_total = (EditText) view.findViewById(R.id.et_total);
+        lv_do_items = (ListView) view.findViewById(R.id.lv_do_items);
+        btn_add = (Button) view.findViewById(R.id.btn_add);
+        btn_edit = (Button) view.findViewById(R.id.btn_edit);
+        btn_del = (Button) view.findViewById(R.id.btn_delete);
     }
 
     public void setOnDoItemListener(OnSetDoItemListener listener) {

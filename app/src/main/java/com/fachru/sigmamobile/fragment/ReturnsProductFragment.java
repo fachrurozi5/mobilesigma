@@ -53,7 +53,7 @@ public class ReturnsProductFragment extends Fragment
     protected ListView lv_returns_product;
 
     /*
-    * listener
+    * mListener
     * */
     protected OnItemLongClickListener onReturnsProductItemClick;
 

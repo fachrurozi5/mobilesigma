@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by fachru on 20/10/15.
@@ -34,6 +35,9 @@ public class DoHead extends Model {
     @Column(name = "grand_total")
     public long grand_total;
 
+    @Column(name = "Customer")
+    public Customer customer;
+
     @Column(name = "Salesman")
     public Salesman salesman;
 
@@ -47,35 +51,41 @@ public class DoHead extends Model {
         super();
     }
 
-    public DoHead(String docno, String rute, Salesman salesman, Outlet outlet) {
+    public DoHead(String docno, String rute, Customer customer, Salesman salesman, Outlet outlet) {
+        super();
         this.docno = docno;
         this.rute = rute;
+        this.customer = customer;
         this.salesman = salesman;
         this.outlet = outlet;
     }
 
-    public DoHead(String docno, String rute, Salesman salesman, Outlet outlet, boolean status) {
+    public DoHead(String docno, String rute, Customer customer, Salesman salesman, Outlet outlet, boolean status) {
+        super();
         this.docno = docno;
         this.rute = rute;
+        this.customer = customer;
         this.salesman = salesman;
         this.outlet = outlet;
         this.status = status;
     }
 
-    public DoHead(String docno, Date docdate, String rute, long total, long bonus, long grand_total, Salesman salesman, Outlet outlet, boolean status) {
+    public DoHead(String docno, Date docdate, String rute, long total, long bonus, long grand_total, Customer customer, Salesman salesman, Outlet outlet, boolean status) {
+        super();
         this.docno = docno;
         this.docdate = docdate;
         this.rute = rute;
         this.total = total;
         this.bonus = bonus;
         this.grand_total = grand_total;
+        this.customer = customer;
         this.salesman = salesman;
         this.outlet = outlet;
         this.status = status;
     }
 
     public void setDateFromString(String date) throws ParseException {
-        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy");
+        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         sf.setLenient(true);
         this.docdate = sf.parse(date);
     }
@@ -90,9 +100,9 @@ public class DoHead extends Model {
                 .execute();
     }
 
-    public static List<DoHead> allPending() {
+    public static List<DoHead> allPending(Customer customer) {
         return new Select().from(DoHead.class)
-                .where("status = ?", 0)
+                .where("status = ? and Customer = ?", 0, customer.getId())
                 .execute();
     }
 

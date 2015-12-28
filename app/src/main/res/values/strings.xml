@@ -93,7 +93,7 @@
     <string name="hint_input_bonus">BONUS</string>
     <string name="hint_input_grand_total">GRAND TOTAL</string>
     <string name="title_dialog_order">DO HEAD</string>
-    <string name="tab_order_view">View</string>
+    <string name="tab_order_done">PAID OFF</string>
     <string name="title_activity_sub_menu_osc">OSC</string>
     <string name="title_activity_osc">OSC</string>
     <string name="title_activity_choose_ro">Pilih RO</string>
@@ -116,4 +116,5 @@
     <string name="id">ID.</string>
     <string name="name">Nama</string>
     <string name="search">Cari Disini ...</string>
+    <string name="title_activity_sales_order">SalesOrderActivity</string>
 </resources>

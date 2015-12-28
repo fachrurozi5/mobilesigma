@@ -25,10 +25,10 @@
             android:value="sigma.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="2" />
+            android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="com.neosulusi.mobiledistribution.model.Product,com.neosulusi.mobiledistribution.model.Salesman,com.neosulusi.mobiledistribution.model.Outlet,com.neosulusi.mobiledistribution.model.DoHead,com.neosulusi.mobiledistribution.model.DoItem,com.fachru.sigmamobile.model.CameraActivity" />
+            android:value="             com.fachru.sigmamobile.model.Product,             com.fachru.sigmamobile.model.Salesman,             com.fachru.sigmamobile.model.Outlet,             com.fachru.sigmamobile.model.DoHead,             com.fachru.sigmamobile.model.DoItem,             com.fachru.sigmamobile.model.CameraActivity,             com.fachru.sigmamobile.model.Customer" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -109,6 +109,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fachru.sigmamobile.MainActivity" />
         </activity>
+        <activity
+            android:name=".SalesOrderActivity"
+            android:label="@string/title_activity_sales_order"></activity>
     </application>
 
 </manifest>

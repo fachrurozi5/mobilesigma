@@ -14,7 +14,7 @@ import retrofit.http.POST;
  */
 public interface CustomerApi {
 
-    @GET("customer")
+    @GET("customer/getcustomer/50")
     Call<List<Customer>> getCustomers();
 
     @POST("customer/create")

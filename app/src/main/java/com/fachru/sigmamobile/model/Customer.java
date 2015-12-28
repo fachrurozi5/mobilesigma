@@ -1,16 +1,9 @@
 package com.fachru.sigmamobile.model;
 
-import android.database.sqlite.SQLiteConstraintException;
-import android.util.Log;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
-import com.activeandroid.query.Update;
-import com.activeandroid.util.SQLiteUtils;
-import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -19,12 +12,12 @@ import java.util.List;
 /**
  * Created by fachru on 17/12/15.
  */
-@Table(name = "customer", id = "_id")
+@Table(name = "Customers")
 public class Customer extends Model{
 
     @SerializedName("CUSTID")
-    @Column(name = "id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    private String id;
+    @Column(name = "custid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    private String custid;
 
     @SerializedName("CUSTNAME")
     @Column(name = "name")
@@ -264,7 +257,7 @@ public class Customer extends Model{
 
     @SerializedName("DATECREATE")
     @Column(name = "created_at")
-    private Date created_at = new Date();
+    private Date created_at;
 
     @SerializedName("USRUPDATE")
     @Column(name = "updater")
@@ -272,7 +265,7 @@ public class Customer extends Model{
 
     @SerializedName("DATEUPDATE")
     @Column(name = "updated_at")
-    private Date updated_at = new Date();
+    private Date updated_at;
 
 
     public Customer() {
@@ -281,7 +274,7 @@ public class Customer extends Model{
 
     public  Customer(Builder builder) {
         super();
-        this.id = builder.id;
+        this.custid = builder.id;
         this.name = builder.name;
         this.csstatid1 = builder.csstatid1;
         this.csstatid2 = builder.csstatid2;
@@ -292,14 +285,17 @@ public class Customer extends Model{
         this.invadd2 = builder.invadd2;
         this.invadd3 = builder.invadd3;
         this.invadd4 = builder.invadd4;
+        this.invzip = builder.invzip;
+        this.created_at = builder.created_at;
+        this.updated_at = builder.updated_at;
     }
 
     public String getCustomerId() {
-        return id;
+        return custid;
     }
 
     public void setCustomerId(String id) {
-        this.id = id;
+        this.custid = id;
     }
 
     public String getName() {
@@ -984,6 +980,16 @@ public class Customer extends Model{
             return Builder.this;
         }
 
+        public Builder setCreate_at(Date create_at) {
+            this.created_at = create_at;
+            return Builder.this;
+        }
+
+        public Builder setUpdate_at(Date update_at) {
+            this.updated_at = update_at;
+            return Builder.this;
+        }
+
         public Customer builde() {
             return new Customer(Builder.this);
         }
@@ -1000,7 +1006,7 @@ public class Customer extends Model{
     @Override
     public String toString() {
         return "Customer{" +
-                "id='" + id + '\'' +
+                "custid='" + custid + '\'' +
                 ", name='" + name + '\'' +
                 ", csstatid1='" + csstatid1 + '\'' +
                 ", csstatid2='" + csstatid2 + '\'' +

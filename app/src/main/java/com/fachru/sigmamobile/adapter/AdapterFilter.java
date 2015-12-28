@@ -87,7 +87,9 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
 
-            String filterString = charSequence.toString().toLowerCase();
+            String filterString = "";
+            if (charSequence != null)
+                filterString = charSequence.toString().toLowerCase();
             final List<HashMap<String, String>> mList = new ArrayList<>();
             for (HashMap<String, String> map : datas) {
                 label1 = map.get(Constanta.SIMPLE_LIST_ITEM_2);
