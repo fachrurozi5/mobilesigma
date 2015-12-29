@@ -140,6 +140,7 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
 
         if (intent != null) {
             intent.putExtra(CustomerActivity.CUSTID, manager.getCustomer());
+            intent.putExtra(MainActivity.EMPLID, manager.getEmployee());
             startActivity(intent);
         }
     }

@@ -64,6 +64,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     protected long bonus = 0;
     protected long grand_total = 0;
     private long custid;
+    private long emplid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         initComp();
         Intent intent = getIntent();
         custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
+        emplid = intent.getLongExtra(MainActivity.EMPLID, -1);
         fragmentPosition(0);
     }
 
@@ -157,6 +159,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 fragment.setOnSetDoHeadListener(this);
                 Bundle bundle = new Bundle();
                 bundle.putLong(CustomerActivity.CUSTID, custid);
+                bundle.putLong(MainActivity.EMPLID, emplid);
                 fragment.setArguments(bundle);
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container, fragment, TAG_DO_HEAD).commit();

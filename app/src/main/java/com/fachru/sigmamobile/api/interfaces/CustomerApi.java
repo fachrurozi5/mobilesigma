@@ -1,4 +1,4 @@
-package com.fachru.sigmamobile.api;
+package com.fachru.sigmamobile.api.interfaces;
 
 import com.fachru.sigmamobile.model.Customer;
 

@@ -27,11 +27,11 @@ public class BootReceiver extends BroadcastReceiver {
             context.startService(serviceIntent);
             serviceIntent = new Intent(context, LocationTrackerService.class);
             context.startService(serviceIntent);
-            createNotification(context);
+//            createNotification(context);
         }
     }
 
-    private void createNotification(Context context) {
+    /*private void createNotification(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -48,5 +48,5 @@ public class BootReceiver extends BroadcastReceiver {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         manager.notify(0, notification);
-    }
+    }*/
 }

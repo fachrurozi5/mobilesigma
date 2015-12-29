@@ -131,9 +131,10 @@ public class CameraActivity extends AppCompatActivity
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                if (picturesPathList.size() != 0)
                 if (thisPosition != firstVisibleItem) {
                     thisPosition = firstVisibleItem;
+
                     PicturesPath path = (PicturesPath) listView.getItemAtPosition(thisPosition);
 
                     thisDate = CommonUtil.dateHelper(path.picture_date, Constanta.ID);

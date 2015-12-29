@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +26,10 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.adapter.ImageAdapter;
+import com.fachru.sigmamobile.controller.EmployeeController;
+import com.fachru.sigmamobile.controller.interfaces.OnEmployeeCallbackListener;
 import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Outlet;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.Salesman;
@@ -42,19 +46,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements OnItemClickListener, OnEmployeeCallbackListener{
 
+    public static final String EMPLID = "key_emplid";
     protected Context context = this;
     protected SessionManager sessionManager;
     private Intent serviceIntent;
     private SaveMyAppsService mService;
 
+    /*
+    * widget
+    * */
     protected Toolbar toolbar;
     protected GridView gridview;
     protected TextView text_time;
     protected TextView text_date;
     protected TextView text_location;
 
+    /*
+    * controller
+    * */
+    EmployeeController controller;
+
+    /*
+    * label
+    * */
     private double latitude = 0;
     private double longitude = 0;
 
@@ -105,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         sessionManager = new SessionManager(context);
         serviceIntent = new Intent(context, SaveMyAppsService.class);
@@ -114,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setLogo(R.drawable.ic_action_bar);
+
+        controller = new EmployeeController(this);
 
         if (savedInstanceState != null) {
             text_date.setText(savedInstanceState.getString(Constanta.RESULT_DATE));
@@ -138,7 +155,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         startService(new Intent(context, LocationTrackerService.class));
         startService(new Intent(context, SaveMyAppsService.class));
-        startService(new Intent(context, DateTimeService.class));
+//        startService(new Intent(context, DateTimeService.class));
+
+        controller.startFetch();
 
     }
 
@@ -353,5 +372,26 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     private void scanBarcode() {
         IntentIntegrator scanIntegrator = new IntentIntegrator(this);
         scanIntegrator.initiateScan();
+    }
+
+    @Override
+    public void onFetchProgress(Employee employee) {
+        Log.e(Constanta.TAG, employee.toString());
+        sessionManager.setEmployee(employee.getId());
+    }
+
+    @Override
+    public void onFetchStart() {
+        CommonUtil.showToast(getApplicationContext(), "FetchStart");
+    }
+
+    @Override
+    public void onFetchComplete() {
+        CommonUtil.showToast(getApplicationContext(), "FetchComplite");
+    }
+
+    @Override
+    public void onFetchFailed(Throwable t) {
+        Log.e(Constanta.TAG, "FetchFailed", t);
     }
 }

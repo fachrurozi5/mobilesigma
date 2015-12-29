@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.CustomerActivity;
+import com.fachru.sigmamobile.MainActivity;
 import com.fachru.sigmamobile.R;
 
 import java.text.ParseException;
@@ -37,6 +38,7 @@ import com.fachru.sigmamobile.adapter.AdapterFilter;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
+import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Outlet;
 import com.fachru.sigmamobile.model.Salesman;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
@@ -60,8 +62,9 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected RelativeLayout layout;
     protected EditText et_doc_no;
     protected EditText et_doc_date;
-    protected EditText et_rute;
+    protected EditText et_salesman;
     protected EditText et_customer;
+    protected EditText et_rute;
     protected AutoCompleteTextView act_salesman;
     protected AutoCompleteTextView act_outlet;
     protected Button btn_date_picker;
@@ -87,6 +90,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected Salesman salesman;
     protected Outlet outlet;
     protected Customer customer;
+    protected Employee employee;
 
     /*
     * list of object
@@ -112,6 +116,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         activity = getActivity();
         bundle = getArguments();
         customer = Customer.load(Customer.class, bundle.getLong(CustomerActivity.CUSTID));
+        employee = Employee.load(Employee.class, bundle.getLong(MainActivity.EMPLID));
         salesman = null;
         outlet = null;
         doHeads = new ArrayList<>();
@@ -142,6 +147,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         lv_do_head_items.setAdapter(adapterDoHeadItem);
 
         et_customer.setText(customer.getName());
+        et_salesman.setText(employee.name);
 
         setButtonEnable(btn_add);
 
@@ -152,8 +158,9 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_header_pos);
         et_doc_no = (EditText) view.findViewById(R.id.et_doc_no);
         et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
-        et_rute = (EditText) view.findViewById(R.id.et_rute);
+        et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
+        et_rute = (EditText) view.findViewById(R.id.et_rute);
         act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
         act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);
         btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);
