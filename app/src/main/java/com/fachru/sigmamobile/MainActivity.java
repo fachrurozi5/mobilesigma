@@ -33,9 +33,12 @@ import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Outlet;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.Salesman;
+import com.fachru.sigmamobile.model.WareHouseStock;
+import com.fachru.sigmamobile.service.CustomerIntentService;
 import com.fachru.sigmamobile.service.DateTimeService;
 import com.fachru.sigmamobile.service.LocationTrackerService;
 import com.fachru.sigmamobile.service.SaveMyAppsService;
+import com.fachru.sigmamobile.service.WarehouseStockIntentService;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
@@ -273,6 +276,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     private void actionAfterInstall() {
+
+        startActivity(new Intent(context, CustomerIntentService.class));
+        startActivity(new Intent(context, WarehouseStockIntentService.class));
 
         String[] salesmans = {
                 "Salesman 1", "Salesman 2"

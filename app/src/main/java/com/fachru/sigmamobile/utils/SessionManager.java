@@ -21,10 +21,27 @@ public class SessionManager {
     public static final String KEY_CUSTOMER = "key_customer";
     public static final String KEY_EMPLOYEE = "last_outlet";
 
+    /*
+    * service
+    * */
+    public static final String KEY_LOCATION_TRACKER_SERVICE = "key_location_tracker_service";
+
     public SessionManager(Context context) {
         this.context = context;
         preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = preferences.edit();
+    }
+
+    /*
+    * for service
+    * */
+    public void setLocationTrackerService(boolean b) {
+        editor.putBoolean(KEY_LOCATION_TRACKER_SERVICE, b);
+        editor.commit();
+    }
+
+    public boolean getLocationTrackerService() {
+        return preferences.getBoolean(KEY_LOCATION_TRACKER_SERVICE, false);
     }
 
     public void setAfterInstall(boolean b) {

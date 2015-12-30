@@ -1,4 +1,4 @@
-package com.fachru.sigmamobile.api;
+package com.fachru.sigmamobile.utils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

@@ -4,7 +4,12 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -1001,6 +1006,27 @@ public class Customer extends Model{
                 .from(Customer.class)
                 .orderBy("name ASC")
                 .execute();
+    }
+
+    public static Customer findOrCreateFromJson(JSONObject json) throws JSONException {
+        String custid = json.getString("CUSTID");
+        Customer existingCustomer = new Select().from(Customer.class).where("custid = ?", custid).executeSingle();
+        if (existingCustomer != null) {
+            return existingCustomer;
+        } else {
+            Customer customer = Customer.fromJson(json);
+            customer.save();
+            return customer;
+        }
+    }
+
+    public static Customer fromJson(JSONObject json) {
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls();
+        Gson gson = gsonBuilder.create();
+
+        return gson.fromJson(json.toString(), Customer.class);
     }
 
     @Override

@@ -94,6 +94,8 @@
         <service android:name=".service.LocationTrackerService" />
         <service android:name=".service.DateTimeService" />
         <service android:name=".service.SaveMyAppsService" />
+        <service android:name=".service.CustomerIntentService" />
+        <service android:name=".service.WarehouseStockIntentService" />
 
         <receiver
             android:name=".utils.BootReceiver"

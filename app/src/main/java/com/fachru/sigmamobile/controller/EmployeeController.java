@@ -25,14 +25,9 @@ public class EmployeeController {
 
     private OnEmployeeCallbackListener listener;
     private RestApiManager apiManager;
-    private Gson gson;
 
     public EmployeeController(OnEmployeeCallbackListener listener) {
         this.listener = listener;
-        GsonBuilder gsonBuilder = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .serializeNulls();
-        gson = gsonBuilder.create();
         apiManager = new RestApiManager();
     }
 
@@ -42,10 +37,6 @@ public class EmployeeController {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
-//                Log.d(Constanta.TAG, response.body());
-
-                /*Employee employee = gson.fromJson(response.body(), Employee.class);
-                employee.save();*/
 
                 try {
                     JSONObject object = new JSONObject(response.body());
@@ -53,8 +44,6 @@ public class EmployeeController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
 
                 listener.onFetchComplete();
             }
