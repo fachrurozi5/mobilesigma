@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        multiDexEnabled true
+        /*multiDexEnabled true*/
         applicationId "com.fachru.sigmamobile"
         minSdkVersion 16
         targetSdkVersion 23
@@ -13,11 +13,11 @@ android {
         versionName "1.0"
     }
 
-    dexOptions {
+    /*dexOptions {
         incremental true
         javaMaxHeapSize "2048M"
         jumboMode = true
-    }
+    }*/
 
     buildTypes {
         release {
@@ -47,7 +47,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v13:23.1.1'
-    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'com.wdullaer:materialdatetimepicker:1.5.4'
     compile('com.afollestad.material-dialogs:core:0.8.4.2@aar') { transitive = true }
