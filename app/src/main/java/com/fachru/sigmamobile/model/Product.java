@@ -3,7 +3,13 @@ package com.fachru.sigmamobile.model;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -11,111 +17,166 @@ import java.util.Date;
  * Created by fachru on 31/12/15.
  */
 @Table(name = "Products")
-public class Product extends Model{
+public class Product extends Model {
 
     @SerializedName("PRODID")
+    @Column(name = "product_id")
     public String product_id;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("PRODNAME1")
+    @Column(name = "name")
     public String name;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("ARTICLEID")
+    @Column(name = "articleid")
     public String articleid;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("PRSTATID1")
+    @Column(name = "prstatid1")
     public String prstatid1;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("PRSTATID2")
+    @Column(name = "prstatid2")
     public String prstatid2;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("PRODTYPE")
+    @Column(name = "type")
     public int type;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("UNITID")
+    @Column(name = "unitid")
     public String unitid;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("UNITPO")
+    @Column(name = "unitpo")
     public String unitpo;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("UNITSELL")
+    @Column(name = "unitsell")
     public String unitsell;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("unitkecil")
+    @Column(name = "unitkecil")
     public String unitkecil;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("UNITCONV")
+    @Column(name = "unitconv")
     public double unitconv;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("SELLCURRID")
+    @Column(name = "sellcurrid")
     public String sellcurrid;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("SELLPRC")
+    @Column(name = "sellprice")
     public double sellprice;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("DISCOUNT")
+    @Column(name = "discount")
     public double discount;
-    @SerializedName("PRODID")
-    @Column(name = "")
-    public String suppid;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("SUPPID")
+    @Column(name = "supplier_id")
+    public String supplier_id;
+
+    @SerializedName("LOCATION")
+    @Column(name = "location")
     public String location;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("WEIGHT")
+    @Column(name = "wight")
     public double weight;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("VOLUME")
+    @Column(name = "volume")
     public double volume;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("ACCIDCOGS")
+    @Column(name = "accidcogs")
     public String accidcogs;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("ACCIDINV")
+    @Column(name = "accidinv")
     public String accidinv;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("ACCIDSLS")
+    @Column(name = "accidsls")
     public String accidsls;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("accidslsrt")
+    @Column(name = "accidslsrt")
     public String accidslsrt;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("EMPID")
+    @Column(name = "empid")
     public String empid;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("ABC")
+    @Column(name = "abc")
     public String abc;
-    @SerializedName("PRODID")
+
+    @SerializedName("FMR")
     @Column(name = "")
     public String fmr;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("BASEPRICE")
+    @Column(name = "baseprice")
     public double baseprice;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("OLDPRICE")
+    @Column(name = "oldprice")
     public double oldprice;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("TESTPRICE")
+    @Column(name = "testprice")
     public double testprice;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("INACTIVE")
+    @Column(name = "inactive")
     public int inactive;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("EV_EVOUCHER")
+    @Column(name = "ev_evoucher")
     public String ev_evoucher;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("USRCREATE")
+    @Column(name = "creator")
     public String creator;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("DATECREATE")
+    @Column(name = "created_at")
     public Date created_at;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("USRUPDATE")
+    @Column(name = "updator")
     public String updator;
-    @SerializedName("PRODID")
-    @Column(name = "")
+
+    @SerializedName("USRUPDATE")
+    @Column(name = "updated_at")
     public Date updated_at;
 
     public Product() {
         super();
+    }
+
+    public static Product findOrCreateFromJson(JSONObject json) throws JSONException {
+        String product_id = json.getString("PRODID");
+        Product existingProduct = new Select().from(Product.class).where("product_id = ?", product_id).executeSingle();
+        if (existingProduct != null) {
+            return existingProduct;
+        } else {
+            Product product = Product.fromJson(json);
+            product.save();
+            return product;
+        }
+    }
+
+    public static Product fromJson(JSONObject json) {
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls();
+        Gson gson = gsonBuilder.create();
+
+        return gson.fromJson(json.toString(), Product.class);
     }
 }

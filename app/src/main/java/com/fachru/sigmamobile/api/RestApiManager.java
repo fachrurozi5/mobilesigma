@@ -2,6 +2,7 @@ package com.fachru.sigmamobile.api;
 
 import com.fachru.sigmamobile.api.interfaces.CustomerApi;
 import com.fachru.sigmamobile.api.interfaces.EmployeeApi;
+import com.fachru.sigmamobile.api.interfaces.ProductApi;
 import com.fachru.sigmamobile.api.interfaces.WarehouseStockApi;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.StringDesirializer;
@@ -18,6 +19,7 @@ public class RestApiManager {
     private CustomerApi customerApi;
     private EmployeeApi employeeApi;
     private WarehouseStockApi warehouseStockApi;
+    private ProductApi productApi;
     private GsonBuilder builder;
 
     public RestApiManager() {
@@ -64,6 +66,19 @@ public class RestApiManager {
         }
 
         return warehouseStockApi;
+    }
+
+    /*
+    * Product API
+    * */
+    public ProductApi getProduct() {
+        if (productApi == null) {
+            builder.registerTypeAdapter(String.class, new StringDesirializer());
+
+            productApi = retrofit().create(ProductApi.class);
+        }
+
+        return productApi;
     }
 
     private Retrofit retrofit() {
