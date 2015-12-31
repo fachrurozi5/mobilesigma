@@ -23,7 +23,7 @@
         android:layout_height="45dp"
         android:layout_below="@id/et_doc_no"
         android:layout_alignParentRight="true"
-        android:background="@drawable/button_date"/>
+        android:background="@drawable/button_date" />
 
     <EditText
         android:id="@+id/et_doc_date"
@@ -47,10 +47,20 @@
         android:hint="@string/hint_customer"/>
 
     <EditText
-        android:id="@+id/et_rute"
+        android:id="@+id/et_salesman"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_customer"
+        android:singleLine="true"
+        android:editable="false"
+        android:focusable="false"
+        android:hint="@string/hint_salesman"/>
+
+    <EditText
+        android:id="@+id/et_rute"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_salesman"
         android:singleLine="true"
         android:hint="@string/hint_rute"/>
 
@@ -60,7 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_rute"
         android:singleLine="true"
-        android:hint="@string/hint_salesman"/>
+        android:hint="@string/hint_salesman"
+        android:visibility="gone"/>
 
     <AutoCompleteTextView
         android:id="@+id/act_outlet"
@@ -68,7 +79,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/act_salesman"
         android:singleLine="true"
-        android:hint="@string/hint_outlet"/>
+        android:hint="@string/hint_outlet"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_add"

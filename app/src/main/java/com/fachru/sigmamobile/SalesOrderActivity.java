@@ -1,5 +1,6 @@
 package com.fachru.sigmamobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
@@ -34,6 +35,8 @@ public class SalesOrderActivity extends AppCompatActivity implements OnTabSelect
     * */
     protected Toolbar toolbar;
     protected TabLayout tabLayout;
+    private long custid;
+    private long emplid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,9 @@ public class SalesOrderActivity extends AppCompatActivity implements OnTabSelect
         initComp();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent intent = getIntent();
+        custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
+        emplid = intent.getLongExtra(MainActivity.EMPLID, -1);
         fragmentPosition(0);
     }
 
@@ -82,6 +88,10 @@ public class SalesOrderActivity extends AppCompatActivity implements OnTabSelect
         switch (position) {
             case 0:
                 fragment = new HeaderSOFragment();
+                Bundle bundle = new Bundle();
+                bundle.putLong(CustomerActivity.CUSTID, custid);
+                bundle.putLong(MainActivity.EMPLID, emplid);
+                fragment.setArguments(bundle);
                 break;
             case 1:
                 SalesOrderFragment salesOrderFragment = new SalesOrderFragment();

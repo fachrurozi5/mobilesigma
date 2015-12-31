@@ -44,9 +44,10 @@
         android:layout_below="@id/et_product_price"
         android:paddingLeft="16dp"
         android:inputType="numberDecimal"
-        android:hint="@string/hint_disc"/>
+        android:hint="@string/hint_disc"
+        android:visibility="gone"/>
 
-    <EditText
+    <EditText android:visibility="gone"
         android:id="@+id/et_disc_nusantara_value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -57,7 +58,7 @@
         android:layout_toRightOf="@id/et_disc_nusantara"
         android:hint="@string/hint_disc_nusantara_value"/>
 
-    <EditText
+    <EditText android:visibility="gone"
         android:id="@+id/et_disc_principal"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
         android:inputType="numberDecimal"
         android:hint="@string/hint_disc"/>
 
-    <EditText
+    <EditText android:visibility="gone"
         android:id="@+id/et_disc_principal_value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -177,7 +178,7 @@
                     android:layout_gravity="center"
                     android:text="@string/jumlah" />
 
-                <LinearLayout
+                <LinearLayout android:visibility="gone"
                     android:layout_width="152dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
@@ -212,7 +213,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <LinearLayout android:visibility="gone"
                     android:layout_width="152dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"

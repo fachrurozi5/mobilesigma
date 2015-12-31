@@ -1,4 +1,4 @@
-package com.fachru.sigmamobile.model;
+package com.fachru.sigmamobile.model.model;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;

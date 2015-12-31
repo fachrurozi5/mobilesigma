@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapter.AdapterDoHeadItem;
-import com.fachru.sigmamobile.model.DoHead;
+import com.fachru.sigmamobile.model.model.DoHead;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -27,9 +27,9 @@ import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapter.AdapterDoItem;
 import com.fachru.sigmamobile.adapter.AdapterFilter;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoItemListener;
-import com.fachru.sigmamobile.model.DoHead;
-import com.fachru.sigmamobile.model.DoItem;
-import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.model.DoHead;
+import com.fachru.sigmamobile.model.model.DoItem;
+import com.fachru.sigmamobile.model.model.Product;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -130,7 +130,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_point_of_sale, container, false);
+        view = inflater.inflate(R.layout.fragment_sales_order, container, false);
         iniComp();
         initListener();
         et_qty.addTextChangedListener(qtyWatcher);

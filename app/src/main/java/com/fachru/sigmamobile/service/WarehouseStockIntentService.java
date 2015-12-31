@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.model.WareHouseStock;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -11,6 +12,11 @@ import com.fachru.sigmamobile.utils.Constanta;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -41,12 +47,10 @@ public class WarehouseStockIntentService extends IntentService{
                             if (o instanceof JSONArray) {
                                 JSONArray jsonArray = jsonObject.getJSONArray(Constanta.TAG_DATA);
                                 for (int i = 0; i < jsonArray.length(); i++) {
-                                    WareHouseStock wareHouseStock = WareHouseStock.findOrCreateFromJson(jsonArray.getJSONObject(i));
-                                    wareHouseStock.save();
+                                    WareHouseStock.findOrCreateFromJson(jsonArray.getJSONObject(i));
                                 }
                             } else {
-                                WareHouseStock wareHouseStock = WareHouseStock.findOrCreateFromJson(jsonObject.getJSONObject(Constanta.TAG_DATA));
-                                wareHouseStock.save();
+                                WareHouseStock.findOrCreateFromJson(jsonObject.getJSONObject(Constanta.TAG_DATA));
                             }
                         } else {
                             Log.d(Constanta.TAG, jsonObject.getString(Constanta.TAG_MESSAGE));

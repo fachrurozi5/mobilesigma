@@ -29,7 +29,7 @@ public class CustomerIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         RestApiManager apiManager = new RestApiManager();
-        Call<String> call = apiManager.getCustomerApi().getCustomers();
+        Call<String> call = apiManager.getCustomerApi().Records();
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {

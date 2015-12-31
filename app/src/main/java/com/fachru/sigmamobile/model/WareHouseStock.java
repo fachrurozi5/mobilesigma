@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by fachru on 30/12/15.
  */
@@ -67,10 +69,14 @@ public class WareHouseStock extends Model {
 
     @SerializedName("TRANSTYPE")
     @Column(name = "transtype")
-    public int transtype;
+    public String transtype;
 
     public WareHouseStock() {
         super();
+    }
+
+    public static List<WareHouseStock> getAll() {
+        return new Select().from(WareHouseStock.class).execute();
     }
 
     public static WareHouseStock findOrCreateFromJson(JSONObject json) throws JSONException {
@@ -92,5 +98,24 @@ public class WareHouseStock extends Model {
         Gson gson = gsonBuilder.create();
 
         return gson.fromJson(json.toString(), WareHouseStock.class);
+    }
+
+    @Override
+    public String toString() {
+        return "WareHouseStock{" +
+                "whid='" + whid + '\'' +
+                ", product_id='" + product_id + '\'' +
+                ", prstatid1='" + prstatid1 + '\'' +
+                ", inn=" + inn +
+                ", out=" + out +
+                ", balance=" + balance +
+                ", balance2=" + balance2 +
+                ", reserved=" + reserved +
+                ", soo=" + soo +
+                ", cor=" + cor +
+                ", bor=" + bor +
+                ", averege=" + averege +
+                ", transtype=" + transtype +
+                '}';
     }
 }

@@ -1,9 +1,10 @@
-package com.fachru.sigmamobile.model;
+package com.fachru.sigmamobile.model.model;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.fachru.sigmamobile.model.Customer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

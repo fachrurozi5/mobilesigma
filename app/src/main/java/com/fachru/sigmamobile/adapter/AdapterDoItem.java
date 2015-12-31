@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
-import com.fachru.sigmamobile.model.DoItem;
+import com.fachru.sigmamobile.model.model.DoItem;
 import com.fachru.sigmamobile.utils.CommonUtil;
 
 import java.util.List;

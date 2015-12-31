@@ -28,17 +28,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.adapter.ImageAdapter;
 import com.fachru.sigmamobile.controller.EmployeeController;
 import com.fachru.sigmamobile.controller.interfaces.OnEmployeeCallbackListener;
-import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Employee;
-import com.fachru.sigmamobile.model.Outlet;
-import com.fachru.sigmamobile.model.Product;
-import com.fachru.sigmamobile.model.Salesman;
-import com.fachru.sigmamobile.model.WareHouseStock;
 import com.fachru.sigmamobile.service.CustomerIntentService;
-import com.fachru.sigmamobile.service.DateTimeService;
 import com.fachru.sigmamobile.service.LocationTrackerService;
 import com.fachru.sigmamobile.service.SaveMyAppsService;
-import com.fachru.sigmamobile.service.WarehouseStockIntentService;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
@@ -149,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         if (sessionManager.getAffterInstall()) {
             actionAfterInstall();
-            sessionManager.setAfterInstall(false);
+
         }
 
         if (!CommonUtil.isLocationOn(context)) {
@@ -158,9 +151,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         startService(new Intent(context, LocationTrackerService.class));
         startService(new Intent(context, SaveMyAppsService.class));
-//        startService(new Intent(context, DateTimeService.class));
 
         controller.startFetch();
+
+
+//        startService(new Intent(context, WarehouseStockIntentService.class));
 
     }
 
@@ -276,59 +271,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     private void actionAfterInstall() {
-
-        startActivity(new Intent(context, CustomerIntentService.class));
-        startActivity(new Intent(context, WarehouseStockIntentService.class));
-
-        String[] salesmans = {
-                "Salesman 1", "Salesman 2"
-        };
-
-        String[] outlets = {
-                "Outlet 1", "Outlet 2"
-        };
-
-        String[] product = {
-                "Ekonomi Sabun Cream Lemon 560G",
-                "A Cotton Buds Reguler 100Pcs",
-                "Kapal Api Kopi Special 65G",
-                "Pledge Furniture Polish Liquid Lemon 450ML",
-                "Ambi Pur Car Pink Blossom Started Kid 7ML",
-                "Bagus Zipper Bag",
-                "Pop Mie Soto Ayam",
-                "Lapasta Barbeque Pedas 57G",
-                "Lee Kum Kee Panda Tiram 225G",
-                "Mama Suka Tepung Roti 100G",
-                "Gulaku Gula Tebu Premium 1KG"
-
-        };
-
-        long[] prodcut_price = {
-                5700,
-                6900,
-                4900,
-                23900,
-                54500,
-                36700,
-                4550,
-                3300,
-                22200,
-                6000,
-                13500
-        };
-
-        for (int i=0; i < salesmans.length; i++) {
-            new Salesman("SO00" + (i+1), salesmans[i]).save();
-        }
-
-        for (int i=0; i < outlets.length; i++) {
-            new Outlet("OT00" + (i+1), outlets[i]).save();
-        }
-
-        for (int i=0; i < product.length; i++) {
-            new Product("PRD" + (i+1), product[i], prodcut_price[i], 50).save();
-        }
-
+        startService(new Intent(context, CustomerIntentService.class));
+        sessionManager.setAfterInstall(false);
     }
 
     private void turnGPSOn(){
@@ -388,12 +332,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public void onFetchStart() {
-        CommonUtil.showToast(getApplicationContext(), "FetchStart");
     }
 
     @Override
     public void onFetchComplete() {
-        CommonUtil.showToast(getApplicationContext(), "FetchComplite");
     }
 
     @Override

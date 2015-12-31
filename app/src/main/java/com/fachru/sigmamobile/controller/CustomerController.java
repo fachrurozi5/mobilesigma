@@ -5,7 +5,6 @@ import android.util.Log;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.controller.interfaces.OnCustomerCallbackListener;
 import com.fachru.sigmamobile.model.Customer;
-import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 
 import org.json.JSONArray;
@@ -37,7 +36,7 @@ public class CustomerController {
 
     public void startFetching() {
         listener.onFetchStart();
-        Call<String> call = apiManager.getCustomerApi().getCustomers();
+        Call<String> call = apiManager.getCustomerApi().Records();
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
@@ -73,7 +72,7 @@ public class CustomerController {
     }
 
     public void startCreating(Customer customer) {
-        Call<String> call = apiManager.getCustomerApi().setCustomer(customer);
+        Call<String> call = apiManager.getCustomerApi().store(customer);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
