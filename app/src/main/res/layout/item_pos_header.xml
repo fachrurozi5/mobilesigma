@@ -29,6 +29,7 @@
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
         android:layout_marginRight="0dp"
-        android:id="@+id/tv_item_outlet"/>
+        android:id="@+id/tv_item_outlet"
+        android:visibility="gone"/>
 
 </LinearLayout>

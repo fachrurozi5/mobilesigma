@@ -32,11 +32,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.fachru.sigmamobile.adapter.AdapterDoHeadItem;
+import com.fachru.sigmamobile.adapter.AdapterDoHead;
+import com.fachru.sigmamobile.adapter.adapter.AdapterDoHeadItem;
 import com.fachru.sigmamobile.adapter.AdapterFilter;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.Customer;
-import com.fachru.sigmamobile.model.model.DoHead;
+import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.model.Outlet;
 import com.fachru.sigmamobile.model.model.Salesman;
@@ -64,8 +65,8 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected EditText et_salesman;
     protected EditText et_customer;
     protected EditText et_rute;
-    protected AutoCompleteTextView act_salesman;
-    protected AutoCompleteTextView act_outlet;
+    /*protected AutoCompleteTextView act_salesman;
+    protected AutoCompleteTextView act_outlet;*/
     protected Button btn_date_picker;
     protected Button btn_add;
     protected Button btn_edit;
@@ -86,8 +87,8 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     * plain old data object
     * */
     protected DoHead doHead;
-    protected Salesman salesman;
-    protected Outlet outlet;
+    /*protected Salesman salesman;
+    protected Outlet outlet;*/
     protected Customer customer;
     protected Employee employee;
 
@@ -99,9 +100,9 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     /*
     * costum adapter
     * */
-    protected AdapterFilter salesmanFilter;
-    protected AdapterFilter outletFilter;
-    protected AdapterDoHeadItem adapterDoHeadItem;
+    /*protected AdapterFilter salesmanFilter;
+    protected AdapterFilter outletFilter;*/
+    private AdapterDoHead adapterDoHead;
 
     /*
     * label
@@ -116,14 +117,21 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         bundle = getArguments();
         customer = Customer.load(Customer.class, bundle.getLong(CustomerActivity.CUSTID));
         employee = Employee.load(Employee.class, bundle.getLong(MainActivity.EMPLID));
-        salesman = null;
+        /*salesman = null;
         outlet = null;
         doHeads = new ArrayList<>();
         if (DoHead.allPending(customer).size() > 0)
             doHeads = DoHead.allPending(customer);
         salesmanFilter = new AdapterFilter(activity, Salesman.toListHashMap());
-        outletFilter = new AdapterFilter(activity, Outlet.toListHashMap());
-        adapterDoHeadItem = new AdapterDoHeadItem(activity, doHeads);
+        outletFilter = new AdapterFilter(activity, Outlet.toListHashMap());*/
+
+        doHeads = new ArrayList<>();
+
+        if (DoHead.getAll().size() > 0)
+            doHeads = DoHead.getAll();
+
+        adapterDoHead = new AdapterDoHead(getContext(), doHeads);
+
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
     }
@@ -134,16 +142,18 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         initComp();
         initListener();
         lv_do_head_items.setOnItemLongClickListener(onDoHeadLongClicked);
-        act_salesman.setOnItemClickListener(onSalesmanClicked);
-        act_outlet.setOnItemClickListener(onOutletClicked);
+        /*act_salesman.setOnItemClickListener(onSalesmanClicked);
+        act_outlet.setOnItemClickListener(onOutletClicked);*/
         btn_date_picker.setOnClickListener(this);
         btn_add.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
         btn_del.setOnClickListener(this);
 
-        act_salesman.setAdapter(salesmanFilter);
+        /*act_salesman.setAdapter(salesmanFilter);
         act_outlet.setAdapter(outletFilter);
-        lv_do_head_items.setAdapter(adapterDoHeadItem);
+        lv_do_head_items.setAdapter(adapterDoHeadItem);*/
+
+        lv_do_head_items.setAdapter(adapterDoHead);
 
         et_customer.setText(customer.getName());
         et_salesman.setText(employee.name);
@@ -160,8 +170,8 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
         et_rute = (EditText) view.findViewById(R.id.et_rute);
-        act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
-        act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);
+        /*act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
+        act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);*/
         btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
@@ -221,15 +231,20 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     }
 
     private void editDoHead(DoHead doHead) {
-        salesman = doHead.salesman;
+        /*salesman = doHead.salesman;
         outlet = doHead.outlet;
-        customer = doHead.customer;
-        et_doc_no.setText(doHead.docno);
-        et_doc_date.setText(CommonUtil.dateToStringMedium(doHead.docdate));
-        et_rute.setText(doHead.rute);
-        act_salesman.setText(doHead.salesman.salesman_name);
-        act_outlet.setText(doHead.outlet.outlet_name);
-        et_customer.setText(doHead.customer.getName());
+        customer = doHead.customer;*/
+
+        customer = Customer.getCustomer(doHead.custid);
+        employee = Employee.getEmployee(doHead.empid);
+
+        et_doc_no.setText(doHead.doc_no);
+        et_doc_date.setText(doHead.getDocDate());
+        /*et_rute.setText(doHead.rute);*/
+        /*act_salesman.setText(doHead.salesman.salesman_name);
+        act_outlet.setText(doHead.outlet.outlet_name);*/
+        et_customer.setText(customer.getName());
+        et_salesman.setText(employee.name);
         disableForm(layout);
         setButtonDisable(btn_date_picker);
     }
@@ -237,23 +252,16 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     protected void actionAdd() {
         if (!errorChecked()) {
-            DoHead doHead = new DoHead(
-                    et_doc_no.getText().toString(),
-                    new Date(),
-                    et_rute.getText().toString(),
-                    customer,
-                    salesman,
-                    outlet,
-                    false
-            );
-            /*try {
-                doHead.setDateFromString(et_doc_date.getText().toString());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }*/
-            long status = doHead.save();
+            long status = new DoHead.Builder()
+                    .setDocNo(et_doc_no.getText().toString())
+                    .setDocDate(new Date())
+                    .setCustid(et_customer.getText().toString())
+                    .setCustid(customer.getCustomerId())
+                    .setEmpid(employee.employee_id)
+                    .build()
+                    .save();
             if (status != -1) {
-                adapterDoHeadItem.add(doHead);
+                adapterDoHead.add(doHead);
                 clearForm(layout);
             } else {
                 et_doc_no.setError(getString(R.string.error_input_doc_no_duplicate));
@@ -276,13 +284,17 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected void actionUpdate() {
         if (!errorChecked()) {
             try {
-                doHead.setDateFromString(et_doc_date.getText().toString());
+                /*doHead.setDateFromString(et_doc_date.getText().toString());
                 doHead.rute = et_rute.getText().toString();
                 doHead.salesman = salesman;
                 doHead.outlet = outlet;
                 doHead.customer = customer;
-                doHead.save();
-                adapterDoHeadItem.set(doHead);
+                doHead.save();*/
+                doHead.custid = customer.getCustomerId();
+                doHead.empid = employee.employee_id;
+                doHead.setDateFromString(et_doc_date.getText().toString());
+
+                adapterDoHead.set(doHead);
                 onCancelOrAfterEdit();
                 setButtonEnable(btn_add);
                 clearForm(layout);
@@ -295,13 +307,13 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     protected void actionDelete() {
         new MaterialDialog.Builder(activity)
-                .content(doHead.docno + " akan dihapus dari dohead ?")
+                .content(doHead.doc_no + " akan dihapus dari dohead ?")
                 .positiveText(R.string.agree)
                 .negativeText(R.string.disagree)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        adapterDoHeadItem.delete(doHead);
+                        adapterDoHead.delete(doHead);
                         doHead.delete();
                         clearForm(layout);
                         onCancelOrAfterEdit();
@@ -319,7 +331,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
     @Override
     protected void initListener() {
-        onSalesmanClicked = new OnItemClickListener() {
+        /*onSalesmanClicked = new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
@@ -338,7 +350,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 et_doc_no.requestFocus();
                 imm.hideSoftInputFromWindow(et_doc_no.getWindowToken(), 0);
             }
-        };
+        };*/
 
         onDoHeadLongClicked = new OnItemLongClickListener() {
             @Override
@@ -353,8 +365,8 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
     private void onCancelOrAfterEdit() {
         doHead = null;
-        salesman = null;
-        outlet = null;
+        /*salesman = null;
+        outlet = null;*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             btn_add.setBackground(getResources().getDrawable(R.drawable.button_add, activity.getTheme()));
             btn_edit.setBackground(getResources().getDrawable(R.drawable.button_edit, activity.getTheme()));
@@ -384,7 +396,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 et_doc_date.getText() == null) {
             et_doc_date.setError(getString(R.string.error_input_doc_date));
             return true;
-        }*/ else if (et_rute.getText().toString().equals("") ||
+        } else if (et_rute.getText().toString().equals("") ||
                 et_rute.getText() == null) {
             et_rute.setError(getString(R.string.error_input_rute));
             return true;
@@ -394,7 +406,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         } else if (outlet == null) {
             act_outlet.setError(getString(R.string.error_input_outlet));
             return true;
-        } else {
+        }*/ else {
             return false;
         }
     }
@@ -428,9 +440,10 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected void clearForm(ViewGroup group) {
         super.clearForm(group);
         doHead = null;
-        salesman = null;
-        outlet = null;
+        /*salesman = null;
+        outlet = null;*/
         et_customer.setText(customer.getName());
+        et_salesman.setText(employee.employee_id);
         et_doc_no.requestFocus();
         imm.hideSoftInputFromWindow(et_doc_no.getWindowToken(), 0);
     }

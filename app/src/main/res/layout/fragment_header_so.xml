@@ -138,7 +138,8 @@
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="100dp"
-                    android:text="Rute" />
+                    android:text="Rute"
+                    android:visibility="gone"/>
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
@@ -151,7 +152,8 @@
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="fill_parent"
                     android:layout_marginRight="0dp"
-                    android:text="Outlet"/>
+                    android:text="Outlet"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

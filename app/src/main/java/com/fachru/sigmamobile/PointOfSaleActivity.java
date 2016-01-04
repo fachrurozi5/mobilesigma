@@ -22,7 +22,7 @@ import com.fachru.sigmamobile.fragment.HeaderPOSFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment.OnSetDoItemListener;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
-import com.fachru.sigmamobile.model.model.DoHead;
+import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.model.DoItem;
 import com.fachru.sigmamobile.model.model.Product;
 import com.fachru.sigmamobile.utils.CommonUtil;
@@ -108,10 +108,11 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
             return true;
         } else if (id == R.id.action_done) {
-            for(DoItem doItem : doHead.doItems())
+            // TODO:Hitung sub total
+            /*for(DoItem doItem : doHead.doItems())
             {
                 total += doItem.sub_total;
-            }
+            }*/
             showDialogOrder();
         }
 
@@ -168,7 +169,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 orderFragment.setOnDoItemListener(this);
                 if (doHead != null) {
                     bundle = new Bundle();
-                    bundle.putString(Constanta.KEY_DOC_NO, doHead.docno);
+                    bundle.putString(Constanta.KEY_DOC_NO, doHead.doc_no);
                     orderFragment.setArguments(bundle);
                 }
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -193,7 +194,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        doHead.total = total;
+                        // TODO:Hitung grand total dan print nota
+                        /*doHead.total = total;
                         doHead.bonus = bonus;
                         doHead.grand_total = grand_total;
                         doHead.status = true;
@@ -203,8 +205,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                             product.save();
                         }
                         doHead.save();
-                        actionPrint(doHead.docno);
-                        tabLayout.getTabAt(0).select();
+                        actionPrint(doHead.doc_no);
+                        tabLayout.getTabAt(0).select();*/
                     }
                 }).build();
         EditText et_total = (EditText) dialog.getCustomView().findViewById(R.id.et_total);
@@ -245,13 +247,6 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         File file = null;
 
         try {
-           /* String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SIGMA";
-
-            File dir = new File(path);
-            if(!dir.exists())
-                dir.mkdirs();
-
-            File file = new File(dir, title + ".pdf");*/
 
             file = CommonUtil.getOutputMediaFile(title);
             FileOutputStream fOut = new FileOutputStream(file);
@@ -266,7 +261,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
             PdfPTable table = createTable(columnWidths, 150f, font);
 
-            for (DoItem item : doHead.doItems()) {
+            // TODO:Perbaiki Cell di pdf
+            /*for (DoItem item : doHead.doItems()) {
                 table.addCell(createCell(item.product.product_id, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(item.product.product_name, font, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
                 table.addCell(createCell("PCS", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
@@ -285,7 +281,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
             table.addCell(createCell("PPN(10%) :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
             table.addCell(createCell(CommonUtil.priceFormat((doHead.total * 10) / 100), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             table.addCell(createCell("Grand Total :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(doHead.grand_total + ((doHead.total * 10) / 100)), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(doHead.grand_total + ((doHead.total * 10) / 100)), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));*/
 
             table.writeSelectedRows(0, -1, doc.leftMargin(), 650, docWriter.getDirectContent());
             
@@ -332,10 +328,6 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
     private void openPDf(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        /*String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SIGMA";
-
-        File file = new File(path, title + ".pdf");
-*/
         intent.setDataAndType( Uri.fromFile(file), "application/pdf" );
         startActivity(intent);
     }

@@ -15,11 +15,11 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:largeHeap="true"
         android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
         android:icon="@mipmap/sigma_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
@@ -30,12 +30,7 @@
             android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="
-            com.fachru.sigmamobile.model.Product,
-            com.fachru.sigmamobile.model.PicturesPath,
-            com.fachru.sigmamobile.model.Customer,
-            com.fachru.sigmamobile.model.Employee,
-            com.fachru.sigmamobile.model.WareHouseStock" />
+            android:value="             com.fachru.sigmamobile.model.DoHead,             com.fachru.sigmamobile.model.Product,             com.fachru.sigmamobile.model.PicturesPath,             com.fachru.sigmamobile.model.Customer,             com.fachru.sigmamobile.model.Employee,             com.fachru.sigmamobile.model.WareHouseStock" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -44,11 +39,6 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".PointOfSaleActivity"
@@ -94,6 +84,8 @@
         <service android:name=".service.SaveMyAppsService" />
         <service android:name=".service.CustomerIntentService" />
         <service android:name=".service.WarehouseStockIntentService" />
+        <service android:name=".service.ProductIntentService" />
+        <service android:name=".service.DoHeadIntentService" />
 
         <receiver
             android:name=".utils.BootReceiver"
@@ -128,6 +120,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fachru.sigmamobile.ChooseROActivity" />
+        </activity>
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/title_activity_splash_screen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

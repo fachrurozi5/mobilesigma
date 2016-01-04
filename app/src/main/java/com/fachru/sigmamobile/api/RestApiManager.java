@@ -1,6 +1,7 @@
 package com.fachru.sigmamobile.api;
 
 import com.fachru.sigmamobile.api.interfaces.CustomerApi;
+import com.fachru.sigmamobile.api.interfaces.DoHeadAPI;
 import com.fachru.sigmamobile.api.interfaces.EmployeeApi;
 import com.fachru.sigmamobile.api.interfaces.ProductApi;
 import com.fachru.sigmamobile.api.interfaces.WarehouseStockApi;
@@ -16,6 +17,7 @@ import retrofit.Retrofit;
  */
 public class RestApiManager {
 
+    private DoHeadAPI doHeadAPI;
     private CustomerApi customerApi;
     private EmployeeApi employeeApi;
     private WarehouseStockApi warehouseStockApi;
@@ -26,6 +28,16 @@ public class RestApiManager {
         builder = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .registerTypeAdapter(String.class, new StringDesirializer());
+    }
+
+    /*
+    * DoHead API
+    * */
+    public DoHeadAPI getDoHeadAPI() {
+        if (doHeadAPI == null) {
+            doHeadAPI = retrofit().create(DoHeadAPI.class);
+        }
+        return doHeadAPI;
     }
 
     /*
@@ -43,13 +55,7 @@ public class RestApiManager {
     * */
     public EmployeeApi getEmployeeApi() {
         if (employeeApi == null) {
-            builder.registerTypeAdapter(String.class, new StringDesirializer());
-
-            employeeApi = new Retrofit.Builder()
-                    .baseUrl(Constanta.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(builder.create()))
-                    .build()
-                    .create(EmployeeApi.class);
+            employeeApi = retrofit().create(EmployeeApi.class);
         }
 
         return employeeApi;
@@ -60,8 +66,6 @@ public class RestApiManager {
     * */
     public WarehouseStockApi getWhStock() {
         if (warehouseStockApi == null) {
-            builder.registerTypeAdapter(String.class, new StringDesirializer());
-
             warehouseStockApi = retrofit().create(WarehouseStockApi.class);
         }
 
@@ -73,8 +77,6 @@ public class RestApiManager {
     * */
     public ProductApi getProduct() {
         if (productApi == null) {
-            builder.registerTypeAdapter(String.class, new StringDesirializer());
-
             productApi = retrofit().create(ProductApi.class);
         }
 

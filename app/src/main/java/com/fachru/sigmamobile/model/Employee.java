@@ -85,6 +85,21 @@ public class Employee extends Model{
                 '}';
     }
 
+    public static Employee getEmployee(String empid) {
+        return new Select()
+                .from(Employee.class)
+                .where("employee_id = ?", empid)
+                .executeSingle();
+    }
+
+    public static String getEmployeeName(String employee_id) {
+        Employee employee = getEmployee(employee_id);
+
+        if (employee != null)
+            return employee.name;
+        return "";
+    }
+
     /*
     * class builder
     * */

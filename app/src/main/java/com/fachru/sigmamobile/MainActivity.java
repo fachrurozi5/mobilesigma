@@ -30,7 +30,9 @@ import com.fachru.sigmamobile.controller.EmployeeController;
 import com.fachru.sigmamobile.controller.interfaces.OnEmployeeCallbackListener;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.service.CustomerIntentService;
+import com.fachru.sigmamobile.service.DoHeadIntentService;
 import com.fachru.sigmamobile.service.LocationTrackerService;
+import com.fachru.sigmamobile.service.ProductIntentService;
 import com.fachru.sigmamobile.service.SaveMyAppsService;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -155,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         controller.startFetch();
 
 
-//        startService(new Intent(context, WarehouseStockIntentService.class));
 
     }
 
@@ -271,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     private void actionAfterInstall() {
-        startService(new Intent(context, CustomerIntentService.class));
+
         sessionManager.setAfterInstall(false);
     }
 
@@ -332,10 +333,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     @Override
     public void onFetchStart() {
+        Log.e(Constanta.TAG, "Employee Start");
     }
 
     @Override
     public void onFetchComplete() {
+        Log.e(Constanta.TAG, "Employee Complite");
     }
 
     @Override

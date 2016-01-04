@@ -4,6 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -11,7 +12,10 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by fachru on 31/12/15.
@@ -151,7 +155,7 @@ public class Product extends Model {
     @Column(name = "updator")
     public String updator;
 
-    @SerializedName("USRUPDATE")
+    @SerializedName("DATEUPDATE")
     @Column(name = "updated_at")
     public Date updated_at;
 
@@ -159,9 +163,32 @@ public class Product extends Model {
         super();
     }
 
+    public static List<Product> all() {
+        return new Select().from(Product.class).execute();
+    }
+
+    public static List<HashMap<String, String>> toListHashMap() {
+        List<HashMap<String, String>> hashMaps = new ArrayList<>();
+        HashMap<String, String> map;
+        for (Product product : all()) {
+            map = new HashMap<>();
+            map.put(Constanta.SIMPLE_LIST_ITEM_1, product.product_id);
+            map.put(Constanta.SIMPLE_LIST_ITEM_2, product.name);
+            hashMaps.add(map);
+        }
+
+        return hashMaps;
+    }
+
+    public static Product find(String product_id) {
+        return new Select().from(Product.class)
+                .where("product_id = ?", product_id)
+                .executeSingle();
+    }
+
     public static Product findOrCreateFromJson(JSONObject json) throws JSONException {
         String product_id = json.getString("PRODID");
-        Product existingProduct = new Select().from(Product.class).where("product_id = ?", product_id).executeSingle();
+        Product existingProduct = find(product_id);
         if (existingProduct != null) {
             return existingProduct;
         } else {
@@ -178,5 +205,45 @@ public class Product extends Model {
         Gson gson = gsonBuilder.create();
 
         return gson.fromJson(json.toString(), Product.class);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "product_id='" + product_id + '\'' +
+                ", name='" + name + '\'' +
+                ", articleid='" + articleid + '\'' +
+                ", prstatid1='" + prstatid1 + '\'' +
+                ", prstatid2='" + prstatid2 + '\'' +
+                ", type=" + type +
+                ", unitid='" + unitid + '\'' +
+                ", unitpo='" + unitpo + '\'' +
+                ", unitsell='" + unitsell + '\'' +
+                ", unitkecil='" + unitkecil + '\'' +
+                ", unitconv=" + unitconv +
+                ", sellcurrid='" + sellcurrid + '\'' +
+                ", sellprice=" + sellprice +
+                ", discount=" + discount +
+                ", supplier_id='" + supplier_id + '\'' +
+                ", location='" + location + '\'' +
+                ", weight=" + weight +
+                ", volume=" + volume +
+                ", accidcogs='" + accidcogs + '\'' +
+                ", accidinv='" + accidinv + '\'' +
+                ", accidsls='" + accidsls + '\'' +
+                ", accidslsrt='" + accidslsrt + '\'' +
+                ", empid='" + empid + '\'' +
+                ", abc='" + abc + '\'' +
+                ", fmr='" + fmr + '\'' +
+                ", baseprice=" + baseprice +
+                ", oldprice=" + oldprice +
+                ", testprice=" + testprice +
+                ", inactive=" + inactive +
+                ", ev_evoucher='" + ev_evoucher + '\'' +
+                ", creator='" + creator + '\'' +
+                ", created_at=" + created_at +
+                ", updator='" + updator + '\'' +
+                ", updated_at=" + updated_at +
+                '}';
     }
 }

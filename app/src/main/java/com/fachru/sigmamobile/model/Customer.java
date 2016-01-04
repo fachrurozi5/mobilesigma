@@ -1000,6 +1000,20 @@ public class Customer extends Model{
         }
     }
 
+    public static Customer getCustomer(String custid) {
+        return new Select()
+                .from(Customer.class)
+                .where("custid = ?", custid)
+                .executeSingle();
+    }
+
+    public static String getCustomerName(String custid) {
+        Customer customer = getCustomer(custid);
+
+        if (customer != null)
+            return customer.getName();
+        return "";
+    }
 
     public static List<Customer> getAll() {
         return new Select()

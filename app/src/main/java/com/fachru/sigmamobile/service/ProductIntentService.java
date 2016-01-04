@@ -41,7 +41,8 @@ public class ProductIntentService extends IntentService {
                             if (o instanceof JSONArray) {
                                 JSONArray jsonArray = jsonObject.getJSONArray(Constanta.TAG_DATA);
                                 for (int i = 0; i < jsonArray.length(); i++) {
-                                    Product.findOrCreateFromJson(jsonArray.getJSONObject(i));
+                                    Product product = Product.findOrCreateFromJson(jsonArray.getJSONObject(i));
+//                                    Log.d(Constanta.TAG, product.toString());
                                 }
                             } else {
                                 Product.findOrCreateFromJson(jsonObject.getJSONObject(Constanta.TAG_DATA));
