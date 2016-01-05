@@ -1,5 +1,6 @@
 package com.fachru.sigmamobile.controller.interfaces;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.model.Employee;
 
 /**
@@ -7,4 +8,5 @@ import com.fachru.sigmamobile.model.Employee;
  */
 public interface OnEmployeeCallbackListener extends OnCallbackListener {
     void onFetchProgress(Employee employee);
+    void onFailureShowMessage(String message);
 }

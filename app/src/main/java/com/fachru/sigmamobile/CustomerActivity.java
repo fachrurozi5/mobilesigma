@@ -216,7 +216,6 @@ public class CustomerActivity extends AppCompatActivity implements
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         Customer customer = (Customer) parent.getItemAtPosition(position);
-        Log.d(Constanta.TAG, customer.toString());
         showDetailCustomer(customer);
         return true;
     }
@@ -224,7 +223,6 @@ public class CustomerActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Customer customer = (Customer) parent.getItemAtPosition(position);
-        Log.d(Constanta.TAG, customer.toString());
         showDetailCustomer(customer);
     }
 
@@ -252,16 +250,7 @@ public class CustomerActivity extends AppCompatActivity implements
 
     @Override
     public void onFetchProgress(List<Customer> list) {
-        ActiveAndroid.beginTransaction();
-        try {
-            for (Customer customer : list)
-                customer.save();
-
-            ActiveAndroid.setTransactionSuccessful();
-        } finally {
-            ActiveAndroid.endTransaction();
-        }
-        adapter.update(Customer.getAll());
+        adapter.update(list);
     }
 
     @Override

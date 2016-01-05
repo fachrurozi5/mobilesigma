@@ -44,9 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements OnItemClickListener, OnEmployeeCallbackListener{
+public class MainActivity extends AppCompatActivity implements OnItemClickListener {
 
-    public static final String EMPLID = "key_emplid";
     protected Context context = this;
     protected SessionManager sessionManager;
     private Intent serviceIntent;
@@ -60,11 +59,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     protected TextView text_time;
     protected TextView text_date;
     protected TextView text_location;
-
-    /*
-    * controller
-    * */
-    EmployeeController controller;
 
     /*
     * label
@@ -128,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         getSupportActionBar().setLogo(R.drawable.ic_action_bar);
 
-        controller = new EmployeeController(this);
-
         if (savedInstanceState != null) {
             text_date.setText(savedInstanceState.getString(Constanta.RESULT_DATE));
             text_time.setText(savedInstanceState.getString(Constanta.RESULT_TIME));
@@ -153,10 +145,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         startService(new Intent(context, LocationTrackerService.class));
         startService(new Intent(context, SaveMyAppsService.class));
-
-        controller.startFetch();
-
-
 
     }
 
@@ -227,11 +215,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//        Intent intent;
-
         switch (position) {
             case 4:
-                /*startActivity(new Intent(context, CustomerActivity.class));*/
                 showDialog();
                 break;
             default:
@@ -276,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         sessionManager.setAfterInstall(false);
     }
 
-    private void turnGPSOn(){
+    private void turnGPSOn() {
         new MaterialDialog.Builder(context)
                 .title(R.string.title_location_dialog)
                 .content(R.string.content_location_dialog)
@@ -325,24 +310,4 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         scanIntegrator.initiateScan();
     }
 
-    @Override
-    public void onFetchProgress(Employee employee) {
-        Log.e(Constanta.TAG, employee.toString());
-        sessionManager.setEmployee(employee.getId());
-    }
-
-    @Override
-    public void onFetchStart() {
-        Log.e(Constanta.TAG, "Employee Start");
-    }
-
-    @Override
-    public void onFetchComplete() {
-        Log.e(Constanta.TAG, "Employee Complite");
-    }
-
-    @Override
-    public void onFetchFailed(Throwable t) {
-        Log.e(Constanta.TAG, "FetchFailed", t);
-    }
 }

@@ -47,7 +47,7 @@ public class SalesOrderActivity extends AppCompatActivity implements OnTabSelect
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
-        emplid = intent.getLongExtra(MainActivity.EMPLID, -1);
+        emplid = intent.getLongExtra(Login.EMPLID, -1);
         fragmentPosition(0);
     }
 
@@ -90,7 +90,7 @@ public class SalesOrderActivity extends AppCompatActivity implements OnTabSelect
                 fragment = new HeaderSOFragment();
                 Bundle bundle = new Bundle();
                 bundle.putLong(CustomerActivity.CUSTID, custid);
-                bundle.putLong(MainActivity.EMPLID, emplid);
+                bundle.putLong(Login.EMPLID, emplid);
                 fragment.setArguments(bundle);
                 break;
             case 1:

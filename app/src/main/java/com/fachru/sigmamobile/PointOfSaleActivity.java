@@ -75,7 +75,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         initComp();
         Intent intent = getIntent();
         custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
-        emplid = intent.getLongExtra(MainActivity.EMPLID, -1);
+        emplid = intent.getLongExtra(Login.EMPLID, -1);
         fragmentPosition(0);
     }
 
@@ -159,7 +159,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 fragment.setOnSetDoHeadListener(this);
                 Bundle bundle = new Bundle();
                 bundle.putLong(CustomerActivity.CUSTID, custid);
-                bundle.putLong(MainActivity.EMPLID, emplid);
+                bundle.putLong(Login.EMPLID, emplid);
                 fragment.setArguments(bundle);
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.container, fragment, TAG_DO_HEAD).commit();

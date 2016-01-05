@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.fachru.sigmamobile.CustomerActivity;
+import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.MainActivity;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.model.Customer;
@@ -66,7 +67,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
         activity = getActivity();
         bundle = getArguments();
         customer = Customer.load(Customer.class, bundle.getLong(CustomerActivity.CUSTID));
-        employee = Employee.load(Employee.class, bundle.getLong(MainActivity.EMPLID));
+        employee = Employee.load(Employee.class, bundle.getLong(Login.EMPLID));
     }
 
     @Nullable

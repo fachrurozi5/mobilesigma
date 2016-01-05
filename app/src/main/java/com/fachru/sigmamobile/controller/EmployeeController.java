@@ -4,14 +4,9 @@ import android.util.Log;
 
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.controller.interfaces.OnEmployeeCallbackListener;
-import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Employee;
-import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,9 +28,9 @@ public class EmployeeController {
         apiManager = new RestApiManager();
     }
 
-    public void startFetch() {
+    public void startFetch(String username, String password) {
         listener.onFetchStart();
-        Call<String> call = apiManager.getEmployeeApi().login("FachruRozi", "1234");
+        Call<String> call = apiManager.getEmployeeApi().login(username, password);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
@@ -44,18 +39,9 @@ public class EmployeeController {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body());
                         if (jsonObject.getBoolean(Constanta.TAG_STATUS)) {
-                            Object o = jsonObject.get(Constanta.TAG_DATA);
-                            if (o instanceof JSONArray) {
-                                /*JSONArray jsonArray = (JSONArray) o;
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    customers.add(Customer.findOrCreateFromJson(jsonArray.getJSONObject(i)));
-                                }
-                                listener.onFetchProgress(customers);*/
-                            } else {
-                               listener.onFetchProgress(Employee.findOrCreateFromJson((JSONObject) o));
-                            }
+                            listener.onFetchProgress(Employee.findOrCreateFromJson(jsonObject.getJSONObject(Constanta.TAG_DATA)));
                         } else {
-                            Log.d(Constanta.TAG, jsonObject.getString(Constanta.TAG_MESSAGE));
+                            listener.onFailureShowMessage(jsonObject.getString(Constanta.TAG_MESSAGE));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -72,4 +58,5 @@ public class EmployeeController {
             }
         });
     }
+
 }

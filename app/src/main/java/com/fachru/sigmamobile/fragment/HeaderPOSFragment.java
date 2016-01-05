@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.CustomerActivity;
+import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.MainActivity;
 import com.fachru.sigmamobile.R;
 
@@ -116,7 +117,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         activity = getActivity();
         bundle = getArguments();
         customer = Customer.load(Customer.class, bundle.getLong(CustomerActivity.CUSTID));
-        employee = Employee.load(Employee.class, bundle.getLong(MainActivity.EMPLID));
+        employee = Employee.load(Employee.class, bundle.getLong(Login.EMPLID));
         /*salesman = null;
         outlet = null;
         doHeads = new ArrayList<>();
@@ -252,14 +253,14 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     protected void actionAdd() {
         if (!errorChecked()) {
-            long status = new DoHead.Builder()
+                    doHead = new DoHead.Builder()
                     .setDocNo(et_doc_no.getText().toString())
                     .setDocDate(new Date())
                     .setCustid(et_customer.getText().toString())
                     .setCustid(customer.getCustomerId())
                     .setEmpid(employee.employee_id)
-                    .build()
-                    .save();
+                    .build();
+            long status = doHead.save();
             if (status != -1) {
                 adapterDoHead.add(doHead);
                 clearForm(layout);

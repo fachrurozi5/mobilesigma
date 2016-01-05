@@ -1,6 +1,7 @@
 package com.fachru.sigmamobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.controller.EmployeeController;
 import com.fachru.sigmamobile.controller.interfaces.OnEmployeeCallbackListener;
 import com.fachru.sigmamobile.model.Employee;
@@ -54,19 +57,45 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
         sessionManager.setEmployee(employee.getId());
     }
 
+
+
     @Override
     public void onFetchStart() {
         Log.e(Constanta.TAG, "Employee Start");
+        showProgressHorizontalIndeterminateDialog();
     }
 
     @Override
     public void onFetchComplete() {
         Log.e(Constanta.TAG, "Employee Complite");
+        startActivity(new Intent(context, MainActivity.class));
+        finish();
     }
 
     @Override
     public void onFetchFailed(Throwable t) {
         Log.e(Constanta.TAG, "FetchFailed", t);
+        new MaterialDialog.Builder(this)
+                .title("Error")
+                .iconRes(android.R.drawable.ic_dialog_alert)
+                .content(t.getMessage())
+                .show();
+    }
+
+    @Override
+    public void onFailureShowMessage(String message) {
+        new MaterialDialog.Builder(this)
+                .title("Login Fail")
+                .iconRes(android.R.drawable.ic_dialog_alert)
+                .content(message)
+                .positiveText("OK")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        et_password.setText("");
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -97,6 +126,17 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
             return false;
         }
     }
+    public void showProgressHorizontalIndeterminateDialog() {
+        showIndeterminateProgressDialog(true);
+    }
 
+    private void showIndeterminateProgressDialog(boolean horizontal) {
+        new MaterialDialog.Builder(this)
+                .title("Login")
+                .content("Please Wait")
+                .progress(true, 0)
+                .progressIndeterminateStyle(horizontal)
+                .show();
+    }
 
 }

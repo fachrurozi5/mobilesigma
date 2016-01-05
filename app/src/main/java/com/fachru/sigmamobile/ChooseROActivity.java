@@ -23,26 +23,26 @@ import com.fachru.sigmamobile.utils.SessionManager;
 
 public class ChooseROActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    protected Context context = this;
+    private Context context = this;
 
     /*
     * widget
     * */
-    protected Toolbar toolbar;
-    protected GridView gridview;
-    protected TextView text_time;
-    protected TextView text_date;
-    protected TextView text_location;
+    private Toolbar toolbar;
+    private GridView gridview;
+    private TextView text_time;
+    private TextView text_date;
+    private TextView text_location;
 
     /*
     * utils
     * */
-    SessionManager manager;
+    private SessionManager manager;
 
     /*
     * label
     * */
-    protected long custid;
+    private long custid;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -70,13 +70,17 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
         initComp();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         gridview.setAdapter(new ImageAdapter(this, getResources().getStringArray(R.array.sub_menu_c_ro),
                 getResources().obtainTypedArray(R.array.icon_sub_menu_c_ro)));
         gridview.setOnItemClickListener(this);
+
         text_date.setText(intent.getStringExtra(Constanta.RESULT_DATE));
         text_time.setText(intent.getStringExtra(Constanta.RESULT_TIME));
         text_location.setText(intent.getStringExtra(Constanta.RESULT_ADDRESS));
+
         custid = intent.getLongExtra(CustomerActivity.CUSTID, -1);
+
         if (custid >= 0)
             manager.setCustomer(custid);
     }
@@ -140,7 +144,7 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
 
         if (intent != null) {
             intent.putExtra(CustomerActivity.CUSTID, manager.getCustomer());
-            intent.putExtra(MainActivity.EMPLID, manager.getEmployee());
+            intent.putExtra(Login.EMPLID, manager.getEmployee());
             startActivity(intent);
         }
     }
