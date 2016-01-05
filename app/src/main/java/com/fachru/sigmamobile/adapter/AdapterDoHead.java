@@ -84,7 +84,6 @@ public class AdapterDoHead extends BaseAdapter {
             holder.rute = (TextView) view.findViewById(R.id.tv_item_rute);
             holder.tv_customer = (TextView) view.findViewById(R.id.tv_item_customer);
             holder.tv_salesman = (TextView) view.findViewById(R.id.tv_item_salesman);
-            holder.tv_outlet = (TextView) view.findViewById(R.id.tv_item_outlet);
 
             view.setTag(holder);
         } else {
@@ -99,7 +98,6 @@ public class AdapterDoHead extends BaseAdapter {
 //        holder.rute.setText(doHead.rute);
         holder.tv_customer.setText(Customer.getCustomerName(doHead.custid));
         holder.tv_salesman.setText(Employee.getEmployeeName(doHead.empid));
-        /*holder.tv_outlet.setText(doHead.outlet.outlet_name);*/
 
         return view;
     }
@@ -111,7 +109,6 @@ public class AdapterDoHead extends BaseAdapter {
         TextView rute;
         TextView tv_customer;
         TextView tv_salesman;
-        TextView tv_outlet;
     }
 
 }

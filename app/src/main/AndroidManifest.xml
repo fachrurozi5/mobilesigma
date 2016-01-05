@@ -30,7 +30,14 @@
             android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="             com.fachru.sigmamobile.model.DoHead,             com.fachru.sigmamobile.model.Product,             com.fachru.sigmamobile.model.PicturesPath,             com.fachru.sigmamobile.model.Customer,             com.fachru.sigmamobile.model.Employee,             com.fachru.sigmamobile.model.WareHouseStock" />
+            android:value="
+                         com.fachru.sigmamobile.model.DoHead,
+                         com.fachru.sigmamobile.model.DoItem,
+                         com.fachru.sigmamobile.model.Product,
+                         com.fachru.sigmamobile.model.PicturesPath,
+                         com.fachru.sigmamobile.model.Customer,
+                         com.fachru.sigmamobile.model.Employee,
+                         com.fachru.sigmamobile.model.WareHouseStock" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

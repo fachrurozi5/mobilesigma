@@ -118,18 +118,11 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         bundle = getArguments();
         customer = Customer.load(Customer.class, bundle.getLong(CustomerActivity.CUSTID));
         employee = Employee.load(Employee.class, bundle.getLong(Login.EMPLID));
-        /*salesman = null;
-        outlet = null;
-        doHeads = new ArrayList<>();
-        if (DoHead.allPending(customer).size() > 0)
-            doHeads = DoHead.allPending(customer);
-        salesmanFilter = new AdapterFilter(activity, Salesman.toListHashMap());
-        outletFilter = new AdapterFilter(activity, Outlet.toListHashMap());*/
 
         doHeads = new ArrayList<>();
 
-        if (DoHead.getAll().size() > 0)
-            doHeads = DoHead.getAll();
+        if (DoHead.getAllWhereCustomer(customer.getCustomerId()).size() > 0)
+            doHeads = DoHead.getAllWhereCustomer(customer.getCustomerId());
 
         adapterDoHead = new AdapterDoHead(getContext(), doHeads);
 

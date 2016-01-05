@@ -136,6 +136,13 @@ public class DoHead extends Model {
                 .execute();
     }
 
+    public static List<DoHead> getAllWhereCustomer(String custid) {
+        return new Select()
+                .from(DoHead.class)
+                .where("custid =? ", custid)
+                .execute();
+    }
+
     public String getDocDate() {
         return CommonUtil.dateToStringMedium(this.doc_date);
     }

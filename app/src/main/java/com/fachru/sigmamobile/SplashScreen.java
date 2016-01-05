@@ -44,42 +44,18 @@ public class SplashScreen extends AppCompatActivity {
         SessionManager manager = new SessionManager(this);
 
         if (manager.getAffterInstall()) {
-            ShowLoading();
+            ShowLoading(1000, false);
             downloadCustomer();
         } else {
-            thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int progress = 0;
-                    while (progress < progressBar.getMax()) {
-                        progress += 1;
-                        final int progressFinal = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress(progressFinal);
-                                progressBar.setSecondaryProgress(progressFinal+5);
-                            }
-                        });
-
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e){
-                            thread.interrupt();
-                        }
-                    }
-
-                    startActivity(new Intent(getApplicationContext(), Login.class));
-                    finish();
-                }
-            });
-
-            thread.start();
+            ShowLoading(50, true);
         }
     }
 
-    private void ShowLoading() {
+    private void ShowLoading(int duration, boolean afterisntall) {
+        LoadingThread(duration, afterisntall);
+    }
 
+    private void LoadingThread(final int sleepDuration, final boolean afterinstall) {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -96,12 +72,16 @@ public class SplashScreen extends AppCompatActivity {
                     });
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(sleepDuration);
                     } catch (InterruptedException e){
                         thread.interrupt();
                     }
                 }
 
+                if (afterinstall) {
+                    startActivity(new Intent(getApplicationContext(), Login.class));
+                    finish();
+                }
 
             }
         });
@@ -135,7 +115,7 @@ public class SplashScreen extends AppCompatActivity {
                         }
                     });
                 }
-
+                ShowLoading(1000, false);
                 downloadProduct();
 
             }

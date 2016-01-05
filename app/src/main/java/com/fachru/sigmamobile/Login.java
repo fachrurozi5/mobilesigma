@@ -57,8 +57,6 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
         sessionManager.setEmployee(employee.getId());
     }
 
-
-
     @Override
     public void onFetchStart() {
         Log.e(Constanta.TAG, "Employee Start");
