@@ -14,7 +14,7 @@ import retrofit.http.POST;
 /**
  * Created by fachru on 17/12/15.
  */
-public interface CustomerApi {
+public interface CustomerAPI {
 
     @GET("customer")
     Call<String> Records();

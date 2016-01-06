@@ -1,10 +1,11 @@
 package com.fachru.sigmamobile.api;
 
-import com.fachru.sigmamobile.api.interfaces.CustomerApi;
+import com.fachru.sigmamobile.api.interfaces.CustomerAPI;
 import com.fachru.sigmamobile.api.interfaces.DoHeadAPI;
-import com.fachru.sigmamobile.api.interfaces.EmployeeApi;
-import com.fachru.sigmamobile.api.interfaces.ProductApi;
-import com.fachru.sigmamobile.api.interfaces.WarehouseStockApi;
+import com.fachru.sigmamobile.api.interfaces.EmployeeAPI;
+import com.fachru.sigmamobile.api.interfaces.PrdStatusAPI;
+import com.fachru.sigmamobile.api.interfaces.ProductAPI;
+import com.fachru.sigmamobile.api.interfaces.WhStockAPI;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.StringDesirializer;
 import com.google.gson.GsonBuilder;
@@ -17,12 +18,14 @@ import retrofit.Retrofit;
  */
 public class RestApiManager {
 
-    private DoHeadAPI doHeadAPI;
-    private CustomerApi customerApi;
-    private EmployeeApi employeeApi;
-    private WarehouseStockApi warehouseStockApi;
-    private ProductApi productApi;
     private GsonBuilder builder;
+
+    private DoHeadAPI doHeadAPI;
+    private CustomerAPI customerAPI;
+    private EmployeeAPI employeeApi;
+    private WhStockAPI whStockAPI;
+    private PrdStatusAPI prdStatusAPI;
+    private ProductAPI productAPI;
 
     public RestApiManager() {
         builder = new GsonBuilder()
@@ -43,19 +46,19 @@ public class RestApiManager {
     /*
     * Customer/Outlet API
     * */
-    public CustomerApi getCustomerApi() {
-        if (customerApi == null) {
-            customerApi = retrofit().create(CustomerApi.class);
+    public CustomerAPI getCustomerAPI() {
+        if (customerAPI == null) {
+            customerAPI = retrofit().create(CustomerAPI.class);
         }
-        return customerApi;
+        return customerAPI;
     }
 
     /*
     * Employee/Salesman API
     * */
-    public EmployeeApi getEmployeeApi() {
+    public EmployeeAPI getEmployeeApi() {
         if (employeeApi == null) {
-            employeeApi = retrofit().create(EmployeeApi.class);
+            employeeApi = retrofit().create(EmployeeAPI.class);
         }
 
         return employeeApi;
@@ -64,23 +67,33 @@ public class RestApiManager {
     /*
     * WarehouseStock API
     * */
-    public WarehouseStockApi getWhStock() {
-        if (warehouseStockApi == null) {
-            warehouseStockApi = retrofit().create(WarehouseStockApi.class);
+    public WhStockAPI getWhStock() {
+        if (whStockAPI == null) {
+            whStockAPI = retrofit().create(WhStockAPI.class);
         }
 
-        return warehouseStockApi;
+        return whStockAPI;
+    }
+
+    /*
+    * Product Status API
+    * */
+    public PrdStatusAPI getPrstat() {
+        if (prdStatusAPI == null) {
+            prdStatusAPI = retrofit().create(PrdStatusAPI.class);
+        }
+        return prdStatusAPI;
     }
 
     /*
     * Product API
     * */
-    public ProductApi getProduct() {
-        if (productApi == null) {
-            productApi = retrofit().create(ProductApi.class);
+    public ProductAPI getProduct() {
+        if (productAPI == null) {
+            productAPI = retrofit().create(ProductAPI.class);
         }
 
-        return productApi;
+        return productAPI;
     }
 
     private Retrofit retrofit() {

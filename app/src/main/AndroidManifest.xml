@@ -33,6 +33,7 @@
             android:value="
                          com.fachru.sigmamobile.model.DoHead,
                          com.fachru.sigmamobile.model.DoItem,
+                         com.fachru.sigmamobile.model.ProductStatus,
                          com.fachru.sigmamobile.model.Product,
                          com.fachru.sigmamobile.model.PicturesPath,
                          com.fachru.sigmamobile.model.Customer,

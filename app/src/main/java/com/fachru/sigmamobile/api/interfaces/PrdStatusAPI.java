@@ -4,11 +4,11 @@ import retrofit.Call;
 import retrofit.http.GET;
 
 /**
- * Created by fachru on 31/12/15.
+ * Created by fachru on 06/01/16.
  */
-public interface ProductApi {
+public interface PrdStatusAPI {
 
-    @GET("product")
+    @GET("prstatid")
     Call<String> Records();
 
 }

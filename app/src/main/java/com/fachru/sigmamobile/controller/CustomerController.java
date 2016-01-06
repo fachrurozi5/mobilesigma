@@ -36,7 +36,7 @@ public class CustomerController {
 
     public void startFetching() {
         listener.onFetchStart();
-        Call<String> call = apiManager.getCustomerApi().Records();
+        Call<String> call = apiManager.getCustomerAPI().Records();
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
@@ -72,7 +72,7 @@ public class CustomerController {
     }
 
     public void startCreating(Customer customer) {
-        Call<String> call = apiManager.getCustomerApi().store(customer);
+        Call<String> call = apiManager.getCustomerAPI().store(customer);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Response<String> response, Retrofit retrofit) {
