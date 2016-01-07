@@ -1,4 +1,4 @@
-package com.fachru.sigmamobile.adapter;
+package com.fachru.sigmamobile.adapters;
 
 import android.app.Activity;
 import android.content.Context;

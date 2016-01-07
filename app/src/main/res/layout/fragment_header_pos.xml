@@ -58,7 +58,7 @@
         android:focusable="false"
         android:hint="@string/hint_salesman"/>
 
-    <EditText
+    <Spinner
         android:id="@+id/et_warehouse"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

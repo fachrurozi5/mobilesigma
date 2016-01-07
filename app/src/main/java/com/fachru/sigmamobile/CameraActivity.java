@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fachru.sigmamobile.adapter.PhotoAdapter;
+import com.fachru.sigmamobile.adapters.PhotoAdapter;
 import com.fachru.sigmamobile.model.PicturesPath;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;

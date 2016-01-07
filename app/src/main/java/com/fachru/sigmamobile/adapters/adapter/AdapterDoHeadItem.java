@@ -1,4 +1,4 @@
-package com.fachru.sigmamobile.adapter;
+package com.fachru.sigmamobile.adapters.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,22 +9,21 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
-import com.fachru.sigmamobile.model.Customer;
-import com.fachru.sigmamobile.model.DoHead;
-import com.fachru.sigmamobile.model.Employee;
+import com.fachru.sigmamobile.model.model.DoHead;
+import com.fachru.sigmamobile.utils.CommonUtil;
 
 import java.util.List;
 
 /**
- * Created by fachru on 31/12/15.
+ * Created by fachru on 15/10/15.
  */
-public class AdapterDoHead extends BaseAdapter {
+public class AdapterDoHeadItem extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     private Context context;
     private List<DoHead> list;
 
-    public AdapterDoHead(Context context, List<DoHead> list) {
+    public AdapterDoHeadItem(Context context, List<DoHead> list) {
         this.context = context;
         this.list = list;
     }
@@ -92,11 +91,11 @@ public class AdapterDoHead extends BaseAdapter {
         DoHead doHead = (DoHead) getItem(i);
 
         holder.no.setText(String.valueOf(i + 1));
-        holder.doc_no.setText(doHead.doc_no);
-        holder.doc_date.setText(doHead.getDocDate());
-//        holder.rute.setText(doHead.rute);
-        holder.tv_customer.setText(Customer.getCustomerName(doHead.custid));
-        holder.tv_salesman.setText(Employee.getEmployeeName(doHead.empid));
+        holder.doc_no.setText(doHead.docno);
+        holder.doc_date.setText(CommonUtil.dateToStringMedium(doHead.docdate));
+        holder.rute.setText(doHead.rute);
+        holder.tv_customer.setText(doHead.customer.getName());
+        holder.tv_salesman.setText(doHead.salesman.salesman_name);
 
         return view;
     }
@@ -109,5 +108,4 @@ public class AdapterDoHead extends BaseAdapter {
         TextView tv_customer;
         TextView tv_salesman;
     }
-
 }

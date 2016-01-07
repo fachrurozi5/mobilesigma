@@ -1,4 +1,4 @@
-package com.fachru.sigmamobile.adapter.adapter;
+package com.fachru.sigmamobile.adapters.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -30,7 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.fachru.sigmamobile.adapter.AdapterDoHead;
+import com.fachru.sigmamobile.adapters.AdapterDoHead;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
@@ -58,7 +59,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected EditText et_doc_date;
     protected EditText et_salesman;
     protected EditText et_customer;
-    protected EditText et_rute;
+    protected Spinner sp_warehause;
     /*protected AutoCompleteTextView act_salesman;
     protected AutoCompleteTextView act_outlet;*/
     protected Button btn_date_picker;
@@ -156,7 +157,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
-        et_rute = (EditText) view.findViewById(R.id.et_warehouse);
+        sp_warehause = (Spinner) view.findViewById(R.id.et_warehouse);
         /*act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
         act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);*/
         btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);
@@ -227,7 +228,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
         et_doc_no.setText(doHead.doc_no);
         et_doc_date.setText(doHead.getDocDate());
-        /*et_rute.setText(doHead.rute);*/
+        /*sp_warehause.setText(doHead.rute);*/
         /*act_salesman.setText(doHead.salesman.salesman_name);
         act_outlet.setText(doHead.outlet.outlet_name);*/
         et_customer.setText(customer.getName());
@@ -272,7 +273,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         if (!errorChecked()) {
             try {
                 /*doHead.setDateFromString(et_doc_date.getText().toString());
-                doHead.rute = et_rute.getText().toString();
+                doHead.rute = sp_warehause.getText().toString();
                 doHead.salesman = salesman;
                 doHead.outlet = outlet;
                 doHead.customer = customer;
@@ -383,9 +384,9 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 et_doc_date.getText() == null) {
             et_doc_date.setError(getString(R.string.error_input_doc_date));
             return true;
-        } else if (et_rute.getText().toString().equals("") ||
-                et_rute.getText() == null) {
-            et_rute.setError(getString(R.string.error_input_rute));
+        } else if (sp_warehause.getText().toString().equals("") ||
+                sp_warehause.getText() == null) {
+            sp_warehause.setError(getString(R.string.error_input_rute));
             return true;
         } else if (salesman == null) {
             act_salesman.setError(getString(R.string.error_input_salesman));

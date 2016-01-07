@@ -17,7 +17,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fachru.sigmamobile.adapter.ImageAdapter;
+import com.fachru.sigmamobile.adapters.ImageAdapter;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
