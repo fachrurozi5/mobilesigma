@@ -15,7 +15,7 @@ import org.json.JSONObject;
  * Created by fachru on 06/01/16.
  */
 @Table(name = "ProductStatus")
-public class ProductStatus extends Model {
+public class ProductStatus2 extends Model{
 
     @SerializedName("PRSTATID")
     @Column(name = "prstat_id")
@@ -29,43 +29,43 @@ public class ProductStatus extends Model {
     @Column(name = "type")
     public String type;
 
-    public ProductStatus() {
+    public ProductStatus2() {
         super();
     }
 
-    public ProductStatus(Builder builder) {
+    public ProductStatus2(Builder builder) {
         super();
         prstat_id = builder.prstat_id;
         name = builder.name;
         type = builder.type;
     }
 
-    public static ProductStatus find(String prstat_id) {
+    public static ProductStatus2 find(String prstat_id) {
         return new Select()
-                .from(ProductStatus.class)
+                .from(ProductStatus2.class)
                 .where("prstat_id =?", prstat_id)
                 .executeSingle();
     }
 
-    public static ProductStatus findOrCreateFromJson(JSONObject json) throws JSONException {
+    public static ProductStatus2 findOrCreateFromJson(JSONObject json) throws JSONException {
         String prstat_id = json.getString("PRSTATID");
-        ProductStatus existingProductStatus = find(prstat_id);
+        ProductStatus2 existingProductStatus = find(prstat_id);
         if (existingProductStatus != null) {
             return existingProductStatus;
         } else {
-            ProductStatus productStatus = ProductStatus.fromJson(json);
+            ProductStatus2 productStatus = ProductStatus2.fromJson(json);
             productStatus.save();
             return productStatus;
         }
     }
 
-    public static ProductStatus fromJson(JSONObject json) {
+    public static ProductStatus2 fromJson(JSONObject json) {
         GsonBuilder gsonBuilder = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .serializeNulls();
         Gson gson = gsonBuilder.create();
 
-        return gson.fromJson(json.toString(), ProductStatus.class);
+        return gson.fromJson(json.toString(), ProductStatus2.class);
     }
 
     @Override
@@ -98,8 +98,9 @@ public class ProductStatus extends Model {
             return Builder.this;
         }
 
-        public ProductStatus Build(){
-            return new ProductStatus(Builder.this);
+        public ProductStatus2 Build(){
+            return new ProductStatus2(Builder.this);
         };
     }
+
 }

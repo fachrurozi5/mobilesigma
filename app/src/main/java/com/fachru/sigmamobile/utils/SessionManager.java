@@ -20,6 +20,12 @@ public class SessionManager {
     public static final String KEY_LAST_APP_PN = "last_app_pin";
     public static final String KEY_CUSTOMER = "key_customer";
     public static final String KEY_EMPLOYEE = "last_outlet";
+    public static final String KEY_DOWNLOAD_CUSTOMER = "dowbload_customer";
+    public static final String KEY_DOWNLOAD_PRSTAT = "dowbload_prstat";
+    public static final String KEY_DOWNLOAD_PRSTAT2 = "dowbload_prstat2";
+    public static final String KEY_DOWNLOAD_PRODUCT = "dowbload_product";
+    public static final String KEY_DOWNLOAD_WAREHOUSE = "download_warehouse";
+
 
     /*
     * service
@@ -73,6 +79,51 @@ public class SessionManager {
     public void unSavePin() {
         editor.putBoolean(IS_PIN_SAVED, false);
         editor.commit();
+    }
+
+    public void setCustomerDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_CUSTOMER, done);
+        editor.commit();
+    }
+
+    public void setPrstatDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_PRSTAT, done);
+        editor.commit();
+    }
+
+    public void setPrstat2Done(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_PRSTAT2, done);
+        editor.commit();
+    }
+
+    public void setProductDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_PRODUCT, done);
+        editor.commit();
+    }
+
+    public void setWarehouseDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_WAREHOUSE, done);
+        editor.commit();
+    }
+
+    public boolean hasCustomer() {
+        return preferences.getBoolean(KEY_DOWNLOAD_CUSTOMER, false);
+    }
+
+    public boolean hasPrstat() {
+        return preferences.getBoolean(KEY_DOWNLOAD_PRSTAT, false);
+    }
+
+    public boolean hasPrstat2() {
+        return preferences.getBoolean(KEY_DOWNLOAD_PRSTAT2, false);
+    }
+
+    public boolean hasProduct() {
+        return preferences.getBoolean(KEY_DOWNLOAD_PRODUCT, false);
+    }
+
+    public boolean hasWarehouse() {
+        return preferences.getBoolean(KEY_DOWNLOAD_WAREHOUSE, false);
     }
 
     public boolean getAffterInstall() {

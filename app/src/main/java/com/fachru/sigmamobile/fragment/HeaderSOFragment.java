@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 
 import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.Login;
-import com.fachru.sigmamobile.MainActivity;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Employee;
@@ -124,7 +123,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
         layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_header_so);
         et_doc_no = (EditText) view.findViewById(R.id.et_doc_no);
         et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
-        et_rute = (EditText) view.findViewById(R.id.et_rute);
+        et_rute = (EditText) view.findViewById(R.id.et_warehouse);
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
         act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);

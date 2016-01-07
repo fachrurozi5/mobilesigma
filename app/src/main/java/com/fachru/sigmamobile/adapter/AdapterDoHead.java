@@ -12,7 +12,6 @@ import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
-import com.fachru.sigmamobile.utils.CommonUtil;
 
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class AdapterDoHead extends BaseAdapter {
             holder.no = (TextView) view.findViewById(R.id.tv_item_no);
             holder.doc_no = (TextView) view.findViewById(R.id.tv_item_doc_no);
             holder.doc_date = (TextView) view.findViewById(R.id.tv_item_doc_date);
-            holder.rute = (TextView) view.findViewById(R.id.tv_item_rute);
+            holder.rute = (TextView) view.findViewById(R.id.tv_item_warehosue);
             holder.tv_customer = (TextView) view.findViewById(R.id.tv_item_customer);
             holder.tv_salesman = (TextView) view.findViewById(R.id.tv_item_salesman);
 

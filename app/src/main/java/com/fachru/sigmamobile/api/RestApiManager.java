@@ -6,6 +6,7 @@ import com.fachru.sigmamobile.api.interfaces.EmployeeAPI;
 import com.fachru.sigmamobile.api.interfaces.PrdStatus2API;
 import com.fachru.sigmamobile.api.interfaces.PrdStatusAPI;
 import com.fachru.sigmamobile.api.interfaces.ProductAPI;
+import com.fachru.sigmamobile.api.interfaces.WarehouseAPI;
 import com.fachru.sigmamobile.api.interfaces.WhStockAPI;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.StringDesirializer;
@@ -28,6 +29,7 @@ public class RestApiManager {
     private PrdStatusAPI prdStatusAPI;
     private PrdStatus2API prdStatus2API;
     private ProductAPI productAPI;
+    private WarehouseAPI warehouseAPI;
 
     public RestApiManager() {
         builder = new GsonBuilder()
@@ -106,6 +108,17 @@ public class RestApiManager {
         }
 
         return productAPI;
+    }
+
+    /*
+    * Warehouse
+    * */
+    public WarehouseAPI getWarehouseAPI() {
+        if (warehouseAPI == null) {
+            warehouseAPI = retrofit().create(WarehouseAPI.class);
+        }
+
+        return warehouseAPI;
     }
 
     private Retrofit retrofit() {

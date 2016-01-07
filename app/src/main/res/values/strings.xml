@@ -79,7 +79,7 @@
     <string name="hint_doc_no">Doc No</string>
     <string name="hint_doc_date">Doc Date</string>
     <string name="tag_date_picker_dialog">Datepickerdialog</string>
-    <string name="hint_rute">Rute</string>
+    <string name="hint_warehouse">Warehouse</string>
     <string name="hint_salesman">Salesman</string>
     <string name="hint_outlet">Ketik Outlet</string>
     <string name="error_input_outlet">OUTLET TIDAK TERSEDIA</string>

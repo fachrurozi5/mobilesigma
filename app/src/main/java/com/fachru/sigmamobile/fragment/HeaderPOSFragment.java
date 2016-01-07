@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,25 +22,19 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.Login;
-import com.fachru.sigmamobile.MainActivity;
 import com.fachru.sigmamobile.R;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import com.fachru.sigmamobile.adapter.AdapterDoHead;
-import com.fachru.sigmamobile.adapter.adapter.AdapterDoHeadItem;
-import com.fachru.sigmamobile.adapter.AdapterFilter;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
-import com.fachru.sigmamobile.model.model.Outlet;
-import com.fachru.sigmamobile.model.model.Salesman;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -163,7 +156,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
-        et_rute = (EditText) view.findViewById(R.id.et_rute);
+        et_rute = (EditText) view.findViewById(R.id.et_warehouse);
         /*act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
         act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);*/
         btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);

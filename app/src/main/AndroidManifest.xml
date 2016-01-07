@@ -34,10 +34,12 @@
                          com.fachru.sigmamobile.model.DoHead,
                          com.fachru.sigmamobile.model.DoItem,
                          com.fachru.sigmamobile.model.ProductStatus,
+                         com.fachru.sigmamobile.model.ProductStatus2,
                          com.fachru.sigmamobile.model.Product,
                          com.fachru.sigmamobile.model.PicturesPath,
                          com.fachru.sigmamobile.model.Customer,
                          com.fachru.sigmamobile.model.Employee,
+                         com.fachru.sigmamobile.model.Warehouse,
                          com.fachru.sigmamobile.model.WareHouseStock" />
         <meta-data
             android:name="com.google.android.gms.version"

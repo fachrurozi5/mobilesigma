@@ -12,6 +12,10 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.Model;
+import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.model.Warehouse;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -326,6 +330,15 @@ public class CommonUtil {
     public static int getPx(Context context, int dimensionDp) {
         float density = context.getResources().getDisplayMetrics().density;
         return (int) (dimensionDp * density + 0.5f);
+    }
+
+    public static <T extends Model> Class<T> getInstance(Object o) {
+        if (o instanceof Customer)
+            return (Class<T>) o;
+        else if (o instanceof Warehouse)
+            return (Class<T>) o;
+        else
+            return null;
     }
 
 }

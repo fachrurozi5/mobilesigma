@@ -57,18 +57,18 @@
         android:hint="@string/hint_salesman"/>
 
     <EditText
-        android:id="@+id/et_rute"
+        android:id="@+id/et_warehouse"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_salesman"
         android:singleLine="true"
-        android:hint="@string/hint_rute"/>
+        android:hint="@string/hint_warehouse"/>
 
     <AutoCompleteTextView
         android:id="@+id/act_salesman"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_rute"
+        android:layout_below="@id/et_warehouse"
         android:singleLine="true"
         android:hint="@string/hint_salesman"
         android:visibility="gone"/>
