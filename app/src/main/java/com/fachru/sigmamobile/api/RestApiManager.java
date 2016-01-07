@@ -3,6 +3,7 @@ package com.fachru.sigmamobile.api;
 import com.fachru.sigmamobile.api.interfaces.CustomerAPI;
 import com.fachru.sigmamobile.api.interfaces.DoHeadAPI;
 import com.fachru.sigmamobile.api.interfaces.EmployeeAPI;
+import com.fachru.sigmamobile.api.interfaces.PrdStatus2API;
 import com.fachru.sigmamobile.api.interfaces.PrdStatusAPI;
 import com.fachru.sigmamobile.api.interfaces.ProductAPI;
 import com.fachru.sigmamobile.api.interfaces.WhStockAPI;
@@ -25,6 +26,7 @@ public class RestApiManager {
     private EmployeeAPI employeeApi;
     private WhStockAPI whStockAPI;
     private PrdStatusAPI prdStatusAPI;
+    private PrdStatus2API prdStatus2API;
     private ProductAPI productAPI;
 
     public RestApiManager() {
@@ -83,6 +85,16 @@ public class RestApiManager {
             prdStatusAPI = retrofit().create(PrdStatusAPI.class);
         }
         return prdStatusAPI;
+    }
+
+    /*
+    * Product Status 2 API
+    * */
+    public PrdStatus2API getPrstat2() {
+        if (prdStatus2API == null) {
+            prdStatus2API = retrofit().create(PrdStatus2API.class);
+        }
+        return prdStatus2API;
     }
 
     /*
