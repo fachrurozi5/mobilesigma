@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.fachru.sigmamobile.R;
-import com.fachru.sigmamobile.adapters.adapter.AdapterDoHeadItem;
-import com.fachru.sigmamobile.model.model.DoHead;
+import com.fachru.sigmamobile.adapters.AdapterDoHead;
+import com.fachru.sigmamobile.model.DoHead;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class DoneOrderFragment extends Fragment {
 
     protected List<DoHead> doHeads;
 
-    protected AdapterDoHeadItem adapterDoHeadItem;
+    protected AdapterDoHead adapterDoHeadItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,10 +36,10 @@ public class DoneOrderFragment extends Fragment {
         bundle = getArguments();
 
         doHeads = new ArrayList<>();
-        if (DoHead.allDone().size() > 0)
-            doHeads = DoHead.allDone();
+        /*if (DoHead.allDone().size() > 0)
+            doHeads = DoHead.allDone();*/
 
-        adapterDoHeadItem = new AdapterDoHeadItem(activity, doHeads);
+        adapterDoHeadItem = new AdapterDoHead(activity, doHeads);
     }
 
     @Override

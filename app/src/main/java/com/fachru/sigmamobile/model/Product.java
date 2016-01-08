@@ -24,7 +24,7 @@ import java.util.List;
 public class Product extends Model {
 
     @SerializedName("PRODID")
-    @Column(name = "product_id")
+    @Column(name = "product_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public String product_id;
 
     @SerializedName("PRODNAME1")
@@ -180,7 +180,7 @@ public class Product extends Model {
         return hashMaps;
     }
 
-    public static Product find(String product_id) {
+    public static Product find(String product_id)  {
         return new Select().from(Product.class)
                 .where("product_id = ?", product_id)
                 .executeSingle();

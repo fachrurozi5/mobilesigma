@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapters.AdapterDoItem;
 import com.fachru.sigmamobile.adapters.AdapterFilter;
 import com.fachru.sigmamobile.model.DoHead;
-import com.fachru.sigmamobile.model.model.DoItem;
+import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
@@ -56,10 +57,10 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     protected AutoCompleteTextView act_product;
     protected EditText et_product_price;
     protected EditText et_qty;
-    protected EditText et_disc_nusantara;
+/*    protected EditText et_disc_nusantara;
     protected EditText et_disc_nusantara_value;
     protected EditText et_disc_principal;
-    protected EditText et_disc_principal_value;
+    protected EditText et_disc_principal_value;*/
     protected EditText et_sub_total;
     protected EditText et_total;
     protected Button btn_add;
@@ -89,12 +90,13 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     * label
     * */
     int QTY;
-    long total = 0;
-    long sub_total = 0;
-    long nusantara_value = 0;
+    double total = 0;
+    double sub_total = 0;
+//    long sub_total = 0;
+    /*long nusantara_value = 0;
     long principal_value = 0;
     double disc_nusantara = 0;
-    double disc_principal = 0;
+    double disc_principal = 0;*/
     boolean isUpdate = false;
 
     /*
@@ -103,8 +105,8 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     private OnItemClickListener onActProductItemClicked;
     private OnItemLongClickListener onDoItemLongClicked;
     private TextWatcher qtyWatcher;
-    private TextWatcher discNusantaraWatcher;
-    private TextWatcher discPrincipalWatcher;
+    /*private TextWatcher discNusantaraWatcher;
+    private TextWatcher discPrincipalWatcher;*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,8 +128,8 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         iniComp();
         initListener();
         et_qty.addTextChangedListener(qtyWatcher);
-        et_disc_nusantara.addTextChangedListener(discNusantaraWatcher);
-        et_disc_principal.addTextChangedListener(discPrincipalWatcher);
+        /*et_disc_nusantara.addTextChangedListener(discNusantaraWatcher);
+        et_disc_principal.addTextChangedListener(discPrincipalWatcher);*/
         act_product.setOnItemClickListener(onActProductItemClicked);
         lv_do_items.setOnItemLongClickListener(onDoItemLongClicked);
         btn_add.setOnClickListener(this);
@@ -139,7 +141,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
 
         if (bundle != null) {
             doHead = DoHead.find(bundle.getString(Constanta.KEY_DOC_NO));
-//          TODO:  doItems = doHead.doItems();
+            doItems = doHead.doItems();
             adapterDoItem.update(doItems);
             setButtonEnable(btn_add);
             enableForm(layout);
@@ -185,8 +187,15 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     @Override
     protected void actionAdd() {
         if (!errorChecked()) {
-//          TODO:  doItem = new DoItem(doHead, product, QTY, disc_nusantara, disc_principal, sub_total);
+            doItem = new DoItem.Builder()
+                    .setDocno(doHead.doc_no)
+                    .setProduct_id(product.product_id)
+                    .setQty(QTY)
+                    .setSubTotal(sub_total)
+                    .build();
             doItem.save();
+
+            Log.d(Constanta.TAG, doItem.toString());
             adapterDoItem.add(doItem);
             clearForm(layout);
         }
@@ -206,6 +215,13 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             doItem.discount_principal = disc_principal;
             doItem.sub_total = sub_total;
             adapterDoItem.set(doItem);*/
+
+            doItem.product_id = product.product_id;
+            doItem.qty = QTY;
+            doItem.sub_total = sub_total;
+            doItem.save();
+            adapterDoItem.set(doItem);
+
             onCancelOrAfterEdit();
             clearForm(layout);
         }
@@ -232,7 +248,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         product = null;
         act_product.requestFocus();
         QTY = 0;
-        disc_nusantara = disc_principal = principal_value = nusantara_value = sub_total = 0;
+        /*disc_nusantara = disc_principal = principal_value = nusantara_value =*/ sub_total = 0;
         imm.hideSoftInputFromWindow(act_product.getWindowToken(), 0);
         setButtonEnable(btn_add);
         calcTotal();
@@ -257,7 +273,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 } catch (Exception e) {
                     et_qty.setGravity(Gravity.LEFT);
                 }
-                // TODO: calcAll();
+                 calcAll();
             }
 
             @Override
@@ -266,7 +282,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             }
         };
 
-        discNusantaraWatcher = new TextWatcher() {
+        /*discNusantaraWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -274,7 +290,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // TODO: calcAll();
+                calcAll();
             }
 
             @Override
@@ -298,7 +314,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             public void afterTextChanged(Editable editable) {
 
             }
-        };
+        };*/
 
         onActProductItemClicked = new OnItemClickListener() {
             @Override
@@ -308,7 +324,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 act_product.setText(product.name);
                 et_product_price.setGravity(Gravity.RIGHT);
                 et_product_price.setText(CommonUtil.priceFormat2Decimal(product.sellprice));
-                // TODO: calcAll();
+                calcAll();
                 et_qty.requestFocus();
             }
         };
@@ -329,10 +345,10 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         act_product = (AutoCompleteTextView) view.findViewById(R.id.act_product);
         et_product_price = (EditText) view.findViewById(R.id.et_product_price);
         et_qty = (EditText) view.findViewById(R.id.et_qty);
-        et_disc_nusantara = (EditText) view.findViewById(R.id.et_disc_nusantara);
+        /*et_disc_nusantara = (EditText) view.findViewById(R.id.et_disc_nusantara);
         et_disc_nusantara_value = (EditText) view.findViewById(R.id.et_disc_nusantara_value);
         et_disc_principal = (EditText) view.findViewById(R.id.et_disc_principal);
-        et_disc_principal_value = (EditText) view.findViewById(R.id.et_disc_principal_value);
+        et_disc_principal_value = (EditText) view.findViewById(R.id.et_disc_principal_value);*/
         et_sub_total = (EditText) view.findViewById(R.id.et_sub_total);
         et_total = (EditText) view.findViewById(R.id.et_total);
         lv_do_items = (ListView) view.findViewById(R.id.lv_do_items);
@@ -373,17 +389,17 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         }
 
         return value;
-    }
+    }*/
 
     private void calcAll() {
         if (product != null) {
-            if (!et_disc_nusantara.getText().toString().equals("") ||
+            /*if (!et_disc_nusantara.getText().toString().equals("") ||
                     et_disc_nusantara.getText() != null)
                 nusantara_value = calcDiscNusantara(et_disc_nusantara.getText().toString());
 
             if (!et_disc_principal.getText().toString().equals("") ||
                     et_disc_principal.getText() != null)
-                principal_value = calcDiscPrincipal(et_disc_principal.getText().toString());
+                principal_value = calcDiscPrincipal(et_disc_principal.getText().toString());*/
 
             if (!et_qty.getText().toString().equals("") &&
                     et_qty.getText() != null)
@@ -393,12 +409,12 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
 
     private int callSubTotal(int QTY) {
         if (QTY > 0 || product != null) {
-            sub_total = QTY * (product.price - (nusantara_value + principal_value));
+            sub_total = QTY * product.sellprice;/*(product.price - (nusantara_value + principal_value));*/
             et_sub_total.setGravity(Gravity.RIGHT);
             et_sub_total.setText(CommonUtil.priceFormat2Decimal(sub_total));
         }
         return QTY;
-    }*/
+    }
 
     private void onEdit() {
         enableForm(layout);
@@ -427,7 +443,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         } /* TODO: else if (Long.parseLong(et_qty.getText().toString()) > product.stock) {
             et_qty.setError(getString(R.string.error_input_qty_and_stock));
             return true;
-        }*/ else if (et_disc_nusantara.getText().toString().equals("") ||
+        }else if (et_disc_nusantara.getText().toString().equals("") ||
                 et_disc_nusantara.getText() == null) {
             et_disc_nusantara.setError(getString(R.string.error_input_disc));
             return true;
@@ -435,19 +451,20 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 et_disc_principal.getText() == null) {
             et_disc_principal.setError(getString(R.string.error_input_disc));
             return true;
-        } else {
+        }*/  else {
             return false;
         }
     }
 
     private void editDoItem(DoItem doItem) {
-        /*TODO: product = doItem.product;
+        product = Product.find(doItem.product_id);
         act_product.setText(product.name);
         et_product_price.setText(CommonUtil.priceFormat2Decimal(product.sellprice));
-        et_qty.setText(String.valueOf(doItem.jumlah_order));
+        et_qty.setText(String.valueOf(doItem.qty));
+        /*
         et_disc_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
         et_disc_principal.setText(CommonUtil.percentFormat(doItem.discount_principal));*/
-        // TODO: calcAll();
+        calcAll();
         disableForm(layout);
         setButtonDisable(btn_add);
     }

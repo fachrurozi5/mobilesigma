@@ -23,8 +23,6 @@ import com.fachru.sigmamobile.fragment.PointOfSaleFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment.OnSetDoItemListener;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.DoHead;
-import com.fachru.sigmamobile.model.model.DoItem;
-import com.fachru.sigmamobile.model.model.Product;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.lowagie.text.Document;

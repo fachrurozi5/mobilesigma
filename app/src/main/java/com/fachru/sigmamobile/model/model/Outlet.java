@@ -54,9 +54,6 @@ public class Outlet extends Model {
                 .executeSingle();
     }
 
-    public List<DoHead> doHeads() {
-        return getMany(DoHead.class, "Outlet");
-    }
 
     @Override
     public String toString() {

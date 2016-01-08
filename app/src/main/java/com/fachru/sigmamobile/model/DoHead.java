@@ -143,6 +143,13 @@ public class DoHead extends Model {
                 .execute();
     }
 
+    public List<DoItem> doItems() {
+        return new Select()
+                .from(DoItem.class)
+                .where("docno =? ", doc_no)
+                .execute();
+    }
+
     public String getDocDate() {
         return CommonUtil.dateToStringMedium(this.doc_date);
     }

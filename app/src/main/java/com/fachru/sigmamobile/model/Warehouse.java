@@ -3,7 +3,10 @@ package com.fachru.sigmamobile.model;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Created by fachru on 07/01/16.
@@ -39,6 +42,27 @@ public class Warehouse extends MasterModel {
         name = builder.name;
         whgroup = builder.whgroup;
         remarks = builder.remarks;
+    }
+
+    public static Warehouse getWarehouse(String whid) {
+        return new Select()
+                .from(Warehouse.class)
+                .where("whid =?", whid)
+                .executeSingle();
+    }
+
+    public static String getWarehouseName(String whid) {
+        Warehouse warehouse = new Select()
+                .from(Warehouse.class)
+                .where("whid =?", whid)
+                .executeSingle();
+        return warehouse.name;
+    }
+
+    public static List<Warehouse> all() {
+        return new Select()
+                .from(Warehouse.class)
+                .execute();
     }
 
     @Override

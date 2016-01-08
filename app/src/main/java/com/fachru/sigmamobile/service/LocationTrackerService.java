@@ -19,6 +19,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.MainActivity;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.utils.CommonUtil;
@@ -220,7 +221,7 @@ public class LocationTrackerService extends Service implements
     }
 
     private void createNotification(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, Login.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

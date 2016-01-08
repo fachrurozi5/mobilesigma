@@ -9,7 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
-import com.fachru.sigmamobile.model.model.DoItem;
+import com.fachru.sigmamobile.model.DoItem;
+import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.CommonUtil;
 
 import java.util.List;
@@ -83,11 +84,11 @@ public class AdapterDoItem extends BaseAdapter {
             holder.no = (TextView) view.findViewById(R.id.item_so_no);
             holder.jenis_barang = (TextView) view.findViewById(R.id.item_so_jenis_barang);
             holder.harga_list = (TextView) view.findViewById(R.id.item_so_harga_list);
-            holder.jumlah_order = (TextView) view.findViewById(R.id.item_so_jumlah_order);
+            holder.jumlah_order = (TextView) view.findViewById(R.id.item_so_jumlah_order);/*
             holder.persen_d_nusantara = (TextView) view.findViewById(R.id.item_so_persen_d_nusantara);
             holder.nilai_d_nusantara = (TextView) view.findViewById(R.id.item_so_nilai_d_nusantara);
             holder.persen_d_principal = (TextView) view.findViewById(R.id.item_so_persen_d_principal);
-            holder.nilai_d_principal = (TextView) view.findViewById(R.id.item_so_nilai_d_principal);
+            holder.nilai_d_principal = (TextView) view.findViewById(R.id.item_so_nilai_d_principal);*/
             holder.sub_total = (TextView) view.findViewById(R.id.item_so_sub_total);
             view.setTag(holder);
         } else {
@@ -95,17 +96,18 @@ public class AdapterDoItem extends BaseAdapter {
         }
 
         DoItem doItem = (DoItem) getItem(i);
+        Product product = Product.find(doItem.product_id);
 
         holder.no.setText(String.valueOf(i + 1));
-        holder.jenis_barang.setText(doItem.product.product_name);
-        holder.harga_list.setText(CommonUtil.priceFormat(doItem.product.price));
-        holder.jumlah_order.setText(CommonUtil.priceFormat(doItem.jumlah_order));
-        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
-        double nilai_nusantara = (doItem.product.price * doItem.discount_nusantara) / 100;
-        holder.nilai_d_nusantara.setText(CommonUtil.priceFormat(nilai_nusantara));
-        holder.persen_d_principal.setText(CommonUtil.percentFormat(doItem.discount_principal));
-        double nilai_principal = (doItem.product.price * doItem.discount_principal) / 100;
-        holder.nilai_d_principal.setText(CommonUtil.priceFormat(nilai_principal));
+        holder.jenis_barang.setText(product.name);
+        holder.harga_list.setText(CommonUtil.priceFormat(product.sellprice));
+        holder.jumlah_order.setText(CommonUtil.priceFormat(doItem.qty));
+//        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
+//        double nilai_nusantara = (doItem.product.price * doItem.discount_nusantara) / 100;
+//        holder.nilai_d_nusantara.setText(CommonUtil.priceFormat(nilai_nusantara));
+//        holder.persen_d_principal.setText(CommonUtil.percentFormat(doItem.discount_principal));
+//        double nilai_principal = (doItem.product.price * doItem.discount_principal) / 100;
+//        holder.nilai_d_principal.setText(CommonUtil.priceFormat(nilai_principal));
         holder.sub_total.setText(CommonUtil.priceFormat(doItem.sub_total));
 
         return view;
@@ -115,11 +117,11 @@ public class AdapterDoItem extends BaseAdapter {
         TextView no;
         TextView jenis_barang;
         TextView harga_list;
-        TextView jumlah_order;
+        TextView jumlah_order;/*
         TextView persen_d_nusantara;
         TextView nilai_d_nusantara;
         TextView persen_d_principal;
-        TextView nilai_d_principal;
+        TextView nilai_d_principal;*/
         TextView sub_total;
     }
 }

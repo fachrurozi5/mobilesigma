@@ -65,9 +65,6 @@ public class Salesman extends Model {
                 .executeSingle();
     }
 
-    public List<DoHead> doHeads() {
-        return getMany(DoHead.class, "Salesman");
-    }
 
     @Override
     public String toString() {

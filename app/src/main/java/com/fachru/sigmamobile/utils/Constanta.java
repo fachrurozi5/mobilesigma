@@ -6,8 +6,8 @@ package com.fachru.sigmamobile.utils;
 public final class Constanta {
 
     public static final String TAG = "com.fachru.sigma";
-    public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
-//    public static final String BASE_URL = "http://192.168.0.100/sigmamobile/";
+//    public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
+    public static final String BASE_URL = "http://192.168.0.100/sigmamobile/";
 
     /*
     * for date time
@@ -23,7 +23,7 @@ public final class Constanta {
     * for result activity
     * */
     public static final int REQUEST_CODE                = 200;
-    public static final int RESULT_FAILD                = 100;
+    public static final int RESULT_FAIL = 100;
     public static final int RESULT_OK                   = 101;
 
     /*

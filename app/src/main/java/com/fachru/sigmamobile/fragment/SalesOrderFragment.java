@@ -28,7 +28,7 @@ import com.fachru.sigmamobile.adapters.AdapterDoItem;
 import com.fachru.sigmamobile.adapters.AdapterFilter;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoItemListener;
 import com.fachru.sigmamobile.model.DoHead;
-import com.fachru.sigmamobile.model.model.DoItem;
+import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
@@ -124,7 +124,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
         product = null;
         doItems = new ArrayList<>();
         productFilter = new AdapterFilter(activity.getApplicationContext(), Product.toListHashMap());
-        adapterDoItem = new AdapterDoItem(activity, doItems);
+//      TODO:  adapterDoItem = new AdapterDoItem(activity, doItems);
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -148,7 +148,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
         if (bundle != null) {
             doHead = DoHead.find(bundle.getString(Constanta.KEY_DOC_NO));
 //          TODO:  doItems = doHead.doItems();
-            adapterDoItem.update(doItems);
+//          TODO:  adapterDoItem.update(doItems);
             setButtonEnable(btn_add);
             enableForm(layout);
             calcTotal();
@@ -165,7 +165,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
         super.onPause();
         clearForm(layout);
         doItems = new ArrayList<>();
-        lv_do_items.setAdapter(new AdapterDoItem(activity, doItems));
+//      TODO:  lv_do_items.setAdapter(new AdapterDoItem(activity, doItems));
         listener.unSetDoItem();
     }
 
@@ -195,7 +195,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
         if (!errorChecked()) {
 //          TODO:  doItem = new DoItem(doHead, product, QTY, disc_nusantara, disc_principal, sub_total);
             doItem.save();
-            adapterDoItem.add(doItem);
+//          TODO  adapterDoItem.add(doItem);
             clearForm(layout);
         }
     }
@@ -229,7 +229,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        adapterDoItem.delete(doItem);
+//              TODO          adapterDoItem.delete(doItem);
                     }
                 }).show();
     }
@@ -478,12 +478,12 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
     }
 
     private void calcTotal() {
-        if (adapterDoItem.getList().size() != 0) {
+        /*if (adapterDoItem.getList().size() != 0) {
             total = 0;
             for (DoItem item : adapterDoItem.getList()) {
                 total += item.sub_total;
             }
         }
-        et_total.setText(CommonUtil.priceFormat2Decimal(total));
+        et_total.setText(CommonUtil.priceFormat2Decimal(total));*/
     }
 }

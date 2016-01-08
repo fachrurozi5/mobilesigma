@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 /**
  * Created by fachru on 25/11/15.
@@ -96,6 +97,11 @@ public abstract class BaseFragmentForm extends Fragment {
 
     private void instanceEditText(View view, boolean b) {
         if (view instanceof EditText) view.setEnabled(b);
+
+        if (view instanceof Spinner) {
+            ((Spinner) view).getSelectedView().setEnabled(b);
+            view.setEnabled(b);
+        }
 
         if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0))
             disableForm((ViewGroup) view);

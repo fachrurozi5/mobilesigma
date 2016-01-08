@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by fachru on 06/01/16.
  */
@@ -18,7 +20,7 @@ import org.json.JSONObject;
 public class ProductStatus extends Model {
 
     @SerializedName("PRSTATID")
-    @Column(name = "prstat_id")
+    @Column(name = "prstat_id", unique = true)
     public String prstat_id;
 
     @SerializedName("PRSTATNAME")

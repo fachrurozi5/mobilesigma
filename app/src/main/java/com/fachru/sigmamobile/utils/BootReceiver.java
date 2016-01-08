@@ -27,26 +27,6 @@ public class BootReceiver extends BroadcastReceiver {
             context.startService(serviceIntent);
             serviceIntent = new Intent(context, LocationTrackerService.class);
             context.startService(serviceIntent);
-//            createNotification(context);
         }
     }
-
-    /*private void createNotification(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification notification = new NotificationCompat.Builder(context)
-                .setContentTitle("Mobile Sigma")
-                .setContentText("Android Tracking Service is Running.").setSmallIcon(R.drawable.ic_action_bar)
-                .setColor(Color.parseColor("#2196F3"))
-                .setContentIntent(pendingIntent)
-                .build();
-
-        notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
-
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        manager.notify(0, notification);
-    }*/
 }

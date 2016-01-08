@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
@@ -32,10 +33,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.fachru.sigmamobile.adapters.AdapterDoHead;
+import com.fachru.sigmamobile.adapters.spinners.AdapterWarehouse;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
+import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -73,9 +76,10 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     * mListener
     * */
     protected OnSetDoHeadListener mListener;
-    protected OnItemClickListener onSalesmanClicked;
-    protected OnItemClickListener onOutletClicked;
+    /*protected OnItemClickListener onSalesmanClicked;
+    protected OnItemClickListener onOutletClicked;*/
     protected OnItemLongClickListener onDoHeadLongClicked;
+    protected OnItemSelectedListener onWarehouseSelected;
 
 
     /*
@@ -86,6 +90,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected Outlet outlet;*/
     protected Customer customer;
     protected Employee employee;
+    protected Warehouse warehouse;
 
     /*
     * list of object
@@ -98,6 +103,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     /*protected AdapterFilter salesmanFilter;
     protected AdapterFilter outletFilter;*/
     private AdapterDoHead adapterDoHead;
+    private AdapterWarehouse adapterWarehouse;
 
     /*
     * label
@@ -119,6 +125,8 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
             doHeads = DoHead.getAllWhereCustomer(customer.getCustomerId());
 
         adapterDoHead = new AdapterDoHead(getContext(), doHeads);
+        adapterWarehouse = new AdapterWarehouse(activity, Warehouse.all());
+        adapterWarehouse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -132,6 +140,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         lv_do_head_items.setOnItemLongClickListener(onDoHeadLongClicked);
         /*act_salesman.setOnItemClickListener(onSalesmanClicked);
         act_outlet.setOnItemClickListener(onOutletClicked);*/
+        sp_warehause.setOnItemSelectedListener(onWarehouseSelected);
         btn_date_picker.setOnClickListener(this);
         btn_add.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
@@ -142,6 +151,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         lv_do_head_items.setAdapter(adapterDoHeadItem);*/
 
         lv_do_head_items.setAdapter(adapterDoHead);
+        sp_warehause.setAdapter(adapterWarehouse);
 
         et_customer.setText(customer.getName());
         et_salesman.setText(employee.name);
@@ -225,12 +235,15 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
         customer = Customer.getCustomer(doHead.custid);
         employee = Employee.getEmployee(doHead.empid);
+        warehouse = Warehouse.getWarehouse(doHead.whid);
 
         et_doc_no.setText(doHead.doc_no);
         et_doc_date.setText(doHead.getDocDate());
         /*sp_warehause.setText(doHead.rute);*/
         /*act_salesman.setText(doHead.salesman.salesman_name);
         act_outlet.setText(doHead.outlet.outlet_name);*/
+        int pos = adapterWarehouse.getPosition(warehouse);
+        sp_warehause.setSelection(pos);
         et_customer.setText(customer.getName());
         et_salesman.setText(employee.name);
         disableForm(layout);
@@ -246,6 +259,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                     .setCustid(et_customer.getText().toString())
                     .setCustid(customer.getCustomerId())
                     .setEmpid(employee.employee_id)
+                    .setWhid(warehouse.whid)
                     .build();
             long status = doHead.save();
             if (status != -1) {
@@ -272,15 +286,11 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected void actionUpdate() {
         if (!errorChecked()) {
             try {
-                /*doHead.setDateFromString(et_doc_date.getText().toString());
-                doHead.rute = sp_warehause.getText().toString();
-                doHead.salesman = salesman;
-                doHead.outlet = outlet;
-                doHead.customer = customer;
-                doHead.save();*/
                 doHead.custid = customer.getCustomerId();
                 doHead.empid = employee.employee_id;
+                doHead.whid = warehouse.whid;
                 doHead.setDateFromString(et_doc_date.getText().toString());
+                doHead.save();
 
                 adapterDoHead.set(doHead);
                 onCancelOrAfterEdit();
@@ -349,10 +359,23 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 return false;
             }
         };
+
+        onWarehouseSelected = new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                warehouse = Warehouse.load(Warehouse.class, id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
     }
 
     private void onCancelOrAfterEdit() {
         doHead = null;
+        warehouse = null;
         /*salesman = null;
         outlet = null;*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -428,6 +451,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected void clearForm(ViewGroup group) {
         super.clearForm(group);
         doHead = null;
+        warehouse = null;
         /*salesman = null;
         outlet = null;*/
         et_customer.setText(customer.getName());

@@ -42,12 +42,15 @@ public class DoItem extends Model {
     @Column(name = "nilai")
     public double nilai;
 
+    public double sub_total;
+
     public DoItem() {
         super();
     }
 
     public DoItem(Builder builder) {
         docno       = builder.docno;
+        product_id  = builder.product_id;
         qty         = builder.qty;
         pricelist   = builder.pricelist;
         pricelist2  = builder.pricelist2;
@@ -90,6 +93,8 @@ public class DoItem extends Model {
 
         public double nilai;
 
+        public double sub_total;
+
 
         public Builder setDocno(String docno) {
             this.docno = docno;
@@ -106,7 +111,12 @@ public class DoItem extends Model {
             return Builder.this;
         }
 
-        public Builder setPricelist(double pricelist) {
+        public Builder setSubTotal(double sub_total) {
+            this.sub_total = sub_total;
+            return Builder.this;
+        }
+
+        /*public Builder setPricelist(double pricelist) {
             this.pricelist = pricelist;
             return Builder.this;
         }
@@ -124,7 +134,7 @@ public class DoItem extends Model {
         public Builder setNilai(double nilai) {
             this.nilai = nilai;
             return Builder.this;
-        }
+        }*/
 
         public DoItem build() {
             return new DoItem(Builder.this);

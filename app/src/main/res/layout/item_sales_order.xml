@@ -38,7 +38,7 @@
         android:gravity="end|center"
         android:layout_gravity="center" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/item_so_persen_d_nusantara"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:padding="2dp"
         android:gravity="end|center"
-        android:layout_gravity="center" />
+        android:layout_gravity="center" />-->
 
     <TextView
         android:id="@+id/item_so_sub_total"
