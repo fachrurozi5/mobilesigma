@@ -168,6 +168,10 @@
                     android:text="@string/header_product"/>
 
                 <TextView style="@style/DefaultHeader"
+                    android:layout_width="100dp"
+                    android:text="@string/header_unit"/>
+
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="90dp"
                     android:layout_gravity="center"
                     android:text="@string/harga_list_rp" />

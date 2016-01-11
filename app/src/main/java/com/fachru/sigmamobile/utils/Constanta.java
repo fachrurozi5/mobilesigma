@@ -7,7 +7,7 @@ public final class Constanta {
 
     public static final String TAG = "com.fachru.sigma";
 //    public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
-    public static final String BASE_URL = "http://192.168.0.100/sigmamobile/";
+    public static final String BASE_URL = "http://192.168.0.105/sigmamobile/";
 
     /*
     * for date time
@@ -54,4 +54,7 @@ public final class Constanta {
     public static final String KEY_DOC_NO               = "doc_no";
     public static final String SIMPLE_LIST_ITEM_1       = "item_1";
     public static final String SIMPLE_LIST_ITEM_2       = "item_2";
+    public static final String SIMPLE_LIST_ITEM_PRICE   = "item_sell";
+    public static final String SIMPLE_LIST_ITEM_STOCK   = "item_stock";
+    public static final String KEY_WHID                 = "whid";
 }

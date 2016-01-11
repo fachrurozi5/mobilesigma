@@ -168,6 +168,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 if (doHead != null) {
                     bundle = new Bundle();
                     bundle.putString(Constanta.KEY_DOC_NO, doHead.doc_no);
+                    bundle.putString(Constanta.KEY_WHID, doHead.whid);
                     orderFragment.setArguments(bundle);
                 }
                 fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -261,7 +262,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
             // TODO:Perbaiki Cell di pdf
             /*for (DoItem item : doHead.doItems()) {
-                table.addCell(createCell(item.product.product_id, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(item.product.prodid, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(item.product.product_name, font, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
                 table.addCell(createCell("PCS", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(String.valueOf(item.jumlah_order), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));

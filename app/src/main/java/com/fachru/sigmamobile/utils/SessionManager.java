@@ -25,6 +25,7 @@ public class SessionManager {
     public static final String KEY_DOWNLOAD_PRSTAT2 = "dowbload_prstat2";
     public static final String KEY_DOWNLOAD_PRODUCT = "dowbload_product";
     public static final String KEY_DOWNLOAD_WAREHOUSE = "download_warehouse";
+    public static final String KEY_DOWNLOAD_WAREHOUSE_STOCK = "download_warehouse_stock";
 
 
     /*
@@ -106,6 +107,11 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void setWarehouseStockDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_WAREHOUSE_STOCK, done);
+        editor.commit();
+    }
+
     public boolean hasCustomer() {
         return preferences.getBoolean(KEY_DOWNLOAD_CUSTOMER, false);
     }
@@ -124,6 +130,10 @@ public class SessionManager {
 
     public boolean hasWarehouse() {
         return preferences.getBoolean(KEY_DOWNLOAD_WAREHOUSE, false);
+    }
+
+    public boolean hasWarehouseStock() {
+        return preferences.getBoolean(KEY_DOWNLOAD_WAREHOUSE_STOCK, false);
     }
 
     public boolean getAffterInstall() {

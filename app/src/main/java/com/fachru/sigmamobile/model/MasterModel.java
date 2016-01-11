@@ -15,6 +15,15 @@ import java.util.List;
  */
 public class MasterModel extends Model {
 
+
+    public static <T extends Model> T find(String column, String value, Class<? extends Model> aClass) {
+        return new Select()
+                .from(aClass)
+                .where(column + "=?", value)
+                .executeSingle();
+    }
+
+
     public static <T extends Model> T findOrCreateFromJson(Class<? extends Model> aClass, String whereclause, String value, JSONObject json) throws JSONException {
         Object existingObject = new Select().from(aClass).where(whereclause + " =?", value).executeSingle();
         if (existingObject != null) {

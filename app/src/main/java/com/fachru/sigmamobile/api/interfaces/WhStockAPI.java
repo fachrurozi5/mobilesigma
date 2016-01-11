@@ -12,7 +12,7 @@ import retrofit.http.POST;
 public interface WhStockAPI {
 
     @GET("whstock")
-    Call<String> whstock();
+    Call<String> Records();
 
     @FormUrlEncoded
     @POST("whstock/getwhstock")

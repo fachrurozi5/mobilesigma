@@ -74,7 +74,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_header_so, container, false);
         initComp();
-        et_customer.setText(customer.getName());
+        et_customer.setText(customer.name);
         et_salesman.setText(employee.name);
         btn_date_picker.setOnClickListener(this);
         return view;

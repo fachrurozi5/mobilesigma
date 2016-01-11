@@ -25,10 +25,6 @@ public class ProductStatus2 extends Model{
     @Column(name = "name")
     public String name;
 
-    @SerializedName("PRSTATTYPE")
-    @Column(name = "type")
-    public String type;
-
     public ProductStatus2() {
         super();
     }
@@ -37,7 +33,6 @@ public class ProductStatus2 extends Model{
         super();
         prstat_id = builder.prstat_id;
         name = builder.name;
-        type = builder.type;
     }
 
     public static ProductStatus2 find(String prstat_id) {
@@ -70,10 +65,9 @@ public class ProductStatus2 extends Model{
 
     @Override
     public String toString() {
-        return "ProductStatus{" +
+        return "ProductStatus2{" +
                 "prstat_id='" + prstat_id + '\'' +
                 ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
                 '}';
     }
 
@@ -81,7 +75,6 @@ public class ProductStatus2 extends Model{
 
         String prstat_id;
         String name;
-        String type;
 
         public Builder setPrstat_id(String prstat_id) {
             this.prstat_id = prstat_id;
@@ -90,11 +83,6 @@ public class ProductStatus2 extends Model{
 
         public Builder setName(String name) {
             this.name = name;
-            return Builder.this;
-        }
-
-        public Builder setType(String type) {
-            this.type = type;
             return Builder.this;
         }
 

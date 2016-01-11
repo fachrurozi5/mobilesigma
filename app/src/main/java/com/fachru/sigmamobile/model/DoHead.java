@@ -181,10 +181,58 @@ public class DoHead extends Model {
         return gson.fromJson(json.toString(), DoHead.class);
     }
 
-    /*
-    * get DoItems
-    * */
+    public static int count(String whid) {
+        return new Select()
+                .from(DoHead.class)
+                .where("empid =?", whid).execute().size();
+    }
 
+    public static String generateId(String whid, Date date) {
+        String id = whid.substring(0, 2).toUpperCase();
+        int size = count(whid);
+        SimpleDateFormat format = new SimpleDateFormat("DDD", Locale.getDefault());
+        id += "-" + format.format(date);
+        if (size > 0) {
+            if (size <= 9) {
+                id += "00" + (size + 1);
+            } else if (size > 9) {
+                id += "0" + (size + 1);
+            } else if (size > 99){
+                id += (size + 1);
+            }
+        } else {
+            id += "001";
+        }
+
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "DoHead{" +
+                "doc_no='" + doc_no + '\'' +
+                ", doc_date=" + doc_date +
+                ", custid='" + custid + '\'' +
+                ", date_order=" + date_order +
+                ", csstatid1='" + csstatid1 + '\'' +
+                ", invadd1='" + invadd1 + '\'' +
+                ", invadd2='" + invadd2 + '\'' +
+                ", empid='" + empid + '\'' +
+                ", topid='" + topid + '\'' +
+                ", vatid='" + vatid + '\'' +
+                ", currid='" + currid + '\'' +
+                ", typeofso='" + typeofso + '\'' +
+                ", vatno='" + vatno + '\'' +
+                ", invamount=" + invamount +
+                ", netamt=" + netamt +
+                ", vatamt=" + vatamt +
+                ", whid='" + whid + '\'' +
+                ", amtpaid=" + amtpaid +
+                ", paytype=" + paytype +
+                ", period='" + period + '\'' +
+                ", inactive=" + inactive +
+                '}';
+    }
 
     public static class Builder {
         public String doc_no;

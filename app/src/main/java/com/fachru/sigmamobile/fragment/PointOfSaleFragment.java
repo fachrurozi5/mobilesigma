@@ -27,9 +27,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapters.AdapterDoItem;
 import com.fachru.sigmamobile.adapters.AdapterFilter;
+import com.fachru.sigmamobile.adapters.AdapterFilterProduct;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -57,7 +59,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     protected AutoCompleteTextView act_product;
     protected EditText et_product_price;
     protected EditText et_qty;
-/*    protected EditText et_disc_nusantara;
+    /*protected EditText et_disc_nusantara;
     protected EditText et_disc_nusantara_value;
     protected EditText et_disc_principal;
     protected EditText et_disc_principal_value;*/
@@ -79,11 +81,12 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     * list of object
     * */
     protected List<DoItem> doItems;
+    protected List<HashMap<String, String>> hashMapList;
 
     /*
     * custom adapter
     * */
-    protected AdapterFilter productFilter;
+    protected AdapterFilterProduct productFilter;
     protected AdapterDoItem adapterDoItem;
 
     /*
@@ -113,12 +116,11 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         super.onCreate(savedInstanceState);
         activity = getActivity();
         bundle = getArguments();
-        doHead = null;
-        doItem = null;
-        product = null;
         doItems = new ArrayList<>();
-        productFilter = new AdapterFilter(activity.getApplicationContext(), Product.toListHashMap());
+        hashMapList = new ArrayList<>();
+
         adapterDoItem = new AdapterDoItem(activity, doItems);
+        productFilter = new AdapterFilterProduct(activity.getApplicationContext(), hashMapList);
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -142,11 +144,15 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         if (bundle != null) {
             doHead = DoHead.find(bundle.getString(Constanta.KEY_DOC_NO));
             doItems = doHead.doItems();
+            hashMapList = WarehouseStock.toListHashMap(doHead.whid);
             adapterDoItem.update(doItems);
+            productFilter.update(hashMapList);
             setButtonEnable(btn_add);
             enableForm(layout);
             calcTotal();
         }
+
+
 
         lv_do_items.setAdapter(adapterDoItem);
         act_product.setAdapter(productFilter);
@@ -189,7 +195,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         if (!errorChecked()) {
             doItem = new DoItem.Builder()
                     .setDocno(doHead.doc_no)
-                    .setProduct_id(product.product_id)
+                    .setProduct_id(product.prodid)
                     .setQty(QTY)
                     .setSubTotal(sub_total)
                     .build();
@@ -216,7 +222,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             doItem.sub_total = sub_total;
             adapterDoItem.set(doItem);*/
 
-            doItem.product_id = product.product_id;
+            doItem.product_id = product.prodid;
             doItem.qty = QTY;
             doItem.sub_total = sub_total;
             doItem.save();

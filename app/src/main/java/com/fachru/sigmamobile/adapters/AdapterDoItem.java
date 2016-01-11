@@ -83,6 +83,7 @@ public class AdapterDoItem extends BaseAdapter {
             holder = new Holder();
             holder.no = (TextView) view.findViewById(R.id.item_so_no);
             holder.jenis_barang = (TextView) view.findViewById(R.id.item_so_jenis_barang);
+            holder.unit = (TextView) view.findViewById(R.id.item_so_unit);
             holder.harga_list = (TextView) view.findViewById(R.id.item_so_harga_list);
             holder.jumlah_order = (TextView) view.findViewById(R.id.item_so_jumlah_order);/*
             holder.persen_d_nusantara = (TextView) view.findViewById(R.id.item_so_persen_d_nusantara);
@@ -100,6 +101,7 @@ public class AdapterDoItem extends BaseAdapter {
 
         holder.no.setText(String.valueOf(i + 1));
         holder.jenis_barang.setText(product.name);
+        holder.unit.setText(product.unitid);
         holder.harga_list.setText(CommonUtil.priceFormat(product.sellprice));
         holder.jumlah_order.setText(CommonUtil.priceFormat(doItem.qty));
 //        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
@@ -116,6 +118,7 @@ public class AdapterDoItem extends BaseAdapter {
     private class Holder {
         TextView no;
         TextView jenis_barang;
+        TextView unit;
         TextView harga_list;
         TextView jumlah_order;/*
         TextView persen_d_nusantara;

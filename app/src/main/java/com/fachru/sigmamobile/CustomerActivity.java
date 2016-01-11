@@ -340,115 +340,115 @@ public class CustomerActivity extends AppCompatActivity implements
 
     private void setDataCustomer(Customer customer) {
 
-        et_id.setText(customer.getCustomerId());
+        et_id.setText(customer.custid);
 
-        if (!(customer.getName().equals("") || customer.getName().equals("-"))) {
-            et_name.setText(customer.getName());
+        if (!(customer.name.equals("") || customer.name.equals("-"))) {
+            et_name.setText(customer.name);
         } else {
             et_name.setVisibility(View.GONE);
             tv_name.setVisibility(View.GONE);
         }
 
-        if (!(customer.getCsstatid1().equals("") || customer.getCsstatid1().equals("-"))) {
-            et_csstatid1.setText(customer.getCsstatid1());
+        if (!(customer.csstatid1.equals("") || customer.csstatid1.equals("-"))) {
+            et_csstatid1.setText(customer.csstatid1);
         } else {
             et_csstatid1.setVisibility(View.GONE);
             tv_csstatid1.setVisibility(View.GONE);
         }
 
-        if (!(customer.getCsstatid2().equals("") || customer.getCsstatid2().equals("-"))) {
-            et_csstatid2.setText(customer.getCsstatid2());
+        if (!(customer.csstatid2.equals("") || customer.csstatid2.equals("-"))) {
+            et_csstatid2.setText(customer.csstatid2);
         } else {
             et_csstatid2.setVisibility(View.GONE);
             tv_csstatid2.setVisibility(View.GONE);
         }
 
-        if (!(customer.getCsstatid3().equals("") || customer.getCsstatid3().equals("-"))) {
-            et_csstatid3.setText(customer.getCsstatid3());
+        if (!(customer.csstatid3.equals("") || customer.csstatid3.equals("-"))) {
+            et_csstatid3.setText(customer.csstatid3);
         } else {
             et_csstatid3.setVisibility(View.GONE);
             tv_csstatid3.setVisibility(View.GONE);
         }
 
-        if (!(customer.getCsstatid4().equals("") || customer.getCsstatid4().equals("-"))) {
-            et_csstatid4.setText(customer.getCsstatid4());
+        if (!(customer.csstatid4.equals("") || customer.csstatid4.equals("-"))) {
+            et_csstatid4.setText(customer.csstatid4);
         } else {
             et_csstatid4.setVisibility(View.GONE);
             tv_csstatid4.setVisibility(View.GONE);
         }
 
-        if (!(customer.getCsstatid5().equals("") || customer.getCsstatid5().equals("-"))) {
-            et_csstatid5.setText(customer.getCsstatid5());
+        if (!(customer.csstatid5.equals("") || customer.csstatid5.equals("-"))) {
+            et_csstatid5.setText(customer.csstatid5);
         } else {
             et_csstatid5.setVisibility(View.GONE);
             tv_csstatid5.setVisibility(View.GONE);
         }
 
-        if (!(customer.getGroup_type().equals("") || customer.getGroup_type().equals("-"))) {
-            et_type_group.setText(customer.getGroup_type());
+        if (!(customer.group_type.equals("") || customer.group_type.equals("-"))) {
+            et_type_group.setText(customer.group_type);
         } else {
             et_type_group.setVisibility(View.GONE);
             tv_type_group.setVisibility(View.GONE);
         }
 
-        if (!(customer.getCs_group().equals("") || customer.getCs_group().equals("-"))) {
-            et_cs_group.setText(customer.getCs_group());
+        if (!(customer.cs_group.equals("") || customer.cs_group.equals("-"))) {
+            et_cs_group.setText(customer.cs_group);
         } else {
             et_cs_group.setVisibility(View.GONE);
             tv_cs_group.setVisibility(View.GONE);
         }
 
-        if (!(customer.getChannel().equals("") || customer.getChannel().equals("-"))) {
-            et_channel.setText(customer.getChannel());
+        if (!(customer.channel.equals("") || customer.channel.equals("-"))) {
+            et_channel.setText(customer.channel);
         } else {
             et_channel.setVisibility(View.GONE);
             tv_channel.setVisibility(View.GONE);
         }
 
-        if (!(customer.getInvadd1().equals("") || customer.getInvadd1().equals("-"))) {
-            et_invadd1.setText(customer.getInvadd1());
+        if (!(customer.invadd1.equals("") || customer.invadd1.equals("-"))) {
+            et_invadd1.setText(customer.invadd1);
         } else {
             et_invadd1.setVisibility(View.GONE);
             tv_invadd1.setVisibility(View.GONE);
         }
 
-        if (!(customer.getInvadd2().equals("") || customer.getInvadd2().equals("-"))) {
-            et_invadd2.setText(customer.getInvadd2());
+        if (!(customer.invadd2.equals("") || customer.invadd2.equals("-"))) {
+            et_invadd2.setText(customer.invadd2);
         } else {
             et_invadd2.setVisibility(View.GONE);
             tv_invadd2.setVisibility(View.GONE);
         }
 
-        if (!(customer.getInvadd3().equals("") || customer.getInvadd3().equals("-"))) {
-            et_invadd3.setText(customer.getInvadd3());
+        if (!(customer.invadd3.equals("") || customer.invadd3.equals("-"))) {
+            et_invadd3.setText(customer.invadd3);
         } else {
             et_invadd3.setVisibility(View.GONE);
             tv_invadd3.setVisibility(View.GONE);
         }
 
-        if (!(customer.getInvadd4().equals("") || customer.getInvadd4().equals("-"))) {
-            et_invadd4.setText(customer.getInvadd4());
+        if (!(customer.invadd4.equals("") || customer.invadd4.equals("-"))) {
+            et_invadd4.setText(customer.invadd4);
         } else {
             et_invadd4.setVisibility(View.GONE);
             tv_invadd4.setVisibility(View.GONE);
         }
 
-        if (!(customer.getInvzip().equals("") || customer.getInvzip().equals("-"))) {
-            et_invzip.setText(customer.getInvzip());
+        if (!(customer.invzip.equals("") || customer.invzip.equals("-"))) {
+            et_invzip.setText(customer.invzip);
         } else {
             et_invzip.setVisibility(View.GONE);
             tv_invzip.setVisibility(View.GONE);
         }
 
-        if (customer.getCreated_at() != null) {
-            et_created.setText(CommonUtil.dateHelper(customer.getCreated_at(), Constanta.ID_LONG));
+        if (customer.created_at != null) {
+            et_created.setText(CommonUtil.dateHelper(customer.created_at, Constanta.ID_LONG));
         } else {
             et_created.setVisibility(View.GONE);
             tv_created.setVisibility(View.GONE);
         }
 
-        if (customer.getUpdated_at() != null) {
-            et_updated.setText(CommonUtil.dateHelper(customer.getUpdated_at(), Constanta.ID_LONG));
+        if (customer.updated_at != null) {
+            et_updated.setText(CommonUtil.dateHelper(customer.updated_at, Constanta.ID_LONG));
         } else {
             et_updated.setVisibility(View.GONE);
             tv_updated.setVisibility(View.GONE);

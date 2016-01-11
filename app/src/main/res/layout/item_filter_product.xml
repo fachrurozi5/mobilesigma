@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView style="?android:attr/spinnerItemStyle"
+        android:id="@+id/simple_list_item_1"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:ellipsize="marquee"
+        android:text="IKMS"/>
+
+    <TextView style="?android:attr/spinnerItemStyle"
+        android:id="@+id/simple_list_item_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_1"
+        android:padding="6dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Kecap Manis Sachet New 14 ml"/>
+
+    <TextView
+        android:id="@+id/tv_stock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:layout_alignParentRight="true"
+        android:padding="6dp"
+        android:gravity="right"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textColor="#33ff88"
+        android:text="284"/>
+
+    <TextView
+        android:id="@+id/text_sell_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:padding="6dp"
+        android:text="Sell Price:"/>
+
+    <TextView
+        android:id="@+id/tv_sell_price"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:layout_toRightOf="@id/text_sell_price"
+        android:padding="6dp"
+        android:textColor="#33ff88"
+        android:text="999.999.999"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:layout_toLeftOf="@id/tv_stock"
+        android:padding="6dp"
+        android:gravity="right"
+        android:text="STOCK:"/>
+
+</RelativeLayout>

@@ -72,9 +72,9 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
         }
 
 //        holder.tv_no.setText(String.valueOf(position+1));
-        holder.tv_id.setText(listFiltered.get(position).getCustomerId());
-        holder.tv_name.setText(listFiltered.get(position).getName());
-        holder.tv_phone.setText(listFiltered.get(position).getPhone());
+        holder.tv_id.setText(listFiltered.get(position).custid);
+        holder.tv_name.setText(listFiltered.get(position).name);
+        holder.tv_phone.setText(listFiltered.get(position).phone);
 
         return view;
     }
@@ -96,8 +96,8 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
             final List<Customer> customers = new ArrayList<>();
 
             for (Customer customer : AdapterCustomer.this.original) {
-                if (customer.getCustomerId().toLowerCase().contains(filterString) ||
-                        customer.getName().toLowerCase().contains(filterString))
+                if (customer.custid.toLowerCase().contains(filterString) ||
+                        customer.name.toLowerCase().contains(filterString))
                     customers.add(customer);
             }
 

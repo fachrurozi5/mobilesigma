@@ -21,6 +21,15 @@
         android:layout_gravity="center" />
 
     <TextView
+        android:id="@+id/item_so_unit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:padding="2dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center" />
+
+    <TextView
         android:id="@+id/item_so_harga_list"
         android:layout_width="90dp"
         android:layout_height="wrap_content"

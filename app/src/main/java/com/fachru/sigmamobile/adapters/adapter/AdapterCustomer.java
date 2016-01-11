@@ -59,8 +59,8 @@ public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv_id.setText(listFiltered.get(position).getCustomerId());
-        holder.tv_name.setText(listFiltered.get(position).getName());
+        holder.tv_id.setText(listFiltered.get(position).custid);
+        holder.tv_name.setText(listFiltered.get(position).name);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.ViewHo
             final List<Customer> customers = new ArrayList<>();
 
             for (Customer customer : AdapterCustomer.this.list) {
-                if (customer.getCustomerId().toLowerCase().contains(filterString) ||
-                        customer.getName().toLowerCase().contains(filterString))
+                if (customer.custid.toLowerCase().contains(filterString) ||
+                        customer.name.toLowerCase().contains(filterString))
                     customers.add(customer);
             }
 

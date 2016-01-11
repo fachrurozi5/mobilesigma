@@ -19,7 +19,7 @@ public class DoItem extends Model {
     public String docno;
 
     @SerializedName("PRODID")
-    @Column(name = "product_id")
+    @Column(name = "prodid")
     public String product_id;
 
     @SerializedName("QUANTITY")
@@ -42,6 +42,7 @@ public class DoItem extends Model {
     @Column(name = "nilai")
     public double nilai;
 
+    @Column(name = "sub_total")
     public double sub_total;
 
     public DoItem() {
@@ -52,10 +53,11 @@ public class DoItem extends Model {
         docno       = builder.docno;
         product_id  = builder.product_id;
         qty         = builder.qty;
-        pricelist   = builder.pricelist;
+        sub_total   = builder.sub_total;
+        /*pricelist   = builder.pricelist;
         pricelist2  = builder.pricelist2;
         unitprice   = builder.unitprice;
-        nilai       = builder.nilai;
+        nilai       = builder.nilai;*/
     }
 
     public List<DoItem> allWhereDoHead(String docno) {
@@ -69,7 +71,7 @@ public class DoItem extends Model {
     public String toString() {
         return "DoItem{" +
                 "docno='" + docno + '\'' +
-                ", product_id='" + product_id + '\'' +
+                ", prodid='" + product_id + '\'' +
                 ", qty=" + qty +
                 ", pricelist=" + pricelist +
                 ", pricelist2=" + pricelist2 +

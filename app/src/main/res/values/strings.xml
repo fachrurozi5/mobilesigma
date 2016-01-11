@@ -118,6 +118,7 @@
     <string name="search">Cari Disini …</string>
     <string name="title_activity_sales_order">Sales Order</string>
     <string name="hint_customer">Customer</string>
-    <string name="title_activity_splash_screen">Splash Screen</string>
+    <string name="title_activity_splash_screen">SIGMA</string>
     <string name="title_activity_login">Login</string>
+    <string name="header_unit">UNIT</string>
 </resources>
