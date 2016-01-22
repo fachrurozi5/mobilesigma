@@ -108,7 +108,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_date_picker:
+            case R.id.btn_po_date_picker:
                 actionDPD();
                 break;
         }
@@ -122,13 +122,13 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     private void initComp() {
         layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_header_so);
         et_doc_no = (EditText) view.findViewById(R.id.et_doc_no);
-        et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
+        et_doc_date = (EditText) view.findViewById(R.id.et_po_date);
         et_rute = (EditText) view.findViewById(R.id.et_warehouse);
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
         act_salesman = (AutoCompleteTextView) view.findViewById(R.id.act_salesman);
         act_outlet = (AutoCompleteTextView) view.findViewById(R.id.act_outlet);
-        btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);
+        btn_date_picker = (Button) view.findViewById(R.id.btn_po_date_picker);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
         btn_del = (Button) view.findViewById(R.id.btn_delete);

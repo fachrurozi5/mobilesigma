@@ -15,6 +15,10 @@
         android:id="@+id/tv_item_doc_date" />
 
     <TextView style="@style/DefaultItem"
+        android:layout_width="120dp"
+        android:id="@+id/tv_item_invoice" />
+
+    <TextView style="@style/DefaultItem"
         android:layout_width="300dp"
         android:id="@+id/tv_item_warehosue" />
 

@@ -77,7 +77,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_doc_no">Doc No</string>
-    <string name="hint_doc_date">Doc Date</string>
+    <string name="hint_po_date">PO Date</string>
     <string name="tag_date_picker_dialog">Datepickerdialog</string>
     <string name="hint_warehouse">Warehouse</string>
     <string name="hint_salesman">Salesman</string>
@@ -121,4 +121,8 @@
     <string name="title_activity_splash_screen">SIGMA</string>
     <string name="title_activity_login">Login</string>
     <string name="header_unit">UNIT</string>
+    <string name="hint_input_bayar">BAYAR</string>
+    <string name="hint_input_kembali">KEMBALI</string>
+    <string name="hint_invoice">Invoice</string>
+    <string name="hint_del_date">Delivery Date</string>
 </resources>

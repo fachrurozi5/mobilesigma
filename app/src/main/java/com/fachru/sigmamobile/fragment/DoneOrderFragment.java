@@ -36,8 +36,8 @@ public class DoneOrderFragment extends Fragment {
         bundle = getArguments();
 
         doHeads = new ArrayList<>();
-        /*if (DoHead.allDone().size() > 0)
-            doHeads = DoHead.allDone();*/
+        if (DoHead.getAllHasPrint().size() > 0)
+            doHeads = DoHead.getAllHasPrint();
 
         adapterDoHeadItem = new AdapterDoHead(activity, doHeads);
     }

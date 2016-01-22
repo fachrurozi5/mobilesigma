@@ -46,17 +46,17 @@
                     android:text="Doc Date" />
 
                 <TextView style="@style/DefaultHeader"
-                    android:layout_width="100dp"
-                    android:text="Rute" />
+                    android:layout_width="300dp"
+                    android:text="Warehouse" />
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
-                    android:text="Salesman"/>
+                    android:text="Customer"/>
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="fill_parent"
                     android:layout_marginRight="0dp"
-                    android:text="Outlet"/>
+                    android:text="Salesman"/>
 
             </LinearLayout>
 

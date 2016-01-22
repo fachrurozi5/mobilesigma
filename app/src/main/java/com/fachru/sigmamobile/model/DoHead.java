@@ -37,49 +37,29 @@ public class DoHead extends Model {
     @Column(name = "custid")
     public String custid;
 
-    @SerializedName("DATEORDER")
-    @Column(name = "date_order")
-    public Date date_order;
-
-    @SerializedName("CSSTATID1")
-    @Column(name = "csstatid1")
-    public String csstatid1;
-
-    @SerializedName("INVADD1")
-    @Column(name = "invadd1")
-    public String invadd1;
-
-    @SerializedName("INVADD2")
-    @Column(name = "invadd2")
-    public String invadd2;
-
     @SerializedName("EMPID")
     @Column(name = "empid")
     public String empid;
 
     @SerializedName("TOPID")
     @Column(name = "topid")
-    public String topid;
+    public String topid = "7";
 
     @SerializedName("VATID")
     @Column(name = "vatid")
-    public String vatid;
+    public String vatid = "10";
 
     @SerializedName("CURRID")
     @Column(name = "currid")
-    public String currid;
+    public String currid = "RP";
 
     @SerializedName("")
     @Column(name = "typeofso" )
-    public String typeofso;
+    public String typeofso = "7";
 
     @SerializedName("VATNO")
     @Column(name = "vatno" )
     public String vatno;
-
-    @SerializedName("INVAMOUNT")
-    @Column(name = "invamount" )
-    public double invamount;
 
     @SerializedName("NETAMT")
     @Column(name = "netamt" )
@@ -93,21 +73,21 @@ public class DoHead extends Model {
     @Column(name = "whid" )
     public String whid;
 
-    @SerializedName("AMTPAID")
-    @Column(name = "amtpaid" )
-    public double amtpaid;
-
     @SerializedName("PAYTYPE")
-    @Column(name = "paytype" )
-    public int paytype;
+    @Column(name = "paytype")
+    public int paytype = 5;
 
     @SerializedName("PERIOD")
     @Column(name = "period" )
     public String period;
 
-    @SerializedName("INACTIVE")
-    @Column(name = "inactive" )
-    public int inactive;
+    @SerializedName("DOCPRINT")
+    @Column(name = "docprint")
+    public int docprint = 0;
+
+    @SerializedName("DIBAYAR")
+    @Column(name = "dibayar")
+    public double dibayar;
 
 
     public DoHead() {
@@ -117,11 +97,18 @@ public class DoHead extends Model {
     public DoHead(Builder builder) {
         super();
         this.doc_no = builder.doc_no;
+        this.vatno = builder.vatno;
         this.doc_date = builder.doc_date;
         this.custid = builder.custid;
-        this.date_order = builder.date_order;
         this.empid = builder.empid;
         this.whid = builder.whid;
+        this.period = new SimpleDateFormat("yyyydd", Locale.US).format(this.doc_date);
+    }
+
+    public static DoHead last() {
+        return new Select().from(DoHead.class)
+                .orderBy("docno DESC")
+                .executeSingle();
     }
 
     public static DoHead find(String docno) {
@@ -140,6 +127,14 @@ public class DoHead extends Model {
         return new Select()
                 .from(DoHead.class)
                 .where("custid =? ", custid)
+                .and("docprint =?", 0)
+                .execute();
+    }
+
+    public static List<DoHead> getAllHasPrint() {
+        return new Select()
+                .from(DoHead.class)
+                .where("docprint =?", 1)
                 .execute();
     }
 
@@ -193,12 +188,13 @@ public class DoHead extends Model {
         SimpleDateFormat format = new SimpleDateFormat("DDD", Locale.getDefault());
         id += "-" + format.format(date);
         if (size > 0) {
+            long v = Long.parseLong(last().doc_no.substring(7));
             if (size <= 9) {
-                id += "00" + (size + 1);
+                id += "00" + (v + 1);
             } else if (size > 9) {
-                id += "0" + (size + 1);
+                id += "0" + (v + 1);
             } else if (size > 99){
-                id += (size + 1);
+                id += (v + 1);
             }
         } else {
             id += "001";
@@ -213,37 +209,36 @@ public class DoHead extends Model {
                 "doc_no='" + doc_no + '\'' +
                 ", doc_date=" + doc_date +
                 ", custid='" + custid + '\'' +
-                ", date_order=" + date_order +
-                ", csstatid1='" + csstatid1 + '\'' +
-                ", invadd1='" + invadd1 + '\'' +
-                ", invadd2='" + invadd2 + '\'' +
                 ", empid='" + empid + '\'' +
                 ", topid='" + topid + '\'' +
                 ", vatid='" + vatid + '\'' +
                 ", currid='" + currid + '\'' +
                 ", typeofso='" + typeofso + '\'' +
                 ", vatno='" + vatno + '\'' +
-                ", invamount=" + invamount +
                 ", netamt=" + netamt +
                 ", vatamt=" + vatamt +
                 ", whid='" + whid + '\'' +
-                ", amtpaid=" + amtpaid +
                 ", paytype=" + paytype +
                 ", period='" + period + '\'' +
-                ", inactive=" + inactive +
+                ", docprint=" + docprint +
                 '}';
     }
 
     public static class Builder {
         public String doc_no;
+        public String vatno;
         public Date doc_date;
         public String custid;
-        public Date date_order;
         public String empid;
         public String whid;
 
         public Builder setDocNo(String docno) {
             this.doc_no = docno;
+            return Builder.this;
+        }
+
+        public Builder setVatno(String vatno) {
+            this.vatno = vatno;
             return Builder.this;
         }
 
@@ -254,11 +249,6 @@ public class DoHead extends Model {
 
         public Builder setCustid(String custid) {
             this.custid = custid;
-            return Builder.this;
-        }
-
-        public Builder setDate_order(Date date_order) {
-            this.date_order = date_order;
             return Builder.this;
         }
 

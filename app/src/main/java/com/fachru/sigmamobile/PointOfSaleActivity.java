@@ -23,6 +23,10 @@ import com.fachru.sigmamobile.fragment.PointOfSaleFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment.OnSetDoItemListener;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.DoHead;
+import com.fachru.sigmamobile.model.DoItem;
+import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.Warehouse;
+import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.lowagie.text.Document;
@@ -59,7 +63,11 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     * */
     protected long total = 0;
     protected long bonus = 0;
+    protected long neto = 0;
+    protected long ppn = 0;
     protected long grand_total = 0;
+    protected long bayar = 0;
+    protected long kembali = 0;
     private long custid;
     private long emplid;
 
@@ -107,10 +115,10 @@ public class PointOfSaleActivity extends AppCompatActivity implements
             return true;
         } else if (id == R.id.action_done) {
             // TODO:Hitung sub total
-            /*for(DoItem doItem : doHead.doItems())
+            for(DoItem doItem : doHead.doItems())
             {
                 total += doItem.sub_total;
-            }*/
+            }
             showDialogOrder();
         }
 
@@ -185,6 +193,10 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
     private void showDialogOrder() {
 
+        neto = total;
+        ppn = (neto * 10) / 100;
+        grand_total = neto + ppn;
+
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.title_dialog_order)
                 .customView(R.layout.prompt_order_done, true)
@@ -194,24 +206,34 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
                         // TODO:Hitung grand total dan print nota
-                        /*doHead.total = total;
-                        doHead.bonus = bonus;
-                        doHead.grand_total = grand_total;
-                        doHead.status = true;
+                        doHead.vatamt = ppn;
+                        doHead.netamt = grand_total;
+                        doHead.dibayar = bayar;
+                        doHead.docprint = 1;
                         for (DoItem item : doHead.doItems()) {
-                            Product product = item.product;
-                            product.stock -= item.jumlah_order;
-                            product.save();
+                            WarehouseStock stock = WarehouseStock.findById(doHead.whid, item.product_id);
+                            stock.balance -= item.qty;
+                            stock.save();
                         }
                         doHead.save();
                         actionPrint(doHead.doc_no);
-                        tabLayout.getTabAt(0).select();*/
+                        tabLayout.getTabAt(0).select();
                     }
                 }).build();
-        EditText et_total = (EditText) dialog.getCustomView().findViewById(R.id.et_total);
-        EditText et_bonus = (EditText) dialog.getCustomView().findViewById(R.id.et_bonus);
-        final EditText et_grand_total = (EditText) dialog.getCustomView().findViewById(R.id.et_grand_total);
+        EditText et_total       = (EditText) dialog.getCustomView().findViewById(R.id.et_total);
+        EditText et_bonus       = (EditText) dialog.getCustomView().findViewById(R.id.et_bonus);
+        EditText et_ppn         = (EditText) dialog.getCustomView().findViewById(R.id.et_ppn);
+        final EditText et_neto          = (EditText) dialog.getCustomView().findViewById(R.id.et_neto);
+        final EditText et_bayar         = (EditText) dialog.getCustomView().findViewById(R.id.et_bayar);
+        final EditText et_kembali       = (EditText) dialog.getCustomView().findViewById(R.id.et_kembali);
+        final EditText et_grand_total   = (EditText) dialog.getCustomView().findViewById(R.id.et_grand_total);
+
         et_total.setText(CommonUtil.priceFormat2Decimal(total));
+        et_bonus.setText("0");
+        et_neto.setText(CommonUtil.priceFormat2Decimal(total));
+        et_ppn.setText(CommonUtil.priceFormat2Decimal(ppn));
+        et_grand_total.setText(CommonUtil.priceFormat2Decimal(grand_total));
+
         et_bonus.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -222,16 +244,43 @@ public class PointOfSaleActivity extends AppCompatActivity implements
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     bonus = Long.parseLong(s.toString());
-                    grand_total = total - bonus;
+                    neto = total - bonus;
+                    grand_total = neto + ppn;
+                    et_neto.setText(CommonUtil.priceFormat2Decimal(neto));
                     et_grand_total.setText(CommonUtil.priceFormat2Decimal(grand_total));
-                } catch (Exception e ) {
-                  e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    et_neto.getText().clear();
                     et_grand_total.getText().clear();
                 }
             }
 
             @Override
-            public void afterTextChanged (Editable s){
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        et_bayar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    bayar = Long.parseLong(s.toString());
+                    kembali = bayar - grand_total;
+                    et_kembali.setText(CommonUtil.priceFormat2Decimal(kembali));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    et_kembali.getText().clear();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -260,27 +309,29 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
             PdfPTable table = createTable(columnWidths, 150f, font);
 
+            Product product = null;
             // TODO:Perbaiki Cell di pdf
-            /*for (DoItem item : doHead.doItems()) {
-                table.addCell(createCell(item.product.prodid, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(item.product.product_name, font, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
+            for (DoItem item : doHead.doItems()) {
+                product = Product.find(item.product_id);
+                table.addCell(createCell(product.prodid, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(product.name, font, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
                 table.addCell(createCell("PCS", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(String.valueOf(item.jumlah_order), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.priceFormat(item.product.price), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.percentFormat(item.discount_principal + item.discount_nusantara), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(String.valueOf(item.qty), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(CommonUtil.priceFormat(product.sellprice), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(CommonUtil.percentFormat(/*item.discount_principal + item.discount_nusantara*/0), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             }
 
             table.addCell(createCell("Total Sebelum PPN :", font, Element.ALIGN_RIGHT, Rectangle.TOP, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(doHead.total), font, Element.ALIGN_RIGHT, Rectangle.TOP, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(total), font, Element.ALIGN_RIGHT, Rectangle.TOP, 1));
             table.addCell(createCell("Bonus :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(doHead.bonus), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(bonus), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             table.addCell(createCell("Dasar Pengenaan Pajak :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(doHead.total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             table.addCell(createCell("PPN(10%) :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat((doHead.total * 10) / 100), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(doHead.vatamt), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             table.addCell(createCell("Grand Total :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(doHead.grand_total + ((doHead.total * 10) / 100)), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));*/
+            table.addCell(createCell(CommonUtil.priceFormat(doHead.netamt), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
 
             table.writeSelectedRows(0, -1, doc.leftMargin(), 650, docWriter.getDirectContent());
             
@@ -292,6 +343,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         finally
         {
             doc.close();
+            total = bonus = 0;
             if (file != null)
                 openPDf(file);
         }

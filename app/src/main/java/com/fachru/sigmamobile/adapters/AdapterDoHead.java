@@ -81,6 +81,7 @@ public class AdapterDoHead extends BaseAdapter {
             holder.no = (TextView) view.findViewById(R.id.tv_item_no);
             holder.doc_no = (TextView) view.findViewById(R.id.tv_item_doc_no);
             holder.doc_date = (TextView) view.findViewById(R.id.tv_item_doc_date);
+            holder.invoice = (TextView) view.findViewById(R.id.tv_item_invoice);
             holder.tv_warehouse = (TextView) view.findViewById(R.id.tv_item_warehosue);
             holder.tv_customer = (TextView) view.findViewById(R.id.tv_item_customer);
             holder.tv_salesman = (TextView) view.findViewById(R.id.tv_item_salesman);
@@ -95,6 +96,7 @@ public class AdapterDoHead extends BaseAdapter {
         holder.no.setText(String.valueOf(i + 1));
         holder.doc_no.setText(doHead.doc_no);
         holder.doc_date.setText(doHead.getDocDate());
+        holder.invoice.setText(doHead.vatno);
         holder.tv_warehouse.setText(Warehouse.getWarehouseName(doHead.whid));
         holder.tv_customer.setText(Customer.getCustomerName(doHead.custid));
         holder.tv_salesman.setText(Employee.getEmployeeName(doHead.empid));
@@ -106,6 +108,7 @@ public class AdapterDoHead extends BaseAdapter {
         TextView no;
         TextView doc_no;
         TextView doc_date;
+        TextView invoice;
         TextView tv_warehouse;
         TextView tv_customer;
         TextView tv_salesman;

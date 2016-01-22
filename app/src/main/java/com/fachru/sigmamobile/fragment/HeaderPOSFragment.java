@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RelativeLayout;
@@ -26,9 +24,7 @@ import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.R;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -40,18 +36,14 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
-import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constanta;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 
 public class HeaderPOSFragment extends BaseFragmentForm implements
-        OnClickListener, DatePickerDialog.OnDateSetListener{
+        OnClickListener {
 
     protected Activity activity;
     protected Bundle bundle;
     protected InputMethodManager imm;
-
 
     /*
     * widget
@@ -59,11 +51,10 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected View view;
     protected RelativeLayout layout;
     protected EditText et_doc_no;
-    protected EditText et_doc_date;
+    protected EditText et_invoice;
     protected EditText et_salesman;
     protected EditText et_customer;
     protected Spinner sp_warehause;
-    protected Button btn_date_picker;
     protected Button btn_add;
     protected Button btn_edit;
     protected Button btn_del;
@@ -135,7 +126,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
         lv_do_head_items.setOnItemLongClickListener(onDoHeadLongClicked);
         sp_warehause.setOnItemSelectedListener(onWarehouseSelected);
-        btn_date_picker.setOnClickListener(this);
         btn_add.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
         btn_del.setOnClickListener(this);
@@ -154,11 +144,10 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     private void initComp() {
         layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_header_pos);
         et_doc_no = (EditText) view.findViewById(R.id.et_doc_no);
-        et_doc_date = (EditText) view.findViewById(R.id.et_doc_date);
+        et_invoice = (EditText) view.findViewById(R.id.et_invoice);
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
         sp_warehause = (Spinner) view.findViewById(R.id.et_warehouse);
-        btn_date_picker = (Button) view.findViewById(R.id.btn_date_picker);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
         btn_del = (Button) view.findViewById(R.id.btn_delete);
@@ -174,9 +163,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_date_picker :
-                actionDPD();
-                break;
             case R.id.btn_add :
                 if (isReadyAddItem) {
                     actionAddItem();
@@ -207,11 +193,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
     }
 
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        et_doc_date.setText(CommonUtil.stringToDateHelper(dayOfMonth + "-" + (++monthOfYear) + "-" + year, Constanta.MEDIUM_UK));
-    }
-
     public void setOnSetDoHeadListener(OnSetDoHeadListener listener) {
         this.mListener = listener;
     }
@@ -222,13 +203,12 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         warehouse = Warehouse.getWarehouse(doHead.whid);
 
         et_doc_no.setText(doHead.doc_no);
-        et_doc_date.setText(doHead.getDocDate());
+        et_invoice.setText(doHead.vatno);
         int pos = adapterWarehouse.getPosition(warehouse);
         sp_warehause.setSelection(pos);
         et_customer.setText(customer.name);
         et_salesman.setText(employee.name);
         disableForm(layout);
-        setButtonDisable(btn_date_picker);
     }
 
     @Override
@@ -236,6 +216,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         if (!errorChecked()) {
                     doHead = new DoHead.Builder()
                     .setDocNo(et_doc_no.getText().toString())
+                    .setVatno(et_invoice.getText().toString())
                     .setDocDate(new Date())
                     .setCustid(et_customer.getText().toString())
                     .setCustid(customer.custid)
@@ -260,26 +241,21 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         isUpdate = true;
         enableForm(layout);
         setButtonDisable(btn_add);
-        btn_date_picker.setEnabled(true);
     }
 
     @Override
     protected void actionUpdate() {
         if (!errorChecked()) {
-            try {
-                doHead.custid = customer.custid;
-                doHead.empid = employee.employee_id;
-                doHead.whid = warehouse.whid;
-                doHead.setDateFromString(et_doc_date.getText().toString());
-                doHead.save();
+            doHead.vatno = et_invoice.getText().toString();
+            doHead.custid = customer.custid;
+            doHead.empid = employee.employee_id;
+            doHead.whid = warehouse.whid;
+            doHead.save();
 
-                adapterDoHead.set(doHead);
-                onCancelOrAfterEdit();
-                setButtonEnable(btn_add);
-                clearForm(layout);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            adapterDoHead.set(doHead);
+            onCancelOrAfterEdit();
+            setButtonEnable(btn_add);
+            clearForm(layout);
         }
     }
 
@@ -310,26 +286,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
     @Override
     protected void initListener() {
-        /*onSalesmanClicked = new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
-                salesman = Salesman.find(map.get(Constanta.SIMPLE_LIST_ITEM_1));
-                act_salesman.setText(salesman.salesman_name);
-                act_outlet.requestFocus();
-            }
-        };
-
-        onOutletClicked = new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(position);
-                outlet = Outlet.find(map.get(Constanta.SIMPLE_LIST_ITEM_1));
-                act_outlet.setText(outlet.outlet_name);
-                et_doc_no.requestFocus();
-                imm.hideSoftInputFromWindow(et_doc_no.getWindowToken(), 0);
-            }
-        };*/
 
         onDoHeadLongClicked = new OnItemLongClickListener() {
             @Override
@@ -355,8 +311,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     }
 
     private void onCancelOrAfterEdit() {
-        doHead = null;
-        warehouse = null;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             btn_add.setBackground(getResources().getDrawable(R.drawable.button_add, activity.getTheme()));
             btn_edit.setBackground(getResources().getDrawable(R.drawable.button_edit, activity.getTheme()));
@@ -382,28 +337,13 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
                 et_doc_no.getText() == null) {
             et_doc_no.setError(getString(R.string.error_input_doc_no));
             return true;
+        } else if (et_invoice.getText().toString().equals("") ||
+                et_invoice.getText() == null) {
+            et_invoice.setError("INVOICE TIDAK BOLEH KOSONG");
+            return true;
         } else {
             return false;
         }
-    }
-
-    private void actionDPD() {
-        Calendar now = Calendar.getInstance();
-        DatePickerDialog dpd = DatePickerDialog.newInstance(
-                HeaderPOSFragment.this,
-                now.get(Calendar.YEAR),
-                now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH)
-        );
-        dpd.setThemeDark(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            dpd.setAccentColor(getResources().getColor(R.color.colorAccentDialog, activity.getTheme()));
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dpd.setAccentColor(ContextCompat.getColor(activity, R.color.colorAccentDialog));
-        } else {
-            dpd.setAccentColor(getResources().getColor(R.color.colorAccentDialog));
-        }
-        dpd.show(activity.getFragmentManager(), getString(R.string.tag_date_picker_dialog));
     }
 
 
@@ -415,8 +355,8 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     protected void clearForm(ViewGroup group) {
         super.clearForm(group);
-        doHead = null;
-        warehouse = null;
+        et_doc_no.setEnabled(true);
+        et_doc_no.setText(DoHead.generateId(employee.employee_id, new Date()));
         et_customer.setText(customer.name);
         et_salesman.setText(employee.employee_id);
         et_doc_no.requestFocus();
@@ -438,7 +378,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         btn_add.setEnabled(false);
         btn_edit.setEnabled(false);
         btn_del.setEnabled(false);
-        btn_date_picker.setEnabled(true);
 
         button.setEnabled(true);
     }
@@ -447,7 +386,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         btn_add.setEnabled(true);
         btn_edit.setEnabled(true);
         btn_del.setEnabled(true);
-        btn_date_picker.setEnabled(false);
 
         button.setEnabled(false);
     }

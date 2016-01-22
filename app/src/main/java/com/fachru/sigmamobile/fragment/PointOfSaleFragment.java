@@ -446,10 +446,10 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 et_qty.getText() == null) {
             et_qty.setError(getString(R.string.error_input_qty));
             return true;
-        } /* TODO: else if (Long.parseLong(et_qty.getText().toString()) > product.stock) {
+        } else if (Long.parseLong(et_qty.getText().toString()) > WarehouseStock.findById(doHead.whid, product.prodid).balance) {
             et_qty.setError(getString(R.string.error_input_qty_and_stock));
             return true;
-        }else if (et_disc_nusantara.getText().toString().equals("") ||
+        }/* TODO: else if (et_disc_nusantara.getText().toString().equals("") ||
                 et_disc_nusantara.getText() == null) {
             et_disc_nusantara.setError(getString(R.string.error_input_disc));
             return true;

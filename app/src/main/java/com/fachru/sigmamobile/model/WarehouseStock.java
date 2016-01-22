@@ -51,6 +51,14 @@ public class WarehouseStock extends Model {
                 .execute();
     }
 
+    public static WarehouseStock findById(String whid, String product_id) {
+        return new Select()
+                .from(WarehouseStock.class)
+                .where("whid =?", whid)
+                .and("prodid =?", product_id)
+                .executeSingle();
+    }
+
     public static List<HashMap<String, String>> toListHashMap(String whid) {
         List<HashMap<String, String>> hashMaps = new ArrayList<>();
         HashMap<String, String> map;

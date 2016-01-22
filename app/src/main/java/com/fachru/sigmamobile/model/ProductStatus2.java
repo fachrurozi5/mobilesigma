@@ -43,7 +43,7 @@ public class ProductStatus2 extends Model{
     }
 
     public static ProductStatus2 findOrCreateFromJson(JSONObject json) throws JSONException {
-        String prstat_id = json.getString("PRSTATID");
+        String prstat_id = json.getString("prstatid");
         ProductStatus2 existingProductStatus = find(prstat_id);
         if (existingProductStatus != null) {
             return existingProductStatus;

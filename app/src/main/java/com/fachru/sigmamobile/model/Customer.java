@@ -521,10 +521,14 @@ public class Customer extends Model{
     public static Customer findOrCreateFromJson(JSONObject json) throws JSONException {
         String custid = json.getString("CUSTID");
         Customer existingCustomer = new Select().from(Customer.class).where("custid = ?", custid).executeSingle();
+        Customer customer = Customer.fromJson(json);
         if (existingCustomer != null) {
+            if (customer.updated_at.after(existingCustomer.updated_at)) {
+                existingCustomer = customer;
+                existingCustomer.save();
+            }
             return existingCustomer;
         } else {
-            Customer customer = Customer.fromJson(json);
             customer.save();
             return customer;
         }

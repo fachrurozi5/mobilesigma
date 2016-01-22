@@ -17,30 +17,62 @@
         android:singleLine="true"
         android:hint="@string/hint_doc_no"/>
 
-    <Button
-        android:id="@+id/btn_date_picker"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_below="@id/et_doc_no"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/button_date" />
-
-    <EditText
-        android:id="@+id/et_doc_date"
+    <LinearLayout
+        android:id="@+id/layout_po_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_doc_no"
-        android:layout_toLeftOf="@id/btn_date_picker"
-        android:singleLine="true"
-        android:editable="false"
-        android:focusable="false"
-        android:hint="@string/hint_doc_date"/>
+        android:layout_below="@id/et_doc_no">
+
+        <EditText
+            android:id="@+id/et_po_date"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:editable="false"
+            android:focusable="false"
+            android:hint="@string/hint_po_date"/>
+
+        <Button
+            android:id="@+id/btn_po_date_picker"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/button_date" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_del_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_po_date">
+
+        <EditText
+            android:id="@+id/et_del_date"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:editable="false"
+            android:focusable="false"
+            android:hint="@string/hint_del_date"/>
+
+        <Button
+            android:id="@+id/btn_del_date_picker"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/button_date" />
+
+    </LinearLayout>
+
+
 
     <EditText
         android:id="@+id/et_customer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_date_picker"
+        android:layout_below="@id/layout_del_date"
         android:singleLine="true"
         android:editable="false"
         android:focusable="false"
@@ -56,7 +88,7 @@
         android:focusable="false"
         android:hint="@string/hint_salesman"/>
 
-    <EditText
+    <Spinner
         android:id="@+id/et_warehouse"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -64,31 +96,13 @@
         android:singleLine="true"
         android:hint="@string/hint_warehouse"/>
 
-    <AutoCompleteTextView
-        android:id="@+id/act_salesman"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_warehouse"
-        android:singleLine="true"
-        android:hint="@string/hint_salesman"
-        android:visibility="gone"/>
-
-    <AutoCompleteTextView
-        android:id="@+id/act_outlet"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/act_salesman"
-        android:singleLine="true"
-        android:hint="@string/hint_outlet"
-        android:visibility="gone"/>
-
     <Button
         android:id="@+id/btn_add"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:background="@drawable/button_add"
-        android:layout_below="@id/act_outlet"
+        android:layout_below="@id/et_warehouse"
         android:layout_alignParentRight="true"/>
 
     <Button
@@ -97,7 +111,7 @@
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:background="@drawable/button_edit"
-        android:layout_below="@id/act_outlet"
+        android:layout_below="@id/et_warehouse"
         android:layout_toLeftOf="@id/btn_add"/>
 
     <Button
@@ -106,7 +120,7 @@
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:background="@drawable/button_delete"
-        android:layout_below="@id/act_outlet"
+        android:layout_below="@id/et_warehouse"
         android:layout_toLeftOf="@id/btn_edit"/>
 
     <HorizontalScrollView
