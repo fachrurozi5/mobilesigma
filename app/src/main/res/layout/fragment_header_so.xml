@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:focusable="false"
         android:singleLine="true"
+        android:inputType="text"
         android:hint="@string/hint_sales_order"/>
 
     <LinearLayout
@@ -159,16 +160,15 @@
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
-                    android:text="Doc No"/>
+                    android:text="Sales Order"/>
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="120dp"
-                    android:text="Doc Date" />
+                    android:text="PO Date" />
 
                 <TextView style="@style/DefaultHeader"
-                    android:layout_width="100dp"
-                    android:text="Rute"
-                    android:visibility="gone"/>
+                    android:layout_width="120dp"
+                    android:text="Delivery Date" />
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
@@ -176,18 +176,23 @@
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
+                    android:text="Customer's PO"/>
+
+                <TextView style="@style/DefaultHeader"
+                    android:layout_width="150dp"
                     android:text="Salesman"/>
 
                 <TextView style="@style/DefaultHeader"
-                    android:layout_width="fill_parent"
-                    android:layout_marginRight="0dp"
-                    android:text="Outlet"
-                    android:visibility="gone"/>
+                    android:layout_width="150dp"
+                    android:text="Warehouse"/>
 
+                <TextView style="@style/DefaultHeader"
+                    android:layout_width="150dp"
+                    android:text="Type of Price"/>
             </LinearLayout>
 
             <ListView
-                android:id="@+id/lv_do_head_items"
+                android:id="@+id/lv_so_head_items"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent" />
 

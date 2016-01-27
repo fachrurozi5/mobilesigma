@@ -67,7 +67,7 @@ public class CommonUtil {
     }
 
     public static Date stringToDateLong(String s) throws ParseException {
-        SimpleDateFormat sf = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.US);
+        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         sf.setLenient(true);
         return sf.parse(s);
     }

@@ -182,9 +182,9 @@ public class DoHead extends Model {
                 .where("empid =?", whid).execute().size();
     }
 
-    public static String generateId(String whid, Date date) {
-        String id = whid.substring(0, 2).toUpperCase();
-        int size = count(whid);
+    public static String generateId(String empid, Date date) {
+        String id = empid.substring(0, 2).toUpperCase();
+        int size = count(empid);
         SimpleDateFormat format = new SimpleDateFormat("DDD", Locale.getDefault());
         id += "-" + format.format(date);
         if (size > 0) {

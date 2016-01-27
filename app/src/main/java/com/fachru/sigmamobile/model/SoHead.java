@@ -7,8 +7,10 @@ import com.activeandroid.query.Select;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by fachru on 22/01/16.
@@ -34,11 +36,11 @@ public class SoHead extends Model{
 
     @SerializedName("TOPID")
     @Column(name = "topid")
-    public String topid;
+    public String topid = "30";
 
     @SerializedName("VATID")
     @Column(name = "vatid")
-    public String vatid;
+    public String vatid = "10";
 
     @SerializedName("PO")
     @Column(name = "po")
@@ -71,10 +73,9 @@ public class SoHead extends Model{
     public SoHead(Builder builder) {
         super();
         so = builder.so;
-        so_date = builder.so_date;
+        so_date = new Date();
         custid = builder.custid;
         empid = builder.empid;
-        topid = builder.topid;
         purchase_order = builder.purchaseOrder;
         date_order = builder.date_order;
         delivery_date = builder.deldate;
@@ -95,8 +96,49 @@ public class SoHead extends Model{
                 .execute();
     }
 
-    public String getDocDate() {
+    public static SoHead last() {
+        return new Select().from(SoHead.class)
+                .orderBy("so DESC")
+                .executeSingle();
+    }
+
+    public static int count() {
+        return new Select()
+                .from(SoHead.class).execute().size();
+    }
+
+    public String getSoDate() {
         return CommonUtil.dateToStringMedium(this.so_date);
+    }
+
+    public String getPoDate() {
+        return CommonUtil.dateToStringMedium(this.date_order);
+    }
+
+    public String getDelDate() {
+        return CommonUtil.dateToStringMedium(this.delivery_date);
+    }
+
+    public static String generateId() {
+
+        String id = "SO.";
+        SimpleDateFormat format = new SimpleDateFormat("MMdd.", Locale.getDefault());
+        id += format.format(new Date());
+        long size = count();
+        if (size > 0) {
+            long v = Long.parseLong(last().so.substring(8));
+            if (size <= 9) {
+                id += "00" + (v + 1);
+            } else if (size > 9) {
+                id += "0" + (v + 1);
+            } else if (size > 99){
+                id += (v + 1);
+            }
+        } else {
+            id += "001";
+        }
+
+        return id;
     }
 
     @Override
