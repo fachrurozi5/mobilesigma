@@ -83,7 +83,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected List<DoHead> doHeads;
 
     /*
-    * costum adapter
+    * custom adapter
     * */
     private AdapterDoHead adapterDoHead;
     private AdapterWarehouse adapterWarehouse;
@@ -147,7 +147,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         et_invoice = (EditText) view.findViewById(R.id.et_invoice);
         et_salesman = (EditText) view.findViewById(R.id.et_salesman);
         et_customer = (EditText) view.findViewById(R.id.et_customer);
-        sp_warehause = (Spinner) view.findViewById(R.id.et_warehouse);
+        sp_warehause = (Spinner) view.findViewById(R.id.sp_warehouse);
         btn_add = (Button) view.findViewById(R.id.btn_add);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
         btn_del = (Button) view.findViewById(R.id.btn_delete);

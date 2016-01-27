@@ -13,15 +13,16 @@
         android:id="@+id/et_doc_no"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:focusable="false"
         android:singleLine="true"
-        android:hint="@string/hint_doc_no"/>
+        android:hint="@string/hint_sales_order"/>
 
     <LinearLayout
         android:id="@+id/layout_po_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_doc_no">
+        android:layout_below="@id/et_doc_no"
+        android:paddingBottom="6dp">
 
         <EditText
             android:id="@+id/et_po_date"
@@ -66,8 +67,6 @@
 
     </LinearLayout>
 
-
-
     <EditText
         android:id="@+id/et_customer"
         android:layout_width="fill_parent"
@@ -79,20 +78,36 @@
         android:hint="@string/hint_customer"/>
 
     <EditText
-        android:id="@+id/et_salesman"
+        android:id="@+id/et_customers_po"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_customer"
+        android:singleLine="true"
+        android:hint="@string/hint_customer_po"/>
+
+    <EditText
+        android:id="@+id/et_salesman"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_customers_po"
         android:singleLine="true"
         android:editable="false"
         android:focusable="false"
         android:hint="@string/hint_salesman"/>
 
     <Spinner
-        android:id="@+id/et_warehouse"
+        android:id="@+id/sp_warehouse"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_salesman"
+        android:singleLine="true"
+        android:hint="@string/hint_warehouse"/>
+
+    <Spinner
+        android:id="@+id/sp_type_of_price"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sp_warehouse"
         android:singleLine="true"
         android:hint="@string/hint_warehouse"/>
 
@@ -102,7 +117,7 @@
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:background="@drawable/button_add"
-        android:layout_below="@id/et_warehouse"
+        android:layout_below="@id/sp_type_of_price"
         android:layout_alignParentRight="true"/>
 
     <Button
@@ -111,7 +126,7 @@
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:background="@drawable/button_edit"
-        android:layout_below="@id/et_warehouse"
+        android:layout_below="@id/sp_type_of_price"
         android:layout_toLeftOf="@id/btn_add"/>
 
     <Button
@@ -120,7 +135,7 @@
         android:layout_height="45dp"
         android:layout_margin="4dp"
         android:background="@drawable/button_delete"
-        android:layout_below="@id/et_warehouse"
+        android:layout_below="@id/sp_type_of_price"
         android:layout_toLeftOf="@id/btn_edit"/>
 
     <HorizontalScrollView

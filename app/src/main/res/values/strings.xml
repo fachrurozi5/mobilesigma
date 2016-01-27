@@ -74,10 +74,18 @@
         <item>@drawable/ic_android_white_48dp</item>
     </string-array>
 
+    <string-array name="type_of_price">
+        <item>PO Price</item>
+        <item>Selling Price</item>
+        <item>Base Price (Whole Seller)</item>
+        <item>Old Price</item>
+        <item>Test Price (Snack Super mkt)</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_doc_no">Doc No</string>
-    <string name="hint_po_date">PO Date</string>
+    <string name="hint_po_date">Purchase Order Date</string>
     <string name="tag_date_picker_dialog">Datepickerdialog</string>
     <string name="hint_warehouse">Warehouse</string>
     <string name="hint_salesman">Salesman</string>
@@ -125,4 +133,6 @@
     <string name="hint_input_kembali">KEMBALI</string>
     <string name="hint_invoice">Invoice</string>
     <string name="hint_del_date">Delivery Date</string>
+    <string name="hint_sales_order">Sales Order</string>
+    <string name="hint_customer_po">Customer\'s PO</string>
 </resources>

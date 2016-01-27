@@ -1,9 +1,11 @@
 package com.fachru.sigmamobile.model;
 
 import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.fachru.sigmamobile.utils.CommonUtil;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 import java.util.List;
@@ -14,28 +16,52 @@ import java.util.List;
 @Table(name = "SoHeads")
 public class SoHead extends Model{
 
+    @SerializedName("SO")
+    @Column(name = "so")
     public String so;
 
+    @SerializedName("SODATE")
+    @Column(name = "so_date")
     public Date so_date;
 
+    @SerializedName("CUSTID")
+    @Column(name = "custid")
     public String custid;
 
+    @SerializedName("EMPID")
+    @Column(name = "empid")
     public String empid;
 
+    @SerializedName("TOPID")
+    @Column(name = "topid")
     public String topid;
 
+    @SerializedName("VATID")
+    @Column(name = "vatid")
     public String vatid;
 
+    @SerializedName("PO")
+    @Column(name = "po")
     public String purchase_order;
 
+    @SerializedName("DATEORDER")
+    @Column(name = "date_oder")
     public Date date_order;
 
+    @SerializedName("DELDATE")
+    @Column(name = "delivery_date")
     public Date delivery_date;
 
+    @SerializedName("PRICETYPE")
+    @Column(name = "price_type")
     public int priceType;
 
+    @SerializedName("WHID")
+    @Column(name = "whid")
     public String whid;
 
+    @SerializedName("DATEUPDATE")
+    @Column(name = "updated_at")
     public Date updated_at;
 
     public SoHead() {
