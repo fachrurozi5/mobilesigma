@@ -68,6 +68,8 @@ public class AdapterWarehouse extends ArrayAdapter<Warehouse> {
         return convertView;
     }
 
+    
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return  getCustomView(position, convertView, parent);

@@ -104,7 +104,8 @@ public class SoHead extends Model{
 
     public static int count() {
         return new Select()
-                .from(SoHead.class).execute().size();
+                .from(SoHead.class)
+                .where("so like ?", "%" + getFirstId() + "%").execute().size();
     }
 
     public String getSoDate() {
@@ -121,9 +122,7 @@ public class SoHead extends Model{
 
     public static String generateId() {
 
-        String id = "SO.";
-        SimpleDateFormat format = new SimpleDateFormat("MMdd.", Locale.getDefault());
-        id += format.format(new Date());
+        String id = getFirstId();
         long size = count();
         if (size > 0) {
             long v = Long.parseLong(last().so.substring(8));
@@ -138,6 +137,13 @@ public class SoHead extends Model{
             id += "001";
         }
 
+        return id;
+    }
+
+    private static String getFirstId() {
+        String id = "SO.";
+        SimpleDateFormat format = new SimpleDateFormat("MMdd.", Locale.getDefault());
+        id += format.format(new Date());
         return id;
     }
 

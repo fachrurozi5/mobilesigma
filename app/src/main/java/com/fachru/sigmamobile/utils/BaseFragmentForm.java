@@ -81,8 +81,13 @@ public abstract class BaseFragmentForm extends Fragment {
     private void instanceButton(View view, boolean b) {
         if (view instanceof Button) view.setEnabled(b);
 
-        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0))
-            disableButton((ViewGroup) view);
+        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0)) {
+            if (b) {
+                enableButton((ViewGroup) view);
+            } else {
+                disableButton((ViewGroup) view);
+            }
+        }
     }
 
     private void instanceEditText(View view) {
@@ -103,9 +108,12 @@ public abstract class BaseFragmentForm extends Fragment {
             view.setEnabled(b);
         }
 
-        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0))
-            disableForm((ViewGroup) view);
+        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0)) {
+            if (b) {
+                enableForm((ViewGroup) view);
+            } else {
+                disableForm((ViewGroup) view);
+            }
+        }
     }
-
-
 }
