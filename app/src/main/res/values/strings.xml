@@ -12,7 +12,7 @@
     <string name="tab_order">Order</string>
     <string name="tab_order_product">Product</string>
     <string name="no">No.</string>
-    <string name="header_product">Jenis Produk</string>
+    <string name="header_product">Produk</string>
     <string name="harga_list_rp">Harga\nList, Rp.</string>
     <string name="jumlah">Jumlah\nOrder</string>
     <string name="discount_nusantara">Discount Nusantara</string>
@@ -128,7 +128,7 @@
     <string name="hint_customer">Customer</string>
     <string name="title_activity_splash_screen">SIGMA</string>
     <string name="title_activity_login">Login</string>
-    <string name="header_unit">UNIT</string>
+    <string name="header_unit">Unit</string>
     <string name="hint_input_bayar">BAYAR</string>
     <string name="hint_input_kembali">KEMBALI</string>
     <string name="hint_invoice">Invoice</string>
