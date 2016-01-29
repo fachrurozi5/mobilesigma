@@ -1,0 +1,4 @@
+--ALTER TABLE products ADD po_price REAL;
+--ALTER TABLE products ADD base_price REAL;
+--ALTER TABLE products ADD old_price REAL;
+--ALTER TABLE products ADD test_price REAL;
