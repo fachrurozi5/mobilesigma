@@ -11,19 +11,17 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 /**
  * Created by fachru on 06/01/16.
  */
 @Table(name = "ProductStatus")
 public class ProductStatus extends Model {
 
-    @SerializedName("PRSTATID")
+    @SerializedName("prstatid")
     @Column(name = "prstat_id", unique = true)
     public String prstat_id;
 
-    @SerializedName("PRSTATNAME")
+    @SerializedName("prstatname")
     @Column(name = "name")
     public String name;
 
@@ -88,8 +86,10 @@ public class ProductStatus extends Model {
             return Builder.this;
         }
 
-        public ProductStatus Build(){
+        public ProductStatus Build() {
             return new ProductStatus(Builder.this);
-        };
+        }
+
+        ;
     }
 }

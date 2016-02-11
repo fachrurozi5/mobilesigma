@@ -10,11 +10,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
@@ -23,11 +23,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.R;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.fachru.sigmamobile.adapters.AdapterDoHead;
 import com.fachru.sigmamobile.adapters.spinners.AdapterWarehouse;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
@@ -36,6 +31,10 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class HeaderPOSFragment extends BaseFragmentForm implements
@@ -81,18 +80,16 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     * list of object
     * */
     protected List<DoHead> doHeads;
-
-    /*
-    * custom adapter
-    * */
-    private AdapterDoHead adapterDoHead;
-    private AdapterWarehouse adapterWarehouse;
-
     /*
     * label
     * */
     protected boolean isUpdate = false;
     protected boolean isReadyAddItem = false;
+    /*
+    * custom adapter
+    * */
+    private AdapterDoHead adapterDoHead;
+    private AdapterWarehouse adapterWarehouse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,21 +160,21 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_add :
+            case R.id.btn_add:
                 if (isReadyAddItem) {
                     actionAddItem();
                 } else {
                     actionAdd();
                 }
                 break;
-            case R.id.btn_edit :
+            case R.id.btn_edit:
                 if (isUpdate) {
                     actionUpdate();
                 } else {
                     actionEdit();
                 }
                 break;
-            case R.id.btn_delete :
+            case R.id.btn_delete:
                 if (isUpdate) {
                     onCancelOrAfterEdit();
                     clearForm(layout);
@@ -214,7 +211,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     @Override
     protected void actionAdd() {
         if (!errorChecked()) {
-                    doHead = new DoHead.Builder()
+            doHead = new DoHead.Builder()
                     .setDocNo(et_doc_no.getText().toString())
                     .setVatno(et_invoice.getText().toString())
                     .setDocDate(new Date())

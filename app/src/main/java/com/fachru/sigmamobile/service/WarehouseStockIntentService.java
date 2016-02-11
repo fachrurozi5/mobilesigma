@@ -20,7 +20,7 @@ import retrofit.Retrofit;
 /**
  * Created by fachru on 30/12/15.
  */
-public class WarehouseStockIntentService extends IntentService{
+public class WarehouseStockIntentService extends IntentService {
 
     public WarehouseStockIntentService() {
         super("Warehouse Stock");

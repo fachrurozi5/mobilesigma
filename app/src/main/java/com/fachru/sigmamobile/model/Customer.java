@@ -18,7 +18,7 @@ import java.util.List;
  * Created by fachru on 17/12/15.
  */
 @Table(name = "Customers")
-public class Customer extends Model{
+public class Customer extends Model {
 
     @SerializedName("CUSTID")
     @Column(name = "custid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
@@ -277,7 +277,7 @@ public class Customer extends Model{
         super();
     }
 
-    public  Customer(Builder builder) {
+    public Customer(Builder builder) {
         super();
         this.custid = builder.id;
         this.name = builder.name;
@@ -293,6 +293,122 @@ public class Customer extends Model{
         this.invzip = builder.invzip;
         this.created_at = builder.created_at;
         this.updated_at = builder.updated_at;
+    }
+
+    public static Customer getCustomer(String custid) {
+        return new Select()
+                .from(Customer.class)
+                .where("custid = ?", custid)
+                .executeSingle();
+    }
+
+    public static String getCustomerName(String custid) {
+        Customer customer = getCustomer(custid);
+
+        if (customer != null)
+            return customer.name;
+        return "";
+    }
+
+    public static List<Customer> getAll() {
+        return new Select()
+                .from(Customer.class)
+                .orderBy("name ASC")
+                .execute();
+    }
+
+    public static Customer findOrCreateFromJson(JSONObject json) throws JSONException {
+        String custid = json.getString("CUSTID");
+        Customer existingCustomer = new Select().from(Customer.class).where("custid = ?", custid).executeSingle();
+        Customer customer = Customer.fromJson(json);
+        if (existingCustomer != null) {
+            if (customer.updated_at.after(existingCustomer.updated_at)) {
+                existingCustomer = customer;
+                existingCustomer.save();
+            }
+            return existingCustomer;
+        } else {
+            customer.save();
+            return customer;
+        }
+    }
+
+    public static Customer fromJson(JSONObject json) {
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls();
+        Gson gson = gsonBuilder.create();
+
+        return gson.fromJson(json.toString(), Customer.class);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "custid='" + custid + '\'' +
+                ", name='" + name + '\'' +
+                ", csstatid1='" + csstatid1 + '\'' +
+                ", csstatid2='" + csstatid2 + '\'' +
+                ", csstatid3='" + csstatid3 + '\'' +
+                ", csstatid4='" + csstatid4 + '\'' +
+                ", group_type='" + group_type + '\'' +
+                ", cs_group='" + cs_group + '\'' +
+                ", channel='" + channel + '\'' +
+                ", csstatid5='" + csstatid5 + '\'' +
+                ", invadd1='" + invadd1 + '\'' +
+                ", invadd2='" + invadd2 + '\'' +
+                ", invadd3='" + invadd3 + '\'' +
+                ", invadd4='" + invadd4 + '\'' +
+                ", invzip='" + invzip + '\'' +
+                ", deladdid='" + deladdid + '\'' +
+                ", deladd1='" + deladd1 + '\'' +
+                ", deladd2='" + deladd2 + '\'' +
+                ", deladd3='" + deladd3 + '\'' +
+                ", deladd4='" + deladd4 + '\'' +
+                ", delzip='" + delzip + '\'' +
+                ", phone='" + phone + '\'' +
+                ", hp='" + hp + '\'' +
+                ", fax='" + fax + '\'' +
+                ", email='" + email + '\'' +
+                ", contact='" + contact + '\'' +
+                ", owner='" + owner + '\'' +
+                ", empid='" + empid + '\'' +
+                ", topid='" + topid + '\'' +
+                ", vatid='" + vatid + '\'' +
+                ", taxid='" + taxid + '\'' +
+                ", currency='" + currency + '\'' +
+                ", pricegrp='" + pricegrp + '\'' +
+                ", warehouse='" + warehouse + '\'' +
+                ", DISCOUNT=" + DISCOUNT +
+                ", DISCOUNT2=" + DISCOUNT2 +
+                ", DISCOUNT3=" + DISCOUNT3 +
+                ", DISCOUNT4=" + DISCOUNT4 +
+                ", DISCOUNT5=" + DISCOUNT5 +
+                ", crlimit=" + crlimit +
+                ", totalar=" + totalar +
+                ", deposit=" + deposit +
+                ", pcmamt=" + pcmamt +
+                ", totalcn=" + totalcn +
+                ", totaldn=" + totaldn +
+                ", sublsg=" + sublsg +
+                ", paytype=" + paytype +
+                ", accid='" + accid + '\'' +
+                ", armaxdue=" + armaxdue +
+                ", inhold=" + inhold +
+                ", inactive=" + inactive +
+                ", ev_company='" + ev_company + '\'' +
+                ", ev_off_address='" + ev_off_address + '\'' +
+                ", ev_off_telp='" + ev_off_telp + '\'' +
+                ", ev_pin='" + ev_pin + '\'' +
+                ", ev_total_penjualan=" + ev_total_penjualan +
+                ", ev_cust_id_2='" + ev_cust_id_2 + '\'' +
+                ", ev_sales_id='" + ev_sales_id + '\'' +
+                ", ev_aktive='" + ev_aktive + '\'' +
+                ", creator='" + creator + '\'' +
+                ", created_at=" + created_at +
+                ", updater='" + updater + '\'' +
+                ", updated_at=" + updated_at +
+                '}';
     }
 
     public static class Builder {
@@ -494,121 +610,5 @@ public class Customer extends Model{
         public Customer builde() {
             return new Customer(Builder.this);
         }
-    }
-
-    public static Customer getCustomer(String custid) {
-        return new Select()
-                .from(Customer.class)
-                .where("custid = ?", custid)
-                .executeSingle();
-    }
-
-    public static String getCustomerName(String custid) {
-        Customer customer = getCustomer(custid);
-
-        if (customer != null)
-            return customer.name;
-        return "";
-    }
-
-    public static List<Customer> getAll() {
-        return new Select()
-                .from(Customer.class)
-                .orderBy("name ASC")
-                .execute();
-    }
-
-    public static Customer findOrCreateFromJson(JSONObject json) throws JSONException {
-        String custid = json.getString("CUSTID");
-        Customer existingCustomer = new Select().from(Customer.class).where("custid = ?", custid).executeSingle();
-        Customer customer = Customer.fromJson(json);
-        if (existingCustomer != null) {
-            if (customer.updated_at.after(existingCustomer.updated_at)) {
-                existingCustomer = customer;
-                existingCustomer.save();
-            }
-            return existingCustomer;
-        } else {
-            customer.save();
-            return customer;
-        }
-    }
-
-    public static Customer fromJson(JSONObject json) {
-        GsonBuilder gsonBuilder = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .serializeNulls();
-        Gson gson = gsonBuilder.create();
-
-        return gson.fromJson(json.toString(), Customer.class);
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "custid='" + custid + '\'' +
-                ", name='" + name + '\'' +
-                ", csstatid1='" + csstatid1 + '\'' +
-                ", csstatid2='" + csstatid2 + '\'' +
-                ", csstatid3='" + csstatid3 + '\'' +
-                ", csstatid4='" + csstatid4 + '\'' +
-                ", group_type='" + group_type + '\'' +
-                ", cs_group='" + cs_group + '\'' +
-                ", channel='" + channel + '\'' +
-                ", csstatid5='" + csstatid5 + '\'' +
-                ", invadd1='" + invadd1 + '\'' +
-                ", invadd2='" + invadd2 + '\'' +
-                ", invadd3='" + invadd3 + '\'' +
-                ", invadd4='" + invadd4 + '\'' +
-                ", invzip='" + invzip + '\'' +
-                ", deladdid='" + deladdid + '\'' +
-                ", deladd1='" + deladd1 + '\'' +
-                ", deladd2='" + deladd2 + '\'' +
-                ", deladd3='" + deladd3 + '\'' +
-                ", deladd4='" + deladd4 + '\'' +
-                ", delzip='" + delzip + '\'' +
-                ", phone='" + phone + '\'' +
-                ", hp='" + hp + '\'' +
-                ", fax='" + fax + '\'' +
-                ", email='" + email + '\'' +
-                ", contact='" + contact + '\'' +
-                ", owner='" + owner + '\'' +
-                ", empid='" + empid + '\'' +
-                ", topid='" + topid + '\'' +
-                ", vatid='" + vatid + '\'' +
-                ", taxid='" + taxid + '\'' +
-                ", currency='" + currency + '\'' +
-                ", pricegrp='" + pricegrp + '\'' +
-                ", warehouse='" + warehouse + '\'' +
-                ", DISCOUNT=" + DISCOUNT +
-                ", DISCOUNT2=" + DISCOUNT2 +
-                ", DISCOUNT3=" + DISCOUNT3 +
-                ", DISCOUNT4=" + DISCOUNT4 +
-                ", DISCOUNT5=" + DISCOUNT5 +
-                ", crlimit=" + crlimit +
-                ", totalar=" + totalar +
-                ", deposit=" + deposit +
-                ", pcmamt=" + pcmamt +
-                ", totalcn=" + totalcn +
-                ", totaldn=" + totaldn +
-                ", sublsg=" + sublsg +
-                ", paytype=" + paytype +
-                ", accid='" + accid + '\'' +
-                ", armaxdue=" + armaxdue +
-                ", inhold=" + inhold +
-                ", inactive=" + inactive +
-                ", ev_company='" + ev_company + '\'' +
-                ", ev_off_address='" + ev_off_address + '\'' +
-                ", ev_off_telp='" + ev_off_telp + '\'' +
-                ", ev_pin='" + ev_pin + '\'' +
-                ", ev_total_penjualan=" + ev_total_penjualan +
-                ", ev_cust_id_2='" + ev_cust_id_2 + '\'' +
-                ", ev_sales_id='" + ev_sales_id + '\'' +
-                ", ev_aktive='" + ev_aktive + '\'' +
-                ", creator='" + creator + '\'' +
-                ", created_at=" + created_at +
-                ", updater='" + updater + '\'' +
-                ", updated_at=" + updated_at +
-                '}';
     }
 }

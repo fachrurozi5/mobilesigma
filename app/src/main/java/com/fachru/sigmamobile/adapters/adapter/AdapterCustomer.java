@@ -17,33 +17,21 @@ import java.util.List;
 /**
  * Created by fachru on 18/12/15.
  */
-public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.ViewHolder> implements Filterable{
+public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.ViewHolder> implements Filterable {
 
     private List<Customer> list;
     private List<Customer> listFiltered;
     private ItemFilter filter = new ItemFilter();
 
 
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView tv_id;
-        public TextView tv_name;
-
-        public ViewHolder(View view) {
-            super(view);
-            tv_id = (TextView) view.findViewById(R.id.tv_customer_id);
-            tv_name = (TextView) view.findViewById(R.id.tv_custom_name);
-        }
-    }
-
     public AdapterCustomer(List<Customer> list) {
         this.list = list;
         this.listFiltered = list;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
     }
 
     @Override
@@ -66,6 +54,18 @@ public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.ViewHo
     @Override
     public int getItemCount() {
         return listFiltered.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView tv_id;
+        public TextView tv_name;
+
+        public ViewHolder(View view) {
+            super(view);
+            tv_id = (TextView) view.findViewById(R.id.tv_customer_id);
+            tv_name = (TextView) view.findViewById(R.id.tv_custom_name);
+        }
     }
 
     private class ItemFilter extends Filter {

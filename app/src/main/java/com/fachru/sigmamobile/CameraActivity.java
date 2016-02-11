@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CameraActivity extends AppCompatActivity
-                                implements Animation.AnimationListener{
+        implements Animation.AnimationListener {
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
@@ -105,7 +105,7 @@ public class CameraActivity extends AppCompatActivity
             thisDate = CommonUtil.dateHelper(picturesPathList.get(i++).picture_date, Constanta.ID);
             if (prevDate == null || !prevDate.equals(thisDate)) {
                 prevDate = thisDate;
-                if (i!=1)
+                if (i != 1)
                     photoAdapter.addSectionHeaderItem(path);
                 photoAdapter.addItem(path);
             } else {
@@ -132,20 +132,20 @@ public class CameraActivity extends AppCompatActivity
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (picturesPathList.size() != 0)
-                if (thisPosition != firstVisibleItem) {
-                    thisPosition = firstVisibleItem;
+                    if (thisPosition != firstVisibleItem) {
+                        thisPosition = firstVisibleItem;
 
-                    PicturesPath path = (PicturesPath) listView.getItemAtPosition(thisPosition);
+                        PicturesPath path = (PicturesPath) listView.getItemAtPosition(thisPosition);
 
-                    thisDate = CommonUtil.dateHelper(path.picture_date, Constanta.ID);
+                        thisDate = CommonUtil.dateHelper(path.picture_date, Constanta.ID);
 
-                    if (prevDate == null || !prevDate.equals(thisDate)) {
-                        prevDate = thisDate;
-                        textView.startAnimation(animSlideUp);
-                        textView.setText(thisDate);
+                        if (prevDate == null || !prevDate.equals(thisDate)) {
+                            prevDate = thisDate;
+                            textView.startAnimation(animSlideUp);
+                            textView.setText(thisDate);
+                        }
+
                     }
-
-                }
 
             }
         });

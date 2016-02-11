@@ -95,7 +95,7 @@ public class CommonUtil {
                 return dateToStringMedium(date);
             case Constanta.LONG_UK:
                 return dateToStringLong(date);
-            case Constanta.TIME :
+            case Constanta.TIME:
                 return dateToStringTime(date);
             case Constanta.ID:
                 return dateToStringID(date);
@@ -164,7 +164,7 @@ public class CommonUtil {
         textView.setBackgroundColor(Color.parseColor(color));
     }
 
-    public static boolean isLocationOn(Context context){
+    public static boolean isLocationOn(Context context) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
@@ -172,19 +172,19 @@ public class CommonUtil {
     private static String getDay(int day_of_week) {
 
         switch (day_of_week) {
-            case Calendar.SUNDAY :
-                return  "Minggu, ";
-            case Calendar.MONDAY :
-                return  "Senin, ";
-            case Calendar.TUESDAY :
-                return  "Selasa, ";
-            case  Calendar.WEDNESDAY :
+            case Calendar.SUNDAY:
+                return "Minggu, ";
+            case Calendar.MONDAY:
+                return "Senin, ";
+            case Calendar.TUESDAY:
+                return "Selasa, ";
+            case Calendar.WEDNESDAY:
                 return "Rabu, ";
-            case  Calendar.THURSDAY :
+            case Calendar.THURSDAY:
                 return "Kamis, ";
-            case Calendar.FRIDAY :
+            case Calendar.FRIDAY:
                 return "Jum'at, ";
-            case Calendar.SATURDAY :
+            case Calendar.SATURDAY:
                 return "Sabtu, ";
             default:
                 return "Minggu, ";
@@ -193,17 +193,17 @@ public class CommonUtil {
 
     private static String getMonth(int month) {
         switch (month) {
-            case Calendar.JANUARY :
+            case Calendar.JANUARY:
                 return " Januari ";
-            case Calendar.FEBRUARY :
+            case Calendar.FEBRUARY:
                 return " February ";
-            case Calendar.MARCH :
+            case Calendar.MARCH:
                 return " Maret ";
-            case Calendar.APRIL :
+            case Calendar.APRIL:
                 return " April ";
-            case Calendar.MAY :
+            case Calendar.MAY:
                 return " Mei ";
-            case Calendar.JUNE :
+            case Calendar.JUNE:
                 return " Juni ";
             case Calendar.JULY:
                 return " Juli ";
@@ -215,7 +215,7 @@ public class CommonUtil {
                 return " Oktober ";
             case Calendar.NOVEMBER:
                 return " November ";
-            case Calendar.DECEMBER :
+            case Calendar.DECEMBER:
                 return " Desember ";
             default:
                 return " Januari ";
@@ -227,8 +227,10 @@ public class CommonUtil {
         mToast.show();
     }
 
-    /** Create a file Uri for saving an image or video */
-    public static Uri getOutputMediaFileUri(int type){
+    /**
+     * Create a file Uri for saving an image or video
+     */
+    public static Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type, ""));
     }
 
@@ -236,7 +238,9 @@ public class CommonUtil {
         return getOutputMediaFile(Constanta.MEDIA_TYPE_DOCUMENT_TITLE, title);
     }
 
-    /** Create a File for saving an image or video */
+    /**
+     * Create a File for saving an image or video
+     */
     private static File getOutputMediaFile(int type, String title) {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
@@ -244,11 +248,11 @@ public class CommonUtil {
         String dirname = "";
 
         switch (type) {
-            case Constanta.MEDIA_TYPE_IMAGE :
+            case Constanta.MEDIA_TYPE_IMAGE:
                 dirname = "Pictures";
                 break;
-            case Constanta.MEDIA_TYPE_DOCUMENT :
-            case Constanta.MEDIA_TYPE_DOCUMENT_TITLE :
+            case Constanta.MEDIA_TYPE_DOCUMENT:
+            case Constanta.MEDIA_TYPE_DOCUMENT_TITLE:
                 dirname = "Nota";
                 break;
             default:

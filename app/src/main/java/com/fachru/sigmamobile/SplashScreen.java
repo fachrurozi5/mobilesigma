@@ -83,14 +83,14 @@ public class SplashScreen extends AppCompatActivity {
 
     private void initComp() {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        label       = (TextView) findViewById(R.id.tv_loading_info);
+        label = (TextView) findViewById(R.id.tv_loading_info);
     }
 
 
     /*
     * Show progress bar loading with Thread
     * */
-    private void LoadingThread(final int sleepDuration,final int state, final boolean afterinstall) {
+    private void LoadingThread(final int sleepDuration, final int state, final boolean afterinstall) {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -141,7 +141,7 @@ public class SplashScreen extends AppCompatActivity {
 
                     try {
                         Thread.sleep(sleepDuration);
-                    } catch (InterruptedException e){
+                    } catch (InterruptedException e) {
                         thread.interrupt();
                     }
                 }
@@ -160,7 +160,9 @@ public class SplashScreen extends AppCompatActivity {
     }
 
 
-    /****************** Method Download **************************/
+    /******************
+     * Method Download
+     **************************/
 
     /*
     * Download Customer
@@ -356,7 +358,9 @@ public class SplashScreen extends AppCompatActivity {
     }
 
 
-    /***************** METHOD STORE *************************/
+    /*****************
+     * METHOD STORE
+     *************************/
 
     /*
     * Store Customer into SQLite3
@@ -381,8 +385,8 @@ public class SplashScreen extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setProgress((finali*100) / max);
-                            progressBar.setSecondaryProgress(((finali*100) / max) + 5);
+                            progressBar.setProgress((finali * 100) / max);
+                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
                             label.setText("Inserting Customer");
                         }
                     });
@@ -417,8 +421,8 @@ public class SplashScreen extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setProgress((finali*100) / max);
-                            progressBar.setSecondaryProgress(((finali*100) / max) + 5);
+                            progressBar.setProgress((finali * 100) / max);
+                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
                             label.setText("Inserting Prastatid");
                         }
                     });
@@ -453,8 +457,8 @@ public class SplashScreen extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setProgress((finali*100) / max);
-                            progressBar.setSecondaryProgress(((finali*100) / max) + 5);
+                            progressBar.setProgress((finali * 100) / max);
+                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
                             label.setText("Inserting Prastatid2");
                         }
                     });
@@ -489,8 +493,8 @@ public class SplashScreen extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setProgress((finali*100) / max);
-                            progressBar.setSecondaryProgress(((finali*100) / max) + 5);
+                            progressBar.setProgress((finali * 100) / max);
+                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
                             label.setText("Inserting Product");
                         }
                     });
@@ -507,7 +511,7 @@ public class SplashScreen extends AppCompatActivity {
     private void storeWarehouse(final JSONArray jsonArray) {
         thread.interrupt();
         progressBar.setProgress(0);
-        final  int max = jsonArray.length();
+        final int max = jsonArray.length();
 
         new Thread(new Runnable() {
             @Override
@@ -525,8 +529,8 @@ public class SplashScreen extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setProgress((finali*100) / max);
-                            progressBar.setSecondaryProgress(((finali*100) / max) + 5);
+                            progressBar.setProgress((finali * 100) / max);
+                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
                             label.setText("Inserting Warehouse");
                         }
                     });
@@ -543,7 +547,7 @@ public class SplashScreen extends AppCompatActivity {
     private void storeWarehouseStock(final JSONArray jsonArray) {
         thread.interrupt();
         progressBar.setProgress(0);
-        final  int max = jsonArray.length();
+        final int max = jsonArray.length();
 
         new Thread(new Runnable() {
             @Override
@@ -563,8 +567,8 @@ public class SplashScreen extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            progressBar.setProgress((finali*100) / max);
-                            progressBar.setSecondaryProgress(((finali*100) / max) + 5);
+                            progressBar.setProgress((finali * 100) / max);
+                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
                             label.setText("Inserting WarehouseStock");
                         }
                     });
@@ -576,7 +580,9 @@ public class SplashScreen extends AppCompatActivity {
         }).start();
     }
 
-    /************* Error Handling ******************/
+    /*************
+     * Error Handling
+     ******************/
 
     /*
     * Show dialog Error

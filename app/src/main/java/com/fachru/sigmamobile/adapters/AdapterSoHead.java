@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.model.Customer;
-import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.SoHead;
 import com.fachru.sigmamobile.model.Warehouse;
@@ -115,7 +114,7 @@ public class AdapterSoHead extends BaseAdapter {
     private class Holder {
         TextView no;
         TextView so;
-//        TextView so_date;
+        //        TextView so_date;
         TextView po_date;
         TextView del_date;
         TextView tv_customer;

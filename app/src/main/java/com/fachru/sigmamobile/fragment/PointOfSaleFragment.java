@@ -26,7 +26,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapters.AdapterDoItem;
-import com.fachru.sigmamobile.adapters.AdapterFilter;
 import com.fachru.sigmamobile.adapters.AdapterFilterProduct;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
@@ -143,8 +142,6 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             calcTotal();
         }
 
-
-
         lv_do_items.setAdapter(adapterDoItem);
         act_product.setAdapter(productFilter);
 
@@ -167,7 +164,8 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 actionAdd();
                 break;
             case R.id.btn_edit:
-                if (isUpdate) actionUpdate(); else actionEdit();
+                if (isUpdate) actionUpdate();
+                else actionEdit();
                 break;
             case R.id.btn_delete:
                 if (!isUpdate) actionDelete();
@@ -263,7 +261,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 } catch (Exception e) {
                     et_qty.setGravity(Gravity.LEFT);
                 }
-                 calcAll();
+                calcAll();
             }
 
             @Override
@@ -407,7 +405,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 et_disc_principal.getText() == null) {
             et_disc_principal.setError(getString(R.string.error_input_disc));
             return true;
-        }*/  else {
+        }*/ else {
             return false;
         }
     }

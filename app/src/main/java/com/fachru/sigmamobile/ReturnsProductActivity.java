@@ -2,9 +2,9 @@ package com.fachru.sigmamobile;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.v7.widget.Toolbar;
 
 import com.fachru.sigmamobile.fragment.ReturnsProductFragment;

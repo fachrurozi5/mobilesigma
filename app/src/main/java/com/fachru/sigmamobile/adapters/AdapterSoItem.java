@@ -9,8 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
-import com.fachru.sigmamobile.model.SoItem;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.SoItem;
 import com.fachru.sigmamobile.utils.CommonUtil;
 
 import java.util.List;
@@ -103,20 +103,20 @@ public class AdapterSoItem extends BaseAdapter {
         Product product = Product.find(soItem.product_id);
         String product_price = null;
 
-        switch (type_price_list){
-            case 1 :
+        switch (type_price_list) {
+            case 1:
                 product_price = CommonUtil.priceFormat(product.po_price);
                 break;
-            case 2 :
+            case 2:
                 product_price = CommonUtil.priceFormat(product.sellprice);
                 break;
-            case 3 :
+            case 3:
                 product_price = CommonUtil.priceFormat(product.base_price);
                 break;
-            case 4 :
+            case 4:
                 product_price = CommonUtil.priceFormat(product.old_price);
                 break;
-            case 5 :
+            case 5:
                 product_price = CommonUtil.priceFormat(product.test_price);
                 break;
         }

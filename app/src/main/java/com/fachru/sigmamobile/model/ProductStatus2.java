@@ -14,14 +14,14 @@ import org.json.JSONObject;
 /**
  * Created by fachru on 06/01/16.
  */
-@Table(name = "ProductStatus")
-public class ProductStatus2 extends Model{
+@Table(name = "ProductStatus2")
+public class ProductStatus2 extends Model {
 
-    @SerializedName("PRSTATID")
+    @SerializedName("prstatid")
     @Column(name = "prstat_id")
     public String prstat_id;
 
-    @SerializedName("PRSTATNAME")
+    @SerializedName("prstatname")
     @Column(name = "name")
     public String name;
 
@@ -86,9 +86,11 @@ public class ProductStatus2 extends Model{
             return Builder.this;
         }
 
-        public ProductStatus2 Build(){
+        public ProductStatus2 Build() {
             return new ProductStatus2(Builder.this);
-        };
+        }
+
+        ;
     }
 
 }

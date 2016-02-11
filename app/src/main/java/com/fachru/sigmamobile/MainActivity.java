@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     protected Context context = this;
     protected SessionManager sessionManager;
-    private Intent serviceIntent;
-    private SaveMyAppsService mService;
-
     /*
     * widget
     * */
@@ -52,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     protected TextView text_time;
     protected TextView text_date;
     protected TextView text_location;
-
+    private Intent serviceIntent;
+    private SaveMyAppsService mService;
     /*
     * label
     * */
@@ -83,7 +81,29 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             }
         }
     };
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            SaveMyAppsService.LocalBinder binder = (SaveMyAppsService.LocalBinder) service;
+            mService = binder.getServiceInstance();
+            List<String> strings = new ArrayList<>();
+            strings.add("memo");
+            strings.add("contacts");
+            strings.add("phone");
+            strings.add("telegram");
+            strings.add("samsungapps");
+            strings.add("vending");
+            strings.add("mms");
+            strings.add("call");
+            strings.add("apps.plus");
+            mService.setListPackage(strings);
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Toast.makeText(context, "onServiceDisconnected called", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -177,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         super.onSaveInstanceState(outState);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -216,30 +235,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 break;
         }
     }
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            SaveMyAppsService.LocalBinder binder = (SaveMyAppsService.LocalBinder) service;
-            mService = binder.getServiceInstance();
-            List<String> strings = new ArrayList<>();
-            strings.add("memo");
-            strings.add("contacts");
-            strings.add("phone");
-            strings.add("telegram");
-            strings.add("samsungapps");
-            strings.add("vending");
-            strings.add("mms");
-            strings.add("call");
-            strings.add("apps.plus");
-            mService.setListPackage(strings);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Toast.makeText(context, "onServiceDisconnected called", Toast.LENGTH_SHORT).show();
-        }
-    };
 
     private void initComp() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);

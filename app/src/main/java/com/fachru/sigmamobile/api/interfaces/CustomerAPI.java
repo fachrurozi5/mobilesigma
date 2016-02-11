@@ -2,8 +2,6 @@ package com.fachru.sigmamobile.api.interfaces;
 
 import com.fachru.sigmamobile.model.Customer;
 
-import java.util.List;
-
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.Field;

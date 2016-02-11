@@ -9,11 +9,6 @@ import android.content.SharedPreferences.Editor;
  */
 public class SessionManager {
 
-    private SharedPreferences preferences;
-    private Editor editor;
-    private Context context;
-    private static final int PRIVATE_MODE = 0;
-    private static final String PREF_NAME = "sigma_preference";
     public static final String KEY_AFTER_INSTALL = "after_install";
     public static final String KEY_PIN = "pin";
     public static final String IS_PIN_SAVED = "is_pin_saved";
@@ -26,17 +21,24 @@ public class SessionManager {
     public static final String KEY_DOWNLOAD_PRODUCT = "dowbload_product";
     public static final String KEY_DOWNLOAD_WAREHOUSE = "download_warehouse";
     public static final String KEY_DOWNLOAD_WAREHOUSE_STOCK = "download_warehouse_stock";
-
-
     /*
     * service
     * */
     public static final String KEY_LOCATION_TRACKER_SERVICE = "key_location_tracker_service";
+    private static final int PRIVATE_MODE = 0;
+    private static final String PREF_NAME = "sigma_preference";
+    private SharedPreferences preferences;
+    private Editor editor;
+    private Context context;
 
     public SessionManager(Context context) {
         this.context = context;
         preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = preferences.edit();
+    }
+
+    public boolean getLocationTrackerService() {
+        return preferences.getBoolean(KEY_LOCATION_TRACKER_SERVICE, false);
     }
 
     /*
@@ -45,10 +47,6 @@ public class SessionManager {
     public void setLocationTrackerService(boolean b) {
         editor.putBoolean(KEY_LOCATION_TRACKER_SERVICE, b);
         editor.commit();
-    }
-
-    public boolean getLocationTrackerService() {
-        return preferences.getBoolean(KEY_LOCATION_TRACKER_SERVICE, false);
     }
 
     public void setAfterInstall(boolean b) {
@@ -64,16 +62,6 @@ public class SessionManager {
 
     public void saveLastAppPn(String lastApp) {
         editor.putString(KEY_LAST_APP_PN, lastApp);
-        editor.commit();
-    }
-
-    public void setCustomer(long customer_id) {
-        editor.putLong(KEY_CUSTOMER, customer_id);
-        editor.commit();
-    }
-
-    public void setEmployee(long employee_id) {
-        editor.putLong(KEY_EMPLOYEE, employee_id);
         editor.commit();
     }
 
@@ -152,8 +140,18 @@ public class SessionManager {
         return preferences.getLong(KEY_CUSTOMER, -1);
     }
 
+    public void setCustomer(long customer_id) {
+        editor.putLong(KEY_CUSTOMER, customer_id);
+        editor.commit();
+    }
+
     public long getEmployee() {
         return preferences.getLong(KEY_EMPLOYEE, -1);
+    }
+
+    public void setEmployee(long employee_id) {
+        editor.putLong(KEY_EMPLOYEE, employee_id);
+        editor.commit();
     }
 
     public boolean isPinSaved() {

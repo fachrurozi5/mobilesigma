@@ -17,7 +17,7 @@ import java.util.Date;
  * Created by fachru on 29/12/15.
  */
 @Table(name = "Employees")
-public class Employee extends Model{
+public class Employee extends Model {
 
     @SerializedName("EMPID")
     @Column(name = "employee_id")
@@ -75,16 +75,6 @@ public class Employee extends Model{
         return gson.fromJson(json.toString(), Employee.class);
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "employee_id='" + employee_id + '\'' +
-                ", name='" + name + '\'' +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
-
     public static Employee getEmployee(String empid) {
         return new Select()
                 .from(Employee.class)
@@ -98,6 +88,16 @@ public class Employee extends Model{
         if (employee != null)
             return employee.name;
         return "";
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employee_id='" + employee_id + '\'' +
+                ", name='" + name + '\'' +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                '}';
     }
 
     /*

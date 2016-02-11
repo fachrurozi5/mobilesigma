@@ -16,8 +16,9 @@ import java.util.Locale;
  * Created by fachru on 22/01/16.
  */
 @Table(name = "SoHeads")
-public class SoHead extends Model{
+public class SoHead extends Model {
 
+    private static List<SoHead> allHasPrint;
     @SerializedName("SO")
     @Column(name = "so")
     public String so;
@@ -25,46 +26,53 @@ public class SoHead extends Model{
     @SerializedName("SODATE")
     @Column(name = "so_date")
     public Date so_date;
-
     @SerializedName("CUSTID")
     @Column(name = "custid")
     public String custid;
-
     @SerializedName("EMPID")
     @Column(name = "empid")
     public String empid;
-
     @SerializedName("TOPID")
     @Column(name = "topid")
     public String topid = "30";
-
     @SerializedName("VATID")
     @Column(name = "vatid")
     public String vatid = "10";
-
     @SerializedName("PO")
     @Column(name = "po")
     public String purchase_order;
-
     @SerializedName("DATEORDER")
     @Column(name = "date_oder")
     public Date date_order;
-
     @SerializedName("DELDATE")
     @Column(name = "delivery_date")
     public Date delivery_date;
-
     @SerializedName("PRICETYPE")
     @Column(name = "price_type")
     public int priceType;
-
     @SerializedName("WHID")
     @Column(name = "whid")
     public String whid;
-
     @SerializedName("DATEUPDATE")
     @Column(name = "updated_at")
     public Date updated_at;
+
+    @SerializedName("EXRATE")
+    @Column(name = "exrate")
+    public double exrate = 1;
+
+    @SerializedName("TYPEOFSO")
+    @Column(name = "typeofso")
+    public int typeofso = 1;
+
+    @Column(name = "vatamt")
+    public double vatamt;
+
+    @Column(name = "netamt")
+    public double netamt;
+
+    @Column(name = "docprint")
+    public int docprint;
 
     public SoHead() {
         super();
@@ -96,6 +104,14 @@ public class SoHead extends Model{
                 .execute();
     }
 
+    public static List<SoHead> getAllWhereCustomer(String custid) {
+        return new Select()
+                .from(SoHead.class)
+                .where("custid =? ", custid)
+                .and("docprint =?", 0)
+                .execute();
+    }
+
     public static SoHead last() {
         return new Select().from(SoHead.class)
                 .orderBy("so DESC")
@@ -108,16 +124,13 @@ public class SoHead extends Model{
                 .where("so like ?", "%" + getFirstId() + "%").execute().size();
     }
 
-    public String getSoDate() {
-        return CommonUtil.dateToStringMedium(this.so_date);
-    }
+    public static List<SoHead> getAllHasPrint() {
+        allHasPrint = new Select()
+                .from(SoHead.class)
+                .where("docprint =?", 1)
+                .execute();
 
-    public String getPoDate() {
-        return CommonUtil.dateToStringMedium(this.date_order);
-    }
-
-    public String getDelDate() {
-        return CommonUtil.dateToStringMedium(this.delivery_date);
+        return allHasPrint;
     }
 
     public static String generateId() {
@@ -130,7 +143,7 @@ public class SoHead extends Model{
                 id += "00" + (v + 1);
             } else if (size > 9) {
                 id += "0" + (v + 1);
-            } else if (size > 99){
+            } else if (size > 99) {
                 id += (v + 1);
             }
         } else {
@@ -145,6 +158,25 @@ public class SoHead extends Model{
         SimpleDateFormat format = new SimpleDateFormat("MMdd.", Locale.getDefault());
         id += format.format(new Date());
         return id;
+    }
+
+    public List<SoItem> soItems() {
+        return new Select()
+                .from(SoItem.class)
+                .where("so =? ", so)
+                .execute();
+    }
+
+    public String getSoDate() {
+        return CommonUtil.dateToStringMedium(this.so_date);
+    }
+
+    public String getPoDate() {
+        return CommonUtil.dateToStringMedium(this.date_order);
+    }
+
+    public String getDelDate() {
+        return CommonUtil.dateToStringMedium(this.delivery_date);
     }
 
     @Override

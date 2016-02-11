@@ -37,9 +37,13 @@ public class CustomerActivity extends AppCompatActivity implements
 
 
     public static final String CUSTID = "key_custid";
-
+    /*
+    * label
+    * */
+    String text_time = "";
+    String text_date = "";
+    String text_location = "";
     private Context context = this;
-
     /*
     * widget
     * */
@@ -61,6 +65,12 @@ public class CustomerActivity extends AppCompatActivity implements
     private TextView tv_invadd3;
     private TextView tv_invadd4;
     private TextView tv_invzip;
+    private TextView tv_deladdid;
+    private TextView tv_deladd1;
+    private TextView tv_deladd2;
+    private TextView tv_deladd3;
+    private TextView tv_deladd4;
+    private TextView tv_delzip;
     private TextView tv_created;
     private TextView tv_updated;
     private EditText et_id;
@@ -78,32 +88,26 @@ public class CustomerActivity extends AppCompatActivity implements
     private EditText et_invadd3;
     private EditText et_invadd4;
     private EditText et_invzip;
+    private EditText et_deladdid;
+    private EditText et_deladd1;
+    private EditText et_deladd2;
+    private EditText et_deladd3;
+    private EditText et_deladd4;
+    private EditText et_delzip;
     private EditText et_created;
     private EditText et_updated;
-
     /*
     * adapter
     * */
     private AdapterCustomer adapter;
-
-
     /*
     * controller
     * */
     private CustomerController controller;
-
     /*
     * arraylist
     * */
     private List<Customer> list = new ArrayList<>();
-
-    /*
-    * label
-    * */
-    String text_time = "";
-    String text_date = "";
-    String text_location = "";
-
     /*
     * reciever datetime
     * */
@@ -297,40 +301,52 @@ public class CustomerActivity extends AppCompatActivity implements
 
         View view = dialog.getCustomView();
 
-        et_id           = (EditText) view.findViewById(R.id.et_id);
-        et_name         = (EditText) view.findViewById(R.id.et_name);
-        et_csstatid1    = (EditText) view.findViewById(R.id.et_csstatid1);
-        et_csstatid2    = (EditText) view.findViewById(R.id.et_csstatid2);
-        et_csstatid3    = (EditText) view.findViewById(R.id.et_csstatid3);
-        et_csstatid4    = (EditText) view.findViewById(R.id.et_csstatid4);
-        et_csstatid5    = (EditText) view.findViewById(R.id.et_csstatid5);
-        et_type_group   = (EditText) view.findViewById(R.id.et_type_group);
-        et_cs_group     = (EditText) view.findViewById(R.id.et_cs_group);
-        et_channel      = (EditText) view.findViewById(R.id.et_channel);
-        et_invadd1      = (EditText) view.findViewById(R.id.et_invadd1);
-        et_invadd2      = (EditText) view.findViewById(R.id.et_invadd2);
-        et_invadd3      = (EditText) view.findViewById(R.id.et_invadd3);
-        et_invadd4      = (EditText) view.findViewById(R.id.et_invadd4);
-        et_invzip       = (EditText) view.findViewById(R.id.et_invzip);
-        et_created       = (EditText) view.findViewById(R.id.et_created);
-        et_updated       = (EditText) view.findViewById(R.id.et_updated);
+        et_id = (EditText) view.findViewById(R.id.et_id);
+        et_name = (EditText) view.findViewById(R.id.et_name);
+        et_csstatid1 = (EditText) view.findViewById(R.id.et_csstatid1);
+        et_csstatid2 = (EditText) view.findViewById(R.id.et_csstatid2);
+        et_csstatid3 = (EditText) view.findViewById(R.id.et_csstatid3);
+        et_csstatid4 = (EditText) view.findViewById(R.id.et_csstatid4);
+        et_csstatid5 = (EditText) view.findViewById(R.id.et_csstatid5);
+        et_type_group = (EditText) view.findViewById(R.id.et_type_group);
+        et_cs_group = (EditText) view.findViewById(R.id.et_cs_group);
+        et_channel = (EditText) view.findViewById(R.id.et_channel);
+        et_invadd1 = (EditText) view.findViewById(R.id.et_invadd1);
+        et_invadd2 = (EditText) view.findViewById(R.id.et_invadd2);
+        et_invadd3 = (EditText) view.findViewById(R.id.et_invadd3);
+        et_invadd4 = (EditText) view.findViewById(R.id.et_invadd4);
+        et_invzip = (EditText) view.findViewById(R.id.et_invzip);
+        et_deladdid = (EditText) view.findViewById(R.id.et_deladdid);
+        et_deladd1 = (EditText) view.findViewById(R.id.et_deladd1);
+        et_deladd2 = (EditText) view.findViewById(R.id.et_deladd2);
+        et_deladd3 = (EditText) view.findViewById(R.id.et_deladd3);
+        et_deladd4 = (EditText) view.findViewById(R.id.et_deladd4);
+        et_delzip = (EditText) view.findViewById(R.id.et_deladdzip);
+        et_created = (EditText) view.findViewById(R.id.et_created);
+        et_updated = (EditText) view.findViewById(R.id.et_updated);
 
-        tv_name         = (TextView) view.findViewById(R.id.tv_name);
-        tv_csstatid1    = (TextView) view.findViewById(R.id.tv_csstatid1);
-        tv_csstatid2    = (TextView) view.findViewById(R.id.tv_csstatid2);
-        tv_csstatid3    = (TextView) view.findViewById(R.id.tv_csstatid3);
-        tv_csstatid4    = (TextView) view.findViewById(R.id.tv_csstatid4);
-        tv_csstatid5    = (TextView) view.findViewById(R.id.tv_csstatid5);
-        tv_type_group   = (TextView) view.findViewById(R.id.tv_type_group);
-        tv_cs_group     = (TextView) view.findViewById(R.id.tv_cs_group);
-        tv_channel      = (TextView) view.findViewById(R.id.tv_channel);
-        tv_invadd1      = (TextView) view.findViewById(R.id.tv_invadd1);
-        tv_invadd2      = (TextView) view.findViewById(R.id.tv_invadd2);
-        tv_invadd3      = (TextView) view.findViewById(R.id.tv_invadd3);
-        tv_invadd4      = (TextView) view.findViewById(R.id.tv_invadd4);
-        tv_invzip       = (TextView) view.findViewById(R.id.tv_invzip);
-        tv_created      = (TextView) view.findViewById(R.id.tv_created);
-        tv_updated      = (TextView) view.findViewById(R.id.tv_updated);
+        tv_name = (TextView) view.findViewById(R.id.tv_name);
+        tv_csstatid1 = (TextView) view.findViewById(R.id.tv_csstatid1);
+        tv_csstatid2 = (TextView) view.findViewById(R.id.tv_csstatid2);
+        tv_csstatid3 = (TextView) view.findViewById(R.id.tv_csstatid3);
+        tv_csstatid4 = (TextView) view.findViewById(R.id.tv_csstatid4);
+        tv_csstatid5 = (TextView) view.findViewById(R.id.tv_csstatid5);
+        tv_type_group = (TextView) view.findViewById(R.id.tv_type_group);
+        tv_cs_group = (TextView) view.findViewById(R.id.tv_cs_group);
+        tv_channel = (TextView) view.findViewById(R.id.tv_channel);
+        tv_invadd1 = (TextView) view.findViewById(R.id.tv_invadd1);
+        tv_invadd2 = (TextView) view.findViewById(R.id.tv_invadd2);
+        tv_invadd3 = (TextView) view.findViewById(R.id.tv_invadd3);
+        tv_invadd4 = (TextView) view.findViewById(R.id.tv_invadd4);
+        tv_invzip = (TextView) view.findViewById(R.id.tv_invzip);
+        tv_deladdid = (TextView) view.findViewById(R.id.tv_deladdid);
+        tv_deladd1 = (TextView) view.findViewById(R.id.tv_deladd1);
+        tv_deladd2 = (TextView) view.findViewById(R.id.tv_deladd2);
+        tv_deladd3 = (TextView) view.findViewById(R.id.tv_deladd3);
+        tv_deladd4 = (TextView) view.findViewById(R.id.tv_deladd4);
+        tv_delzip = (TextView) view.findViewById(R.id.tv_deladdzip);
+        tv_created = (TextView) view.findViewById(R.id.tv_created);
+        tv_updated = (TextView) view.findViewById(R.id.tv_updated);
 
         setDataCustomer(customer);
 
@@ -440,12 +456,55 @@ public class CustomerActivity extends AppCompatActivity implements
             tv_invzip.setVisibility(View.GONE);
         }
 
+        if (!(customer.deladdid.equals("") || customer.deladdid.equals("-"))) {
+            et_delzip.setText(customer.deladdid);
+        } else {
+            et_delzip.setVisibility(View.GONE);
+            tv_delzip.setVisibility(View.GONE);
+        }
+
+        if (!(customer.deladd1.equals("") || customer.deladd1.equals("-"))) {
+            et_deladd1.setText(customer.deladd1);
+        } else {
+            et_deladd1.setVisibility(View.GONE);
+            tv_deladd1.setVisibility(View.GONE);
+        }
+
+        if (!(customer.deladd2.equals("") || customer.deladd2.equals("-"))) {
+            et_deladd2.setText(customer.deladd2);
+        } else {
+            et_deladd2.setVisibility(View.GONE);
+            tv_deladd2.setVisibility(View.GONE);
+        }
+
+        if (!(customer.deladd3.equals("") || customer.deladd3.equals("-"))) {
+            et_deladd3.setText(customer.deladd3);
+        } else {
+            et_deladd3.setVisibility(View.GONE);
+            tv_deladd3.setVisibility(View.GONE);
+        }
+
+        if (!(customer.deladd4.equals("") || customer.deladd4.equals("-"))) {
+            et_deladd4.setText(customer.deladd4);
+        } else {
+            et_deladd4.setVisibility(View.GONE);
+            tv_deladd4.setVisibility(View.GONE);
+        }
+
+        if (!(customer.delzip.equals("") || customer.delzip.equals("-"))) {
+            et_delzip.setText(customer.delzip);
+        } else {
+            et_delzip.setVisibility(View.GONE);
+            tv_delzip.setVisibility(View.GONE);
+        }
+
         if (customer.created_at != null) {
             et_created.setText(CommonUtil.dateHelper(customer.created_at, Constanta.ID_LONG));
         } else {
             et_created.setVisibility(View.GONE);
             tv_created.setVisibility(View.GONE);
         }
+
 
         if (customer.updated_at != null) {
             et_updated.setText(CommonUtil.dateHelper(customer.updated_at, Constanta.ID_LONG));

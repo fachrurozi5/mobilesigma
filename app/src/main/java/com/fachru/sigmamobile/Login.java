@@ -39,6 +39,7 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
     private EditText et_username;
     private EditText et_password;
     private Button btn_login;
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
 
     @Override
     public void onFetchComplete() {
-        Log.e(Constanta.TAG, "Employee Complite");
+        Log.e(Constanta.TAG, "Employee Complete");
         startActivity(new Intent(context, MainActivity.class));
         finish();
     }
@@ -73,15 +74,17 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
     @Override
     public void onFetchFailed(Throwable t) {
         Log.e(Constanta.TAG, "FetchFailed", t);
+        materialDialog.dismiss();
         new MaterialDialog.Builder(this)
                 .title("Error")
                 .iconRes(android.R.drawable.ic_dialog_alert)
-                .content(t.getMessage())
+                .content("Server tidak meresponse (timeout)")
                 .show();
     }
 
     @Override
     public void onFailureShowMessage(String message) {
+        materialDialog.dismiss();
         new MaterialDialog.Builder(this)
                 .title("Login Fail")
                 .iconRes(android.R.drawable.ic_dialog_alert)
@@ -108,7 +111,7 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
     private void initComp() {
         et_username = (EditText) findViewById(R.id.input_username);
         et_password = (EditText) findViewById(R.id.input_password);
-        btn_login   = (Button) findViewById(R.id.btn_login);
+        btn_login = (Button) findViewById(R.id.btn_login);
     }
 
     private boolean isMissing() {
@@ -124,12 +127,13 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
             return false;
         }
     }
+
     public void showProgressHorizontalIndeterminateDialog() {
-        showIndeterminateProgressDialog(true);
+        materialDialog = showIndeterminateProgressDialog(true);
     }
 
-    private void showIndeterminateProgressDialog(boolean horizontal) {
-        new MaterialDialog.Builder(this)
+    private MaterialDialog showIndeterminateProgressDialog(boolean horizontal) {
+        return new MaterialDialog.Builder(this)
                 .title("Login")
                 .content("Please Wait")
                 .progress(true, 0)

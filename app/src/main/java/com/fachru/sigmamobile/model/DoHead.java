@@ -5,7 +5,6 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.fachru.sigmamobile.utils.CommonUtil;
-import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -54,23 +53,23 @@ public class DoHead extends Model {
     public String currid = "RP";
 
     @SerializedName("")
-    @Column(name = "typeofso" )
+    @Column(name = "typeofso")
     public String typeofso = "7";
 
     @SerializedName("VATNO")
-    @Column(name = "vatno" )
+    @Column(name = "vatno")
     public String vatno;
 
     @SerializedName("NETAMT")
-    @Column(name = "netamt" )
+    @Column(name = "netamt")
     public double netamt; //
 
     @SerializedName("VATAMT")
-    @Column(name = "vatamt" )
+    @Column(name = "vatamt")
     public double vatamt; //
 
     @SerializedName("WHID")
-    @Column(name = "whid" )
+    @Column(name = "whid")
     public String whid;
 
     @SerializedName("PAYTYPE")
@@ -78,7 +77,7 @@ public class DoHead extends Model {
     public int paytype = 5;
 
     @SerializedName("PERIOD")
-    @Column(name = "period" )
+    @Column(name = "period")
     public String period;
 
     @SerializedName("DOCPRINT")
@@ -138,23 +137,6 @@ public class DoHead extends Model {
                 .execute();
     }
 
-    public List<DoItem> doItems() {
-        return new Select()
-                .from(DoItem.class)
-                .where("docno =? ", doc_no)
-                .execute();
-    }
-
-    public String getDocDate() {
-        return CommonUtil.dateToStringMedium(this.doc_date);
-    }
-
-    public void setDateFromString(String date) throws ParseException {
-        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-        sf.setLenient(true);
-        this.doc_date = sf.parse(date);
-    }
-
     public static DoHead findOrCreateFromJson(JSONObject json) throws JSONException {
         String docno = json.getString("DOCNO");
         DoHead existingDoHead = new Select().from(DoHead.class).where("docno = ?", docno).executeSingle();
@@ -193,7 +175,7 @@ public class DoHead extends Model {
                 id += "00" + (v + 1);
             } else if (size > 9) {
                 id += "0" + (v + 1);
-            } else if (size > 99){
+            } else if (size > 99) {
                 id += (v + 1);
             }
         } else {
@@ -201,6 +183,23 @@ public class DoHead extends Model {
         }
 
         return id;
+    }
+
+    public List<DoItem> doItems() {
+        return new Select()
+                .from(DoItem.class)
+                .where("docno =? ", doc_no)
+                .execute();
+    }
+
+    public String getDocDate() {
+        return CommonUtil.dateToStringMedium(this.doc_date);
+    }
+
+    public void setDateFromString(String date) throws ParseException {
+        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+        sf.setLenient(true);
+        this.doc_date = sf.parse(date);
     }
 
     @Override
@@ -262,7 +261,7 @@ public class DoHead extends Model {
             return Builder.this;
         }
 
-        public DoHead build(){
+        public DoHead build() {
             return new DoHead(Builder.this);
         }
     }

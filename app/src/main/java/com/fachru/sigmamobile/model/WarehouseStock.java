@@ -33,7 +33,7 @@ public class WarehouseStock extends Model {
     public String whid;
 
     @SerializedName("prodid")
-    @Column(name = "prodid")
+    @Column(name = "product_id")
     public String product_id;
 
     @SerializedName("balance")
@@ -42,6 +42,10 @@ public class WarehouseStock extends Model {
 
     @Column(name = "prodcut")
     public Product product;
+
+    public WarehouseStock() {
+        super();
+    }
 
     public static List<WarehouseStock> findAllById(String whid) {
         return new Select()
@@ -55,7 +59,7 @@ public class WarehouseStock extends Model {
         return new Select()
                 .from(WarehouseStock.class)
                 .where("whid =?", whid)
-                .and("prodid =?", product_id)
+                .and("product_id =?", product_id)
                 .executeSingle();
     }
 
@@ -79,10 +83,6 @@ public class WarehouseStock extends Model {
         }
 
         return hashMaps;
-    }
-
-    public WarehouseStock() {
-        super();
     }
 
     public static List<WarehouseStock> getAll() {

@@ -7,5 +7,6 @@ import com.fachru.sigmamobile.model.SoHead;
  */
 public interface OnSetSoHeadListener {
     void onSetSoHead(SoHead soHead);
+
     void unSetSoHead();
 }

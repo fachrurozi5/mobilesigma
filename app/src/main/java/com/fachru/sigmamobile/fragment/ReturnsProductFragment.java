@@ -124,7 +124,7 @@ public class ReturnsProductFragment extends Fragment
         switch (view.getId()) {
             case R.id.rb_ambil:
                 if (checked)
-                break;
+                    break;
             case R.id.rb_proses:
                 if (checked)
                     break;

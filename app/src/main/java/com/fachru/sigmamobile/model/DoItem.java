@@ -19,7 +19,7 @@ public class DoItem extends Model {
     public String docno;
 
     @SerializedName("PRODID")
-    @Column(name = "prodid")
+    @Column(name = "product_id")
     public String product_id;
 
     @SerializedName("QUANTITY")
@@ -50,10 +50,10 @@ public class DoItem extends Model {
     }
 
     public DoItem(Builder builder) {
-        docno       = builder.docno;
-        product_id  = builder.product_id;
-        qty         = builder.qty;
-        sub_total   = builder.sub_total;
+        docno = builder.docno;
+        product_id = builder.product_id;
+        qty = builder.qty;
+        sub_total = builder.sub_total;
         /*pricelist   = builder.pricelist;
         pricelist2  = builder.pricelist2;
         unitprice   = builder.unitprice;
@@ -63,7 +63,7 @@ public class DoItem extends Model {
     public List<DoItem> allWhereDoHead(String docno) {
         return new Select()
                 .from(DoItem.class)
-                .where("docno =? " , docno)
+                .where("docno =? ", docno)
                 .execute();
     }
 
@@ -71,7 +71,7 @@ public class DoItem extends Model {
     public String toString() {
         return "DoItem{" +
                 "docno='" + docno + '\'' +
-                ", prodid='" + product_id + '\'' +
+                ", product_id='" + product_id + '\'' +
                 ", qty=" + qty +
                 ", pricelist=" + pricelist +
                 ", pricelist2=" + pricelist2 +

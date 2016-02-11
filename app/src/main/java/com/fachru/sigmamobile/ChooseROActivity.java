@@ -20,7 +20,7 @@ import com.fachru.sigmamobile.adapters.ImageAdapter;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
 
-public class ChooseROActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class ChooseROActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private Context context = this;
 
@@ -60,6 +60,7 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +114,7 @@ public class ChooseROActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home :
+            case android.R.id.home:
                 activityResult();
                 return true;
         }

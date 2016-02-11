@@ -22,10 +22,10 @@ import java.util.List;
 @Table(name = "Products")
 public class Product extends Model {
 
-    public static final String UNIQCOLUMN = "prodid";
+    public static final String UNIQCOLUMN = "product_id";
 
     @SerializedName("prodid")
-    @Column(name = "prodid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    @Column(name = "product_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public String prodid;
 
     @SerializedName("prodname1")
@@ -44,9 +44,25 @@ public class Product extends Model {
     @Column(name = "unitid")
     public String unitid;
 
+    @SerializedName("poprice")
+    @Column(name = "po_price")
+    public double po_price;
+
     @SerializedName("sellprc")
     @Column(name = "sellprice")
     public double sellprice;
+
+    @SerializedName("baseprice")
+    @Column(name = "base_price")
+    public double base_price;
+
+    @SerializedName("oldprice")
+    @Column(name = "old_price")
+    public double old_price;
+
+    @SerializedName("testprice")
+    @Column(name = "test_price")
+    public double test_price;
 
     public Product() {
         super();
@@ -69,9 +85,9 @@ public class Product extends Model {
         return hashMaps;
     }
 
-    public static Product find(String product_id)  {
+    public static Product find(String product_id) {
         return new Select().from(Product.class)
-                .where("prodid = ?", product_id)
+                .where("product_id = ?", product_id)
                 .executeSingle();
     }
 
@@ -99,7 +115,7 @@ public class Product extends Model {
     @Override
     public String toString() {
         return "Product{" +
-                "prodid='" + prodid + '\'' +
+                "product_id='" + prodid + '\'' +
                 ", name='" + name + '\'' +
                 ", prstatid1='" + prstatid1 + '\'' +
                 ", prstatid2='" + prstatid2 + '\'' +

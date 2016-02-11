@@ -7,5 +7,6 @@ import com.fachru.sigmamobile.model.DoHead;
  */
 public interface OnSetDoHeadListener {
     void onSetDoHead(DoHead doHead);
+
     void unSetDoHead();
 }

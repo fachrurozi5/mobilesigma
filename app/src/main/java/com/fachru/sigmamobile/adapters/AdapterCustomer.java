@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by fachru on 21/12/15.
  */
-public class AdapterCustomer extends BaseAdapter implements Filterable{
+public class AdapterCustomer extends BaseAdapter implements Filterable {
 
     private Context context;
     private List<Customer> listFiltered;
@@ -115,7 +115,7 @@ public class AdapterCustomer extends BaseAdapter implements Filterable{
     }
 
     private class Holder {
-//        public TextView tv_no;
+        //        public TextView tv_no;
         public TextView tv_id;
         public TextView tv_name;
         public TextView tv_phone;

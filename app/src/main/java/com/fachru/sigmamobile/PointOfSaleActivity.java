@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +26,6 @@ import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
-import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -45,7 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class PointOfSaleActivity extends AppCompatActivity implements
-        OnTabSelectedListener, OnSetDoHeadListener, OnSetDoItemListener{
+        OnTabSelectedListener, OnSetDoHeadListener, OnSetDoItemListener {
 
     protected static final String TAG_DO_HEAD = "doheadtag";
     protected static final String TAG_DO_ITEM = "doitemtag";
@@ -114,9 +114,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
             return true;
         } else if (id == R.id.action_done) {
-            // TODO:Hitung sub total
-            for(DoItem doItem : doHead.doItems())
-            {
+            for (DoItem doItem : doHead.doItems()) {
                 total += doItem.sub_total;
             }
             showDialogOrder();
@@ -159,35 +157,39 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
     private void fragmentPosition(int position) {
         FragmentTransaction fragmentTransaction;
+        Fragment fragment = null;
+        Bundle bundle;
         switch (position) {
             case 0:
-                HeaderPOSFragment fragment = new HeaderPOSFragment();
-                fragment.setOnSetDoHeadListener(this);
-                Bundle bundle = new Bundle();
+                fragment = new HeaderPOSFragment();
+                ((HeaderPOSFragment) fragment).setOnSetDoHeadListener(this);
+                bundle = new Bundle();
                 bundle.putLong(CustomerActivity.CUSTID, custid);
                 bundle.putLong(Login.EMPLID, emplid);
                 fragment.setArguments(bundle);
-                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, fragment, TAG_DO_HEAD).commit();
                 break;
             case 1:
-                PointOfSaleFragment orderFragment = new PointOfSaleFragment();
-                orderFragment.setOnDoItemListener(this);
+                fragment = new PointOfSaleFragment();
+                ((PointOfSaleFragment) fragment).setOnDoItemListener(this);
                 if (doHead != null) {
                     bundle = new Bundle();
                     bundle.putString(Constanta.KEY_DOC_NO, doHead.doc_no);
                     bundle.putString(Constanta.KEY_WHID, doHead.whid);
-                    orderFragment.setArguments(bundle);
+                    fragment.setArguments(bundle);
                 }
-                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, orderFragment, TAG_DO_ITEM).commit();
                 break;
             case 2:
-                DoneOrderFragment doneOrderFragment = new DoneOrderFragment();
-                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, doneOrderFragment, TAG_DONE_ORDER).commit();
+                fragment = new DoneOrderFragment();
+                bundle = new Bundle();
+                bundle.putString(Constanta.KEY_DOC_NO, Constanta.KEY_DOC_NO);
+                fragment.setArguments(bundle);
             default:
                 break;
+        }
+
+        if (fragment != null) {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.container, fragment).commit();
         }
     }
 
@@ -205,7 +207,6 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        // TODO:Hitung grand total dan print nota
                         doHead.vatamt = ppn;
                         doHead.netamt = grand_total;
                         doHead.dibayar = bayar;
@@ -220,13 +221,13 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                         tabLayout.getTabAt(0).select();
                     }
                 }).build();
-        EditText et_total       = (EditText) dialog.getCustomView().findViewById(R.id.et_total);
-        EditText et_bonus       = (EditText) dialog.getCustomView().findViewById(R.id.et_bonus);
-        EditText et_ppn         = (EditText) dialog.getCustomView().findViewById(R.id.et_ppn);
-        final EditText et_neto          = (EditText) dialog.getCustomView().findViewById(R.id.et_neto);
-        final EditText et_bayar         = (EditText) dialog.getCustomView().findViewById(R.id.et_bayar);
-        final EditText et_kembali       = (EditText) dialog.getCustomView().findViewById(R.id.et_kembali);
-        final EditText et_grand_total   = (EditText) dialog.getCustomView().findViewById(R.id.et_grand_total);
+        EditText et_total = (EditText) dialog.getCustomView().findViewById(R.id.et_total);
+        EditText et_bonus = (EditText) dialog.getCustomView().findViewById(R.id.et_bonus);
+        EditText et_ppn = (EditText) dialog.getCustomView().findViewById(R.id.et_ppn);
+        final EditText et_neto = (EditText) dialog.getCustomView().findViewById(R.id.et_neto);
+        final EditText et_bayar = (EditText) dialog.getCustomView().findViewById(R.id.et_bayar);
+        final EditText et_kembali = (EditText) dialog.getCustomView().findViewById(R.id.et_kembali);
+        final EditText et_grand_total = (EditText) dialog.getCustomView().findViewById(R.id.et_grand_total);
 
         et_total.setText(CommonUtil.priceFormat2Decimal(total));
         et_bonus.setText("0");
@@ -303,14 +304,13 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
             doc.open();
 
-            float[] columnWidths = {1f, 0.8f, 2f, 1.5f,1.5f};
+            float[] columnWidths = {1f, 0.8f, 2f, 1.5f, 1.5f};
 
             Font font = FontFactory.getFont("Times-Roman", 6, Font.NORMAL);
 
             PdfPTable table = createTable(columnWidths, 150f, font);
 
             Product product = null;
-            // TODO:Perbaiki Cell di pdf
             for (DoItem item : doHead.doItems()) {
                 product = Product.find(item.product_id);
                 table.addCell(createCell(product.prodid, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
@@ -334,14 +334,12 @@ public class PointOfSaleActivity extends AppCompatActivity implements
             table.addCell(createCell(CommonUtil.priceFormat(doHead.netamt), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
 
             table.writeSelectedRows(0, -1, doc.leftMargin(), 650, docWriter.getDirectContent());
-            
+
         } catch (DocumentException de) {
             Log.e("PDFCreator", "DocumentException:" + de);
         } catch (IOException e) {
             Log.e("PDFCreator", "ioException:" + e);
-        }
-        finally
-        {
+        } finally {
             doc.close();
             total = bonus = 0;
             if (file != null)
@@ -379,7 +377,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
     private void openPDf(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType( Uri.fromFile(file), "application/pdf" );
+        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
         startActivity(intent);
     }
 }

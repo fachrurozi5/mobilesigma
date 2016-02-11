@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface OnCustomerCallbackListener extends OnCallbackListener {
     void onFetchProgress(Customer customer);
+
     void onFetchProgress(List<Customer> list);
 }

@@ -25,6 +25,7 @@ import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapters.AdapterSoHead;
 import com.fachru.sigmamobile.adapters.spinners.AdapterWarehouse;
+import com.fachru.sigmamobile.fragment.interfaces.OnSetSoHeadListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.SoHead;
@@ -44,19 +45,20 @@ import java.util.List;
  * Created by fachru on 28/12/15.
  */
 public class HeaderSOFragment extends BaseFragmentForm implements
-        View.OnClickListener, DatePickerDialog.OnDateSetListener{
+        View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
+    protected boolean isUpdate = false;
+    protected boolean isReadyAddItem = false;
     private Activity activity;
     private Bundle bundle;
-
     /*
-    * interface
+    * listener
     * */
+    private OnSetSoHeadListener mListener;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private AdapterView.OnItemSelectedListener onWarehouseSelected;
     private AdapterView.OnItemSelectedListener onTypeOfPriceSelected;
     private AdapterView.OnItemLongClickListener onSoHeadLongClick;
-
     /*
     * plain old java object
     * */
@@ -64,7 +66,6 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     private Customer customer;
     private Employee employee;
     private Warehouse warehouse;
-
     /*
     * widget
     * */
@@ -84,25 +85,20 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     private Button btn_edit;
     private Button btn_del;
     private ListView lv_so_head_items;
-
     /*
     * adapter
     * */
     private ArrayAdapter<CharSequence> adapter;
-
     /*
     * custom adapter
     * */
     private AdapterWarehouse adapterWarehouse;
     private AdapterSoHead adapterSoHead;
-
     /*
     * label
     * */
     private int type_of_price;
     private List<SoHead> soHeads = new ArrayList<>();
-    protected boolean isUpdate = false;
-    protected boolean isReadyAddItem = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +114,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
         adapter = ArrayAdapter.createFromResource(activity, R.array.type_of_price, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        soHeads = SoHead.getAll();
+        soHeads = SoHead.getAllWhereCustomer(customer.custid);
         adapterSoHead = new AdapterSoHead(activity, soHeads);
 
     }
@@ -147,6 +143,12 @@ public class HeaderSOFragment extends BaseFragmentForm implements
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mListener.unSetSoHead();
     }
 
     @Nullable
@@ -314,8 +316,30 @@ public class HeaderSOFragment extends BaseFragmentForm implements
 
         onTypeOfPriceSelected = new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                type_of_price = position + 1;
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+                if (isUpdate) {
+                    new MaterialDialog.Builder(activity)
+                            .title("Peringatan")
+                            .content("Mengubah tipe harga akan berdampak pada perubahan nilai harga pada setiap item sales order dan total harga seluruh item")
+                            .positiveText(R.string.agree)
+                            .negativeText(R.string.disagree)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                    type_of_price = position + 1;
+                                }
+                            })
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                    sp_type_of_price.setSelection(type_of_price - 1);
+                                }
+                            })
+                            .show();
+                } else {
+                    type_of_price = position + 1;
+                }
+
             }
 
             @Override
@@ -439,7 +463,8 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     }
 
     private void actionAddItem() {
-
+        mListener.onSetSoHead(soHead);
+        clearForm(layout);
     }
 
     private void onCancelOrAfterEdit() {
@@ -475,6 +500,10 @@ public class HeaderSOFragment extends BaseFragmentForm implements
         button.setEnabled(false);
     }
 
+    public void setOnSoHeadListener(OnSetSoHeadListener mListener) {
+        this.mListener = mListener;
+    }
+
     private boolean errorChecked() {
         if (et_po_date.getText().toString().equals("") ||
                 et_po_date.getText() == null) {
@@ -485,7 +514,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
             et_po_date.setError("Delivery Date tidak boleh kosong!");
             return true;
         } else if (et_customer_po.getText().toString().equals("") ||
-                et_customer_po.getText() == null){
+                et_customer_po.getText() == null) {
             et_customer_po.setError("Customer's PO tidak boleh kosong!");
             return true;
         } else {

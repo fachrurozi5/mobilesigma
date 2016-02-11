@@ -1,17 +1,11 @@
 package com.fachru.sigmamobile.service;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.fachru.sigmamobile.MainActivity;
-import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 

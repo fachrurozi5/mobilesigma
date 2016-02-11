@@ -23,23 +23,13 @@ import java.util.concurrent.TimeUnit;
 public class SaveMyAppsService extends Service {
 
     private static String CURRENT_PACKAGE_NAME;
-
+    private final IBinder mBinder = new LocalBinder();
     private List<String> strings = new ArrayList<>();
-
     private long startTime;
     private long maxDurationInMilliseconds = 60 * 1000;
     private boolean isThreadRunning = false;
-
     private SessionManager manager;
     private ScheduledExecutorService scheduler;
-
-    private final IBinder mBinder = new LocalBinder();
-
-    public class LocalBinder extends Binder {
-        public SaveMyAppsService getServiceInstance() {
-            return SaveMyAppsService.this;
-        }
-    }
 
     public SaveMyAppsService() {
     }
@@ -125,8 +115,7 @@ public class SaveMyAppsService extends Service {
     }
 
     private void interruptedApp(String s) {
-        try
-        {
+        try {
             Process suProcess = Runtime.getRuntime().exec("su");
             DataOutputStream os = new DataOutputStream(suProcess.getOutputStream());
 
@@ -141,20 +130,19 @@ public class SaveMyAppsService extends Service {
             os.close();
             suProcess.waitFor();
 
-        }
-
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             ex.getMessage();
             Log.e(Constanta.TAG, "IOException : " + ex.getMessage());
-        }
-        catch (SecurityException ex)
-        {
+        } catch (SecurityException ex) {
             Log.e(Constanta.TAG, "Can't get root access2");
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Log.e(Constanta.TAG, "Can't get root access3");
+        }
+    }
+
+    public class LocalBinder extends Binder {
+        public SaveMyAppsService getServiceInstance() {
+            return SaveMyAppsService.this;
         }
     }
 }

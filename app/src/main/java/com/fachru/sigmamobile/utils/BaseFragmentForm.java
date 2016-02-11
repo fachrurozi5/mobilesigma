@@ -37,7 +37,7 @@ public abstract class BaseFragmentForm extends Fragment {
         myLoop(group, BUTTON_STATE_DISABLE);
     }
 
-    protected void clearForm(ViewGroup group){
+    protected void clearForm(ViewGroup group) {
         myLoop(group, EDIT_TEXT_CLEAR);
     }
 
@@ -58,16 +58,16 @@ public abstract class BaseFragmentForm extends Fragment {
 
     private void checkInstant(View view, int state) {
         switch (state) {
-            case BUTTON_STATE_DISABLE :
+            case BUTTON_STATE_DISABLE:
                 instanceButton(view, false);
                 break;
-            case BUTTON_STATE_ENABLE :
+            case BUTTON_STATE_ENABLE:
                 instanceButton(view, true);
                 break;
-            case EDIT_TEXT_STATE_DISABLE :
+            case EDIT_TEXT_STATE_DISABLE:
                 instanceEditText(view, false);
                 break;
-            case EDIT_TEXT_STATE_ENABLE :
+            case EDIT_TEXT_STATE_ENABLE:
                 instanceEditText(view, true);
                 break;
             case EDIT_TEXT_CLEAR:
@@ -81,7 +81,7 @@ public abstract class BaseFragmentForm extends Fragment {
     private void instanceButton(View view, boolean b) {
         if (view instanceof Button) view.setEnabled(b);
 
-        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0)) {
+        if (view instanceof ViewGroup && (((ViewGroup) view).getChildCount() > 0)) {
             if (b) {
                 enableButton((ViewGroup) view);
             } else {
@@ -92,11 +92,11 @@ public abstract class BaseFragmentForm extends Fragment {
 
     private void instanceEditText(View view) {
         if (view instanceof EditText) {
-            ((EditText)view).getText().clear();
-            ((EditText)view).setGravity(Gravity.LEFT);
+            ((EditText) view).getText().clear();
+            ((EditText) view).setGravity(Gravity.LEFT);
         }
 
-        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0))
+        if (view instanceof ViewGroup && (((ViewGroup) view).getChildCount() > 0))
             clearForm((ViewGroup) view);
     }
 
@@ -108,7 +108,7 @@ public abstract class BaseFragmentForm extends Fragment {
             view.setEnabled(b);
         }
 
-        if (view instanceof ViewGroup && (((ViewGroup)view).getChildCount() > 0)) {
+        if (view instanceof ViewGroup && (((ViewGroup) view).getChildCount() > 0)) {
             if (b) {
                 enableForm((ViewGroup) view);
             } else {

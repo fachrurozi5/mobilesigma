@@ -5,6 +5,8 @@ package com.fachru.sigmamobile.controller.interfaces;
  */
 public interface OnCallbackListener {
     void onFetchStart();
+
     void onFetchComplete();
+
     void onFetchFailed(Throwable t);
 }
