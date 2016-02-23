@@ -29,16 +29,16 @@ import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,9 +47,6 @@ import java.io.IOException;
 public class PointOfSaleActivity extends AppCompatActivity implements
         OnTabSelectedListener, OnSetDoHeadListener, OnSetDoItemListener {
 
-    protected static final String TAG_DO_HEAD = "doheadtag";
-    protected static final String TAG_DO_ITEM = "doitemtag";
-    protected static final String TAG_DONE_ORDER = "doneoredertag";
     protected TabLayout tabLayout;
     protected DoHead doHead;
 
@@ -351,6 +348,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     private PdfPTable createTable(float[] columnWidths, float maxWidth, Font font) {
 
         PdfPTable table = new PdfPTable(columnWidths);
+
 
         table.setTotalWidth(maxWidth);
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);

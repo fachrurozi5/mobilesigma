@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fachru.sigmamobile">
+<manifest package="com.fachru.sigmamobile"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
-    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera"/>
 
     <application
         android:name="com.activeandroid.app.Application"
@@ -24,28 +24,16 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="AA_DB_NAME"
-            android:value="sigma.db" />
+            android:value="sigma.db"/>
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="1" />
+            android:value="1"/>
         <meta-data
             android:name="AA_MODELS"
-            android:value="
-                         com.fachru.sigmamobile.model.DoHead,
-                         com.fachru.sigmamobile.model.DoItem,
-                         com.fachru.sigmamobile.model.SoHead,
-                         com.fachru.sigmamobile.model.SoItem,
-                         com.fachru.sigmamobile.model.ProductStatus,
-                         com.fachru.sigmamobile.model.ProductStatus2,
-                         com.fachru.sigmamobile.model.Product,
-                         com.fachru.sigmamobile.model.PicturesPath,
-                         com.fachru.sigmamobile.model.Customer,
-                         com.fachru.sigmamobile.model.Employee,
-                         com.fachru.sigmamobile.model.Warehouse,
-                         com.fachru.sigmamobile.model.WarehouseStock" />
+            android:value="                          com.fachru.sigmamobile.model.DoHead,                          com.fachru.sigmamobile.model.DoItem,                          com.fachru.sigmamobile.model.SoHead,                          com.fachru.sigmamobile.model.SoItem,                          com.fachru.sigmamobile.model.ProductStatus,                          com.fachru.sigmamobile.model.ProductStatus2,                          com.fachru.sigmamobile.model.Product,                          com.fachru.sigmamobile.model.PicturesPath,                          com.fachru.sigmamobile.model.Customer,                          com.fachru.sigmamobile.model.Employee,                          com.fachru.sigmamobile.model.Warehouse,                          com.fachru.sigmamobile.model.WarehouseStock"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name=".MainActivity"
@@ -60,7 +48,7 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fachru.sigmamobile.ChooseROActivity" />
+                android:value="com.fachru.sigmamobile.ChooseROActivity"/>
         </activity>
         <activity
             android:name=".OSCActivity"
@@ -69,7 +57,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fachru.sigmamobile.MainActivity" />
+                android:value="com.fachru.sigmamobile.MainActivity"/>
         </activity>
         <activity
             android:name=".ChooseROActivity"
@@ -78,7 +66,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fachru.sigmamobile.OSCActivity" />
+                android:value="com.fachru.sigmamobile.OSCActivity"/>
         </activity>
         <activity
             android:name=".ReturnsProductActivity"
@@ -87,31 +75,31 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fachru.sigmamobile.ChooseROActivity" />
+                android:value="com.fachru.sigmamobile.ChooseROActivity"/>
         </activity>
 
-        <service android:name=".service.LocationTrackerService" />
-        <service android:name=".service.DateTimeService" />
-        <service android:name=".service.SaveMyAppsService" />
-        <service android:name=".service.CustomerIntentService" />
-        <service android:name=".service.WarehouseStockIntentService" />
-        <service android:name=".service.ProductIntentService" />
-        <service android:name=".service.DoHeadIntentService" />
+        <service android:name=".service.LocationTrackerService"/>
+        <service android:name=".service.DateTimeService"/>
+        <service android:name=".service.SaveMyAppsService"/>
+        <service android:name=".service.CustomerIntentService"/>
+        <service android:name=".service.WarehouseStockIntentService"/>
+        <service android:name=".service.ProductIntentService"/>
+        <service android:name=".service.DoHeadIntentService"/>
 
         <receiver
             android:name=".utils.BootReceiver"
             android:label="BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".PinActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".CameraActivity"
-            android:label="@string/title_activity_camera" />
+            android:label="@string/title_activity_camera"/>
         <activity
             android:name=".CustomerActivity"
             android:label="@string/title_activity_customer"
@@ -119,7 +107,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fachru.sigmamobile.MainActivity" />
+                android:value="com.fachru.sigmamobile.MainActivity"/>
         </activity>
         <activity
             android:name=".SalesOrderActivity"
@@ -130,22 +118,28 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fachru.sigmamobile.ChooseROActivity" />
+                android:value="com.fachru.sigmamobile.ChooseROActivity"/>
         </activity>
         <activity
             android:name=".SplashScreen"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ActivityTest"
+            android:label="@string/title_activity_activity_test"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

@@ -136,4 +136,5 @@
     <string name="hint_sales_order">Sales Order</string>
     <string name="hint_customer_po">Customer\'s PO</string>
     <string name="tab_prepare">Prepare Order</string>
+    <string name="title_activity_activity_test">Activity Test</string>
 </resources>

@@ -7,7 +7,7 @@ public final class Constanta {
 
     public static final String TAG = "com.fachru.sigma";
     //    public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
-    public static final String BASE_URL = "http://192.168.1.6/sigmamobile/";
+    public static final String BASE_URL = "http://192.168.1.10/sigmamobile/";
 
     /*
     * for date time

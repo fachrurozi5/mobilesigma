@@ -23,27 +23,30 @@ import com.fachru.sigmamobile.fragment.PrepareSOFragment;
 import com.fachru.sigmamobile.fragment.SalesOrderFragment;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetSoHeadListener;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetSoItemListener;
-import com.fachru.sigmamobile.model.DoItem;
+import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.SoHead;
 import com.fachru.sigmamobile.model.SoItem;
-import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SalesOrderActivity extends AppCompatActivity implements
         OnTabSelectedListener, OnSetSoHeadListener, OnSetSoItemListener {
@@ -199,8 +202,7 @@ public class SalesOrderActivity extends AppCompatActivity implements
                         soHead.vatamt = ppn;
                         soHead.netamt = grand_total;
                         /*soHead.dibayar = bayar;*/
-                        soHead.docprint = 1;
-                        soHead.save();
+
                         actionPrint(soHead.so);
                         tabLayout.getTabAt(0).select();
                     }
@@ -292,87 +294,173 @@ public class SalesOrderActivity extends AppCompatActivity implements
     }
 
     private void actionPrint(String title) {
-        Rectangle rectangle = new Rectangle(216f, 720f);
-        Document doc = new Document(rectangle, 36f, 72f, 108f, 180f); // pagesize,
+
+        Document document = new Document();
         File file = null;
 
         try {
 
+            PdfPTable table = createTable();
+
+            createHeaderSOTable(table);
+
+            createColumnsTableTitle(table);
+
+            fillTable(table);
+
+            document = new Document(new Rectangle(612, table.getTotalHeight() + 250));
+
             file = CommonUtil.getOutputMediaFile(title);
+
             FileOutputStream fOut = new FileOutputStream(file);
 
-            PdfWriter docWriter = PdfWriter.getInstance(doc, fOut);
+            PdfWriter.getInstance(document, fOut);
 
-            doc.open();
+            document.open();
 
-            float[] columnWidths = {1f, 0.8f, 2f, 1.5f, 1.5f};
+            document.add(table);
 
-            Font font = FontFactory.getFont("Times-Roman", 6, Font.NORMAL);
-
-            PdfPTable table = createTable(columnWidths, 150f, font);
-
-            Product product = null;
-            for (SoItem item : soHead.soItems()) {
-                product = Product.find(item.product_id);
-                table.addCell(createCell(product.prodid, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(product.name, font, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
-                table.addCell(createCell("PCS", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(String.valueOf(item.qty), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.priceFormat(product.sellprice), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.percentFormat(/*item.discount_principal + item.discount_nusantara*/0), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            }
-
-            table.addCell(createCell("Total Sebelum PPN :", font, Element.ALIGN_RIGHT, Rectangle.TOP, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(total), font, Element.ALIGN_RIGHT, Rectangle.TOP, 1));
-            table.addCell(createCell("Bonus :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(bonus), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell("Dasar Pengenaan Pajak :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell("PPN(10%) :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(soHead.vatamt), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell("Grand Total :", font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
-            table.addCell(createCell(CommonUtil.priceFormat(soHead.netamt), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-
-            table.writeSelectedRows(0, -1, doc.leftMargin(), 650, docWriter.getDirectContent());
+            document.add(createFooter());
 
         } catch (DocumentException de) {
             Log.e("PDFCreator", "DocumentException:" + de);
         } catch (IOException e) {
             Log.e("PDFCreator", "ioException:" + e);
         } finally {
-            doc.close();
+            document.close();
+            soHead.docprint = 1;
+            soHead.save();
             total = bonus = 0;
             if (file != null)
                 openPDf(file);
         }
     }
 
-    private PdfPTable createTable(float[] columnWidths, float maxWidth, Font font) {
-
-        PdfPTable table = new PdfPTable(columnWidths);
-
-        table.setTotalWidth(maxWidth);
-        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-
-        table.addCell(createCell("Kode", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
-        table.addCell(createCell("Nama Produk", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 4));
-        table.addCell(createCell("Satuan", font, Element.ALIGN_CENTER, Rectangle.BOTTOM, 0));
-        table.addCell(createCell("Qty", font, Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
-        table.addCell(createCell("Harga/Unit", font, Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
-        table.addCell(createCell("Disc", font, Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
-        table.addCell(createCell("Jml Bersih", font, Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
-        table.setHeaderRows(1);
+    private PdfPTable createTable() {
+        PdfPTable table = new PdfPTable(5);
+        table.setTotalWidth(400);
+        table.setLockedWidth(true);
 
         return table;
     }
 
-    private PdfPCell createCell(String text, Font font, int align, int border, int colspan) {
-        PdfPCell pdfPCel = new PdfPCell(new Phrase(text, font));
+    public void createHeaderSOTable(PdfPTable table) {
+
+        Customer customer = Customer.getCustomer(soHead.custid);
+
+        SimpleDateFormat format = new SimpleDateFormat("hh/MM/yyyy");
+
+        table.addCell(createCell("No. Order:", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell(soHead.so, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 2));
+        table.addCell(createCell("Tgl. Order:", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell(format.format(soHead.so_date), Element.ALIGN_LEFT, Rectangle.NO_BORDER, 2));
+
+        table.addCell(createCell("No. PO:", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell(soHead.purchase_order, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 2));
+        table.addCell(createCell("Tgl. Kirim:", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell(format.format(soHead.delivery_date), Element.ALIGN_LEFT, Rectangle.NO_BORDER, 2));
+
+        table.addCell(createCell("Tgl. Cetak:", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell(new SimpleDateFormat("hh/MM/yyyy HH:mm:ss.SSS").format(new Date()), Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
+
+        table.addCell(createCell("NPWP", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 1));
+        table.addCell(createCell(customer.taxid, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
+        table.addCell(createCell("Alamat Pengiriman", Element.ALIGN_LEFT, Rectangle.NO_BORDER, 5));
+        table.addCell(createCell(customer.custid + " " + customer.name, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 5));
+        table.addCell(createCell(customer.deladd1, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 5));
+        table.addCell(createCell(customer.deladd2, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 5));
+        table.addCell(createCell(customer.deladd3, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 5));
+        table.addCell(createCell(customer.deladd4, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 5));
+
+    }
+
+    public void createColumnsTableTitle( PdfPTable table) {
+
+        table.addCell(createCell("Kode", Element.ALIGN_CENTER, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell("Nama Produk", Element.ALIGN_CENTER, Rectangle.NO_BORDER, 4));
+        table.addCell(createCell("Satuan", Element.ALIGN_CENTER, Rectangle.BOTTOM, 0));
+        table.addCell(createCell("Qty", Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
+        table.addCell(createCell("Harga/Unit", Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
+        table.addCell(createCell("Disc", Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
+        table.addCell(createCell("Jml Bersih", Element.ALIGN_RIGHT, Rectangle.BOTTOM, 0));
+    }
+
+    public void fillTable(PdfPTable table) {
+
+        Product product = null;
+        for (SoItem item : soHead.soItems()) {
+            product = Product.find(item.product_id);
+            table.addCell(createCell(product.prodid, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(product.name, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
+            table.addCell(createCell("PCS", Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(String.valueOf(item.qty),Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(getProductPriceAsString(product, soHead.priceType), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.percentFormat(/*item.discount_principal + item.discount_nusantara*/0), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+        }
+
+
+        table.addCell(createCell("Total Sebelum PPN :", Element.ALIGN_RIGHT, Rectangle.TOP, 4));
+        table.addCell(createCell(CommonUtil.priceFormat(total), Element.ALIGN_RIGHT, Rectangle.TOP, 1));
+        table.addCell(createCell("Bonus :", Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
+        table.addCell(createCell(CommonUtil.priceFormat(bonus), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+        table.addCell(createCell("Dasar Pengenaan Pajak :", Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
+        table.addCell(createCell(CommonUtil.priceFormat(total), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+        table.addCell(createCell("PPN(10%) :", Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
+        table.addCell(createCell(CommonUtil.priceFormat(soHead.vatamt), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+        table.addCell(createCell("Grand Total :", Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 4));
+        table.addCell(createCell(CommonUtil.priceFormat(soHead.netamt), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+
+    }
+
+    public PdfPTable createFooter() {
+
+        Employee employee = Employee.getEmployee(soHead.empid);
+
+        float[] columnWidths = {2f, 0.8f, 2f};
+        PdfPTable table = new PdfPTable(columnWidths);
+        table.setTotalWidth(400);
+        table.setLockedWidth(true);
+        table.setSpacingBefore(100f);
+
+        table.addCell(createCell(employee.employee_id + "\n" + employee.name, Element.ALIGN_LEFT, Rectangle.TOP, 0));
+        table.addCell(createCell("", Element.ALIGN_CENTER, Rectangle.NO_BORDER, 0));
+        table.addCell(createCell("Ttd. Pelanggan", Element.ALIGN_LEFT, Rectangle.TOP, 0));
+
+        return table;
+    }
+
+    private PdfPCell createCell(String text,int align, int border, int colspan) {
+        PdfPCell pdfPCel = new PdfPCell(Phrase.getInstance(text));
         pdfPCel.setHorizontalAlignment(align);
         pdfPCel.setBorder(border);
         pdfPCel.setColspan(colspan);
+        pdfPCel.setPaddingBottom(5f);
         return pdfPCel;
+    }
+
+    private String getProductPriceAsString(Product product, int type_price_list) {
+        String product_price = "";
+
+        switch (type_price_list) {
+            case 1:
+                product_price = CommonUtil.priceFormat(product.po_price);
+                break;
+            case 2:
+                product_price = CommonUtil.priceFormat(product.sellprice);
+                break;
+            case 3:
+                product_price = CommonUtil.priceFormat(product.base_price);
+                break;
+            case 4:
+                product_price = CommonUtil.priceFormat(product.old_price);
+                break;
+            case 5:
+                product_price = CommonUtil.priceFormat(product.test_price);
+                break;
+        }
+
+        return product_price;
     }
 
     private void openPDf(File file) {
