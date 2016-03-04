@@ -55,8 +55,8 @@ public class AdapterReturnsProduct extends BaseAdapter {
         holder = new Holder();
         holder.item_r_no = (TextView) view.findViewById(R.id.item_r_no);
         holder.item_r_j_barang = (TextView) view.findViewById(R.id.item_r_j_barang);
-        holder.item_r_pcs = (TextView) view.findViewById(R.id.item_r_pcs);
-        holder.item_r_cart = (TextView) view.findViewById(R.id.item_r_cart);
+        holder.item_r_pcs = (TextView) view.findViewById(R.id.item_r_qty);
+        holder.item_r_cart = (TextView) view.findViewById(R.id.item_r_unit);
         holder.item_r_ambil = (TextView) view.findViewById(R.id.item_r_ambil);
         holder.item_r_proses = (TextView) view.findViewById(R.id.item_r_proses);
         holder.item_r_ket = (TextView) view.findViewById(R.id.item_r_ket);

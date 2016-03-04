@@ -30,10 +30,23 @@
             android:value="1"/>
         <meta-data
             android:name="AA_MODELS"
-            android:value="                          com.fachru.sigmamobile.model.DoHead,                          com.fachru.sigmamobile.model.DoItem,                          com.fachru.sigmamobile.model.SoHead,                          com.fachru.sigmamobile.model.SoItem,                          com.fachru.sigmamobile.model.ProductStatus,                          com.fachru.sigmamobile.model.ProductStatus2,                          com.fachru.sigmamobile.model.Product,                          com.fachru.sigmamobile.model.PicturesPath,                          com.fachru.sigmamobile.model.Customer,                          com.fachru.sigmamobile.model.Employee,                          com.fachru.sigmamobile.model.Warehouse,                          com.fachru.sigmamobile.model.WarehouseStock"/>
+            android:value="com.fachru.sigmamobile.model.DoHead,com.fachru.sigmamobile.model.DoItem,com.fachru.sigmamobile.model.SoHead,com.fachru.sigmamobile.model.SoItem,com.fachru.sigmamobile.model.ProductStatus,com.fachru.sigmamobile.model.ProductStatus2,com.fachru.sigmamobile.model.Product,com.fachru.sigmamobile.model.PicturesPath,com.fachru.sigmamobile.model.Customer,com.fachru.sigmamobile.model.Employee,com.fachru.sigmamobile.model.Warehouse,com.fachru.sigmamobile.model.WarehouseStock"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
+
+        <service android:name=".service.LocationTrackerService"/>
+        <service android:name=".service.DateTimeService"/>
+        <service android:name=".service.SaveMyAppsService"/>
+        <service android:name=".service.SigmaSync"/>
+
+        <receiver
+            android:name=".utils.BootReceiver"
+            android:label="BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".MainActivity"
@@ -77,23 +90,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fachru.sigmamobile.ChooseROActivity"/>
         </activity>
-
-        <service android:name=".service.LocationTrackerService"/>
-        <service android:name=".service.DateTimeService"/>
-        <service android:name=".service.SaveMyAppsService"/>
-        <service android:name=".service.CustomerIntentService"/>
-        <service android:name=".service.WarehouseStockIntentService"/>
-        <service android:name=".service.ProductIntentService"/>
-        <service android:name=".service.DoHeadIntentService"/>
-
-        <receiver
-            android:name=".utils.BootReceiver"
-            android:label="BootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".PinActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
@@ -138,7 +134,11 @@
             android:name=".ActivityTest"
             android:label="@string/title_activity_activity_test"
             android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>-->
         </activity>
     </application>
 

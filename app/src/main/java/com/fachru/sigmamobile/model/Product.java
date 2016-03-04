@@ -7,6 +7,7 @@ import com.activeandroid.query.Select;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -24,42 +25,52 @@ public class Product extends Model {
 
     public static final String UNIQCOLUMN = "product_id";
 
+    @Expose
     @SerializedName("prodid")
     @Column(name = "product_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public String prodid;
 
+    @Expose
     @SerializedName("prodname1")
     @Column(name = "name")
     public String name;
 
+    @Expose
     @SerializedName("prstatid1")
     @Column(name = "prstatid1")
     public String prstatid1;
 
+    @Expose
     @SerializedName("prstatid2")
     @Column(name = "prstatid2")
     public String prstatid2;
 
+    @Expose
     @SerializedName("unitid")
     @Column(name = "unitid")
     public String unitid;
 
+    @Expose
     @SerializedName("poprice")
     @Column(name = "po_price")
     public double po_price;
 
+    @Expose
     @SerializedName("sellprc")
     @Column(name = "sellprice")
     public double sellprice;
 
+    @Expose
     @SerializedName("baseprice")
     @Column(name = "base_price")
     public double base_price;
 
+    @Expose
     @SerializedName("oldprice")
     @Column(name = "old_price")
     public double old_price;
 
+    @Expose
     @SerializedName("testprice")
     @Column(name = "test_price")
     public double test_price;

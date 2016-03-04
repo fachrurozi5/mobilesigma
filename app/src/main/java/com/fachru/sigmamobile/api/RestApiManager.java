@@ -1,7 +1,9 @@
 package com.fachru.sigmamobile.api;
 
+import com.fachru.sigmamobile.BuildConfig;
 import com.fachru.sigmamobile.api.interfaces.CustomerAPI;
 import com.fachru.sigmamobile.api.interfaces.DoHeadAPI;
+import com.fachru.sigmamobile.api.interfaces.DoItemAPI;
 import com.fachru.sigmamobile.api.interfaces.EmployeeAPI;
 import com.fachru.sigmamobile.api.interfaces.PrdStatus2API;
 import com.fachru.sigmamobile.api.interfaces.PrdStatusAPI;
@@ -12,8 +14,13 @@ import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.StringDesirializer;
 import com.google.gson.GsonBuilder;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+/*import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;*/
+
+
 
 /**
  * Created by fachru on 17/12/15.
@@ -23,6 +30,7 @@ public class RestApiManager {
     private GsonBuilder builder;
 
     private DoHeadAPI doHeadAPI;
+    private DoItemAPI doItemAPI;
     private CustomerAPI customerAPI;
     private EmployeeAPI employeeApi;
     private WhStockAPI whStockAPI;
@@ -34,7 +42,7 @@ public class RestApiManager {
     public RestApiManager() {
         builder = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .registerTypeAdapter(String.class, new StringDesirializer());
+                .excludeFieldsWithoutExposeAnnotation();
     }
 
     /*
@@ -45,6 +53,16 @@ public class RestApiManager {
             doHeadAPI = retrofit().create(DoHeadAPI.class);
         }
         return doHeadAPI;
+    }
+
+    /*
+    *  DoItem Api
+    * */
+    public DoItemAPI getDoItemAPI() {
+        if (doItemAPI == null) {
+            doItemAPI = retrofit().create(DoItemAPI.class);
+        }
+        return doItemAPI;
     }
 
     /*
@@ -124,7 +142,9 @@ public class RestApiManager {
     private Retrofit retrofit() {
         return new Retrofit.Builder()
                 .baseUrl(Constanta.BASE_URL)
+//                .baseUrl(BuildConfig.ENV)
                 .addConverterFactory(GsonConverterFactory.create(builder.create()))
                 .build();
     }
+
 }

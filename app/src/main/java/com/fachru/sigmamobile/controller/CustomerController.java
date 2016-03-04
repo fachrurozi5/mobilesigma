@@ -2,7 +2,9 @@ package com.fachru.sigmamobile.controller;
 
 import android.util.Log;
 
+import com.activeandroid.Model;
 import com.fachru.sigmamobile.api.RestApiManager;
+import com.fachru.sigmamobile.controller.interfaces.OnCallbackListener;
 import com.fachru.sigmamobile.controller.interfaces.OnCustomerCallbackListener;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -14,10 +16,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+/*
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit.Retrofit;*/
 
 /**
  * Created by fachru on 17/12/15.
@@ -39,8 +46,9 @@ public class CustomerController {
         Call<String> call = apiManager.getCustomerAPI().Records();
         call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Response<String> response, Retrofit retrofit) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccess() && response.body() != null) {
+                    Log.d(Constanta.TAG, response.body());
                     try {
                         JSONObject jsonObject = new JSONObject(response.body());
                         if (jsonObject.getBoolean(Constanta.TAG_STATUS)) {
@@ -60,30 +68,39 @@ public class CustomerController {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    listener.onFetchComplete();
+
+                } else {
+                    Log.i(Constanta.TAG, "Status " + response.code() + " " + response.message() + " " + response.headers());
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                listener.onFetchFailed(t);
-            }
-        });
-    }
-
-    public void startCreating(Customer customer) {
-        Call<String> call = apiManager.getCustomerAPI().store(customer);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Response<String> response, Retrofit retrofit) {
-                Log.d(Constanta.TAG, response.body());
                 listener.onFetchComplete();
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 listener.onFetchFailed(t);
             }
         });
     }
+
+    public void _startFetching() {
+        listener.onFetchStart();
+        Call<List<Customer>> listCall = apiManager.getCustomerAPI()._Records();
+        listCall.enqueue(new Callback<List<Customer>>() {
+            @Override
+            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
+                Log.i(Constanta.TAG, "Status " + response.code() + " " + response.message() + " " + response.headers());
+                if (response.isSuccess() && response != null) {
+                    Log.d(Constanta.TAG, response.body().toString());
+                }
+                listener.onFetchComplete();
+            }
+
+            @Override
+            public void onFailure(Call<List<Customer>> call, Throwable t) {
+                listener.onFetchFailed(t);
+            }
+        });
+    }
+
+
 }

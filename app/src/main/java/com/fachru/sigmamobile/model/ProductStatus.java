@@ -35,7 +35,7 @@ public class ProductStatus extends Model {
         name = builder.name;
     }
 
-    public static ProductStatus find(String prstat_id) {
+    /*public static ProductStatus find(String prstat_id) {
         return new Select()
                 .from(ProductStatus.class)
                 .where("prstat_id =?", prstat_id)
@@ -61,7 +61,7 @@ public class ProductStatus extends Model {
         Gson gson = gsonBuilder.create();
 
         return gson.fromJson(json.toString(), ProductStatus.class);
-    }
+    }*/
 
     @Override
     public String toString() {

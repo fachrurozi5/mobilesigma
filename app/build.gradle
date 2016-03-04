@@ -23,6 +23,8 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            /*minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig getSigningConfig()
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
@@ -30,7 +32,7 @@ android {
                             output.outputFile.name.replace("-release", "-sigma")
                     )
                 }
-            }
+            }*/
         }
     }
 }
@@ -54,8 +56,8 @@ dependencies {
     compile 'com.venmo.android.pin:library:0.1@aar'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile files('libs/itextg-5.5.4.jar')
 }

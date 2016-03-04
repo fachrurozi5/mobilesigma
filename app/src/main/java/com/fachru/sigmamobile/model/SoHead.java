@@ -19,6 +19,7 @@ import java.util.Locale;
 public class SoHead extends Model {
 
     private static List<SoHead> allHasPrint;
+
     @SerializedName("SO")
     @Column(name = "so")
     public String so;
@@ -26,33 +27,43 @@ public class SoHead extends Model {
     @SerializedName("SODATE")
     @Column(name = "so_date")
     public Date so_date;
+
     @SerializedName("CUSTID")
     @Column(name = "custid")
     public String custid;
+
     @SerializedName("EMPID")
     @Column(name = "empid")
     public String empid;
+
     @SerializedName("TOPID")
     @Column(name = "topid")
     public String topid = "30";
+
     @SerializedName("VATID")
     @Column(name = "vatid")
     public String vatid = "10";
+
     @SerializedName("PO")
     @Column(name = "po")
     public String purchase_order;
+
     @SerializedName("DATEORDER")
     @Column(name = "date_oder")
     public Date date_order;
+
     @SerializedName("DELDATE")
     @Column(name = "delivery_date")
     public Date delivery_date;
+
     @SerializedName("PRICETYPE")
     @Column(name = "price_type")
     public int priceType;
+
     @SerializedName("WHID")
     @Column(name = "whid")
     public String whid;
+
     @SerializedName("DATEUPDATE")
     @Column(name = "updated_at")
     public Date updated_at;

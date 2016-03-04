@@ -13,6 +13,7 @@ import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.CommonUtil;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**

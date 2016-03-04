@@ -46,6 +46,10 @@
                     android:text="Doc Date" />
 
                 <TextView style="@style/DefaultHeader"
+                    android:layout_width="120dp"
+                    android:text="Invoice"/>
+
+                <TextView style="@style/DefaultHeader"
                     android:layout_width="300dp"
                     android:text="Warehouse" />
 

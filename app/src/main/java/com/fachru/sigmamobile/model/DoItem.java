@@ -4,8 +4,10 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,30 +16,42 @@ import java.util.List;
 @Table(name = "DoItems")
 public class DoItem extends Model {
 
+    @Expose
     @SerializedName("DOCNO")
     @Column(name = "docno")
     public String docno;
 
+    @Expose
+    @SerializedName("NOITEM")
+    @Column(name = "noitem")
+    public String noitem;
+
+    @Expose
     @SerializedName("PRODID")
     @Column(name = "product_id")
     public String product_id;
 
+    @Expose
     @SerializedName("QUANTITY")
     @Column(name = "qty")
     public int qty;
 
+    @Expose
     @SerializedName("PRICELIST")
     @Column(name = "pricelist")
     public double pricelist;
 
+    @Expose
     @SerializedName("pricelst2")
     @Column(name = "pricelst2")
     public double pricelist2;
 
+    @Expose
     @SerializedName("UNITPRICE")
     @Column(name = "unitprice")
     public double unitprice;
 
+    @Expose
     @SerializedName("nilai")
     @Column(name = "nilai")
     public double nilai;
@@ -45,15 +59,32 @@ public class DoItem extends Model {
     @Column(name = "sub_total")
     public double sub_total;
 
+    @Expose
+    @SerializedName("DATECREATE")
+    @Column(name = "created_at")
+    public Date created_at = new Date();
+
+    @Expose
+    @SerializedName("DATEUPDATE")
+    @Column(name = "updated_at")
+    public Date updated_at = new Date();
+
+    @Expose
+    @SerializedName("uploaded")
+    @Column(name = "uploaded")
+    public boolean uploaded = false;
+
     public DoItem() {
         super();
     }
 
     public DoItem(Builder builder) {
+        super();
         docno = builder.docno;
         product_id = builder.product_id;
         qty = builder.qty;
         sub_total = builder.sub_total;
+        noitem = builder.noitem;
         /*pricelist   = builder.pricelist;
         pricelist2  = builder.pricelist2;
         unitprice   = builder.unitprice;
@@ -67,21 +98,61 @@ public class DoItem extends Model {
                 .execute();
     }
 
+    public static List<DoItem> getAllNotUpload() {
+        return new Select()
+                .from(DoItem.class)
+                .where("uploaded =?", false)
+                .execute();
+    }
+
+    public static boolean hasDataToUpload() {
+        return DoItem.getAllNotUpload().size() > 0;
+    }
+
     @Override
     public String toString() {
         return "DoItem{" +
                 "docno='" + docno + '\'' +
+                ", noitem='" + noitem + '\'' +
                 ", product_id='" + product_id + '\'' +
                 ", qty=" + qty +
                 ", pricelist=" + pricelist +
                 ", pricelist2=" + pricelist2 +
                 ", unitprice=" + unitprice +
                 ", nilai=" + nilai +
+                ", sub_total=" + sub_total +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                ", uploaded=" + uploaded +
                 '}';
+    }
+
+    public static DoItem find(String docno) {
+        return new Select()
+                .from(DoItem.class)
+                .where("docno =? ", docno)
+                .executeSingle();
+    }
+
+    public static DoItem find(String docno, String noitem) {
+        return new Select()
+                .from(DoItem.class)
+                .where("docno = ? ", docno)
+                .and("noitem = ? ", noitem)
+                .executeSingle();
+    }
+
+    public static int count(String docno) {
+        return new Select()
+                .from(DoItem.class)
+                .where("docno = ?", docno)
+                .count();
     }
 
     public static class Builder {
         public String docno;
+
+        public String noitem;
 
         public String product_id;
 
@@ -100,6 +171,11 @@ public class DoItem extends Model {
 
         public Builder setDocno(String docno) {
             this.docno = docno;
+            return Builder.this;
+        }
+
+        public Builder setNoItem(String noitem) {
+            this.noitem = noitem;
             return Builder.this;
         }
 

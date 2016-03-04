@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.fachru.sigmamobile.BuildConfig;
 import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.R;
@@ -31,6 +33,7 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
+import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,6 +113,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
+
     }
 
     @Override
@@ -118,7 +122,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         initComp();
         initListener();
 
-        et_doc_no.setText(DoHead.generateId(employee.employee_id, new Date()));
+        et_doc_no.setText(DoHead.generateId());
 
 
         lv_do_head_items.setOnItemLongClickListener(onDoHeadLongClicked);
@@ -353,7 +357,7 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
     protected void clearForm(ViewGroup group) {
         super.clearForm(group);
         et_doc_no.setEnabled(true);
-        et_doc_no.setText(DoHead.generateId(employee.employee_id, new Date()));
+        et_doc_no.setText(DoHead.generateId());
         et_customer.setText(customer.name);
         et_salesman.setText(employee.employee_id);
         et_doc_no.requestFocus();

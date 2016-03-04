@@ -10,10 +10,11 @@ import com.fachru.sigmamobile.utils.Constanta;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 
 /**
  * Created by fachru on 29/12/15.
@@ -30,30 +31,24 @@ public class EmployeeController {
 
     public void startFetch(String username, String password) {
         listener.onFetchStart();
-        Call<String> call = apiManager.getEmployeeApi().login(username, password);
-        call.enqueue(new Callback<String>() {
+        Call<Employee> call = apiManager.getEmployeeApi().login(username, password);
+        call.enqueue(new Callback<Employee>() {
             @Override
-            public void onResponse(Response<String> response, Retrofit retrofit) {
-                Log.e(Constanta.TAG, response.body());
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                Log.i(Constanta.TAG, "Status " + response.code() + " " + response.message() + " " + response.headers());
                 if (response.isSuccess() && response.body() != null) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.body());
-                        if (jsonObject.getBoolean(Constanta.TAG_STATUS)) {
-                            listener.onFetchProgress(Employee.findOrCreateFromJson(jsonObject.getJSONObject(Constanta.TAG_DATA)));
-                        } else {
-                            listener.onFailureShowMessage(jsonObject.getString(Constanta.TAG_MESSAGE));
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    Log.d(Constanta.TAG, response.body().toString());
+                    Employee employee = response.body();
+                    employee.save();
+                    listener.onFetchProgress(employee);
                     listener.onFetchComplete();
+                } else {
+                    listener.onFailureShowMessage(response.message());
                 }
-
-                listener.onFetchComplete();
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Employee> call, Throwable t) {
                 listener.onFetchFailed(t);
             }
         });

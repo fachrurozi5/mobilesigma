@@ -13,8 +13,23 @@ import java.util.List;
 /**
  * Created by fachru on 07/01/16.
  */
-public class MasterModel extends Model {
+public class MasterModel<T extends Model> extends Model {
 
+
+    protected Class aClass;
+    protected String id;
+
+    public MasterModel(Class aClass) {
+        super();
+        this.aClass = aClass;
+    }
+
+    public T find(String value) {
+        return new Select()
+                .from(aClass)
+                .where(id + " =?", value)
+                .executeSingle();
+    }
 
     public static <T extends Model> T find(String column, String value, Class<? extends Model> aClass) {
         return new Select()
@@ -29,17 +44,17 @@ public class MasterModel extends Model {
         if (existingObject != null) {
             return (T) existingObject;
         } else {
-            return getInstance(fromJson(json, aClass));
+            return fromJson(json, aClass);
         }
     }
 
-    public static Object fromJson(JSONObject json, Class<? extends Model> aClass) {
+    public static <T extends Model> T fromJson(JSONObject json, Class<? extends Model> aClass) {
         GsonBuilder gsonBuilder = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .serializeNulls();
         Gson gson = gsonBuilder.create();
 
-        return gson.fromJson(json.toString(), aClass);
+        return (T) gson.fromJson(json.toString(), aClass);
     }
 
     public static List<? extends Model> all(Class<? extends Model> aClass) {
@@ -48,7 +63,7 @@ public class MasterModel extends Model {
                 .execute();
     }
 
-    private static <T extends Model> T getInstance(Object object) {
+    /*private static <T extends Model> T getInstance(Object object) {
         if (object instanceof Customer) {
             Customer customer = (Customer) object;
             customer.save();
@@ -61,6 +76,6 @@ public class MasterModel extends Model {
             return null;
         }
 
-    }
+    }*/
 
 }

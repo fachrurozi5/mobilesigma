@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,13 +94,14 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     double total = 0;
     double sub_total = 0;
     boolean isUpdate = false;
-
+    private int noitem = 0;
     /*
     * mListener
     * */
     private OnItemClickListener onActProductItemClicked;
     private OnItemLongClickListener onDoItemLongClicked;
     private TextWatcher qtyWatcher;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -190,7 +190,6 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                     .build();
             doItem.save();
 
-            Log.d(Constanta.TAG, doItem.toString());
             adapterDoItem.add(doItem);
             clearForm(layout);
         }

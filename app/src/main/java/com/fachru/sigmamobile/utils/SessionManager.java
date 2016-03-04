@@ -21,6 +21,7 @@ public class SessionManager {
     public static final String KEY_DOWNLOAD_PRODUCT = "dowbload_product";
     public static final String KEY_DOWNLOAD_WAREHOUSE = "download_warehouse";
     public static final String KEY_DOWNLOAD_WAREHOUSE_STOCK = "download_warehouse_stock";
+    public static final String KEY_IP_ADDRESS = "ipaddress";
     /*
     * service
     * */
@@ -152,6 +153,16 @@ public class SessionManager {
     public void setEmployee(long employee_id) {
         editor.putLong(KEY_EMPLOYEE, employee_id);
         editor.commit();
+    }
+
+    public void setIpAddress(String ipAddress) {
+        Constanta.IP_ADDRESS = ipAddress;
+        editor.putString(KEY_IP_ADDRESS, ipAddress);
+        editor.commit();
+    }
+
+    public String getIpAddress() {
+        return preferences.getString(KEY_IP_ADDRESS, Constanta.IP_ADDRESS);
     }
 
     public boolean isPinSaved() {

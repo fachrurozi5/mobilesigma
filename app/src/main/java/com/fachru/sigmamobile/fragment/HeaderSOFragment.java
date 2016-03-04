@@ -52,7 +52,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     private Activity activity;
     private Bundle bundle;
     /*
-    * listener
+    * fetchListener
     * */
     private OnSetSoHeadListener mListener;
     private DatePickerDialog.OnDateSetListener onDateSetListener;

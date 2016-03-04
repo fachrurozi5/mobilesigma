@@ -21,6 +21,7 @@ import com.fachru.sigmamobile.utils.SessionManager;
 public class Login extends AppCompatActivity implements OnClickListener, OnEmployeeCallbackListener {
 
     public static final String EMPLID = "key_emplid";
+
     private Context context = this;
 
     /*
@@ -41,6 +42,12 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
     private Button btn_login;
     private MaterialDialog materialDialog;
 
+    /*
+    * label
+    * */
+    String username;
+    String password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +67,11 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
 
     @Override
     public void onFetchStart() {
-        Log.e(Constanta.TAG, "Employee Start");
         showProgressHorizontalIndeterminateDialog();
     }
 
     @Override
     public void onFetchComplete() {
-        Log.e(Constanta.TAG, "Employee Complete");
         startActivity(new Intent(context, MainActivity.class));
         finish();
     }
@@ -78,7 +83,7 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
         new MaterialDialog.Builder(this)
                 .title("Error")
                 .iconRes(android.R.drawable.ic_dialog_alert)
-                .content("Server tidak meresponse (timeout)")
+                .content("Server tidak meresponse (timeout) ")
                 .show();
     }
 
@@ -102,8 +107,8 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
     @Override
     public void onClick(View v) {
         if (!isMissing()) {
-            String username = et_username.getText().toString();
-            String password = et_password.getText().toString();
+            username = et_username.getText().toString();
+            password = et_password.getText().toString();
             controller.startFetch(username, password);
         }
     }

@@ -6,6 +6,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -20,254 +21,317 @@ import java.util.List;
 @Table(name = "Customers")
 public class Customer extends Model {
 
+    @Expose
     @SerializedName("CUSTID")
     @Column(name = "custid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public String custid;
 
+    @Expose
     @SerializedName("CUSTNAME")
     @Column(name = "name")
     public String name;
 
+    @Expose
     @SerializedName("csstatid1")    // as group
     @Column(name = "csstadid")
     public String csstatid1;
 
+    @Expose
     @SerializedName("CSSTATID2")
     @Column(name = "csstatid2")
     public String csstatid2;
 
+    @Expose
     @SerializedName("CSSTATID3")
     @Column(name = "csstatid3")
     public String csstatid3;
 
+    @Expose
     @SerializedName("CSSTATID4")
     @Column(name = "csstatid4")
     public String csstatid4;
 
+    @Expose
     @SerializedName("type_group")
     @Column(name = "group_type")
     public String group_type;
 
+    @Expose
     @SerializedName("cs_group")
     @Column(name = "cs_group")
     public String cs_group;
 
+    @Expose
     @SerializedName("channel")
     @Column(name = "channel")
     public String channel;
 
+    @Expose
     @SerializedName("CSSTATID5")
     @Column(name = "csstatid5")
     public String csstatid5;
 
+    @Expose
     @SerializedName("INVADD1")      //
     @Column(name = "invadd1")
     public String invadd1;
 
+    @Expose
     @SerializedName("INVADD2")
     @Column(name = "invadd2")
     public String invadd2;
 
+    @Expose
     @SerializedName("INVADD3")
     @Column(name = "invadd3")
     public String invadd3;
 
+    @Expose
     @SerializedName("INVADD4")
     @Column(name = "invadd4")
     public String invadd4;
 
+    @Expose
     @SerializedName("INVZIP")
     @Column(name = "invzip")
     public String invzip;
 
+    @Expose
     @SerializedName("DELADDID")
     @Column(name = "deladdid")
     public String deladdid;
 
+    @Expose
     @SerializedName("DELADD1")
     @Column(name = "deladd1")
     public String deladd1;
 
+    @Expose
     @SerializedName("DELADD2")
     @Column(name = "deladd2")
     public String deladd2;
 
+    @Expose
     @SerializedName("DELADD3")
     @Column(name = "deladd3")
     public String deladd3;
 
+    @Expose
     @SerializedName("DELADD4")
     @Column(name = "deladd4")
     public String deladd4;
 
+    @Expose
     @SerializedName("DELZIP")
     @Column(name = "delzip")
     public String delzip;
 
+    @Expose
     @SerializedName("PHONE")
     @Column(name = "phone")
     public String phone;
 
+    @Expose
     @SerializedName("HP")
     @Column(name = "hp")
     public String hp;
 
+    @Expose
     @SerializedName("FAX")
     @Column(name = "fax")
     public String fax;
 
+    @Expose
     @SerializedName("EMAIL")
     @Column(name = "email")
     public String email;
 
+    @Expose
     @SerializedName("CONTACT")
     @Column(name = "contact")
     public String contact;
 
+    @Expose
     @SerializedName("OWNER")
     @Column(name = "owner")
     public String owner;
 
+    @Expose
     @SerializedName("EMPID")
     @Column(name = "empid")
     public String empid;
 
+    @Expose
     @SerializedName("TOPID")
     @Column(name = "topid")
     public String topid;
 
+    @Expose
     @SerializedName("VATID")
     @Column(name = "vatid")
     public String vatid;
 
+    @Expose
     @SerializedName("TAXID")
     @Column(name = "taxid")
     public String taxid;
 
+    @Expose
     @SerializedName("CURRID")
     @Column(name = "currid")
     public String currency;
 
+    @Expose
     @SerializedName("PRICEGRP")
     @Column(name = "pricegpr")
     public String pricegrp;
 
+    @Expose
     @SerializedName("WHID")
     @Column(name = "whid")
     public String warehouse;
 
+    @Expose
     @SerializedName("DISCOUNT")
     @Column(name = "discount")
     public double DISCOUNT;
 
+    @Expose
     @SerializedName("DISCOUNT2")
     @Column(name = "discount2")
     public double DISCOUNT2;
 
+    @Expose
     @SerializedName("DISCOUNT3")
     @Column(name = "discount3")
     public double DISCOUNT3;
 
+    @Expose
     @SerializedName("DISCOUNT4")
     @Column(name = "discount4")
     public double DISCOUNT4;
 
+    @Expose
     @SerializedName("DISCOUNT5")
     @Column(name = "discount5")
     public double DISCOUNT5;
 
+    @Expose
     @SerializedName("CRLIMIT")
     @Column(name = "crlimit")
     public double crlimit;
 
+    @Expose
     @SerializedName("TOTALAR")
     @Column(name = "totalar")
     public double totalar;
 
+    @Expose
     @SerializedName("DEPOSIT")
     @Column(name = "desposit")
     public double deposit;
 
+    @Expose
     @SerializedName("PCMAMT")
     @Column(name = "pcmamt")
     public double pcmamt;
 
+    @Expose
     @SerializedName("TOTALCN")
     @Column(name = "totalcn")
     public double totalcn;
 
+    @Expose
     @SerializedName("TOTALDN")
     @Column(name = "totaldn")
     public double totaldn;
 
+    @Expose
     @SerializedName("sublsg")
     @Column(name = "sublsg")
     public double sublsg;
 
+    @Expose
     @SerializedName("paytype")
     @Column(name = "paytype")
     public int paytype;
 
+    @Expose
     @SerializedName("ACCID")
     @Column(name = "accid")
     public String accid;
 
+    @Expose
     @SerializedName("ARMAXDUE")
     @Column(name = "armaxdue")
     public int armaxdue;
 
+    @Expose
     @SerializedName("ONHOLD")
     @Column(name = "onhold")
     public int inhold;
 
+    @Expose
     @SerializedName("INACTIVE")
     @Column(name = "inactive")
     public int inactive;
 
+    @Expose
     @SerializedName("EV_COMPANY")
     @Column(name = "ev_company")
     public String ev_company;
 
+    @Expose
     @SerializedName("EV_OFFADDRESS")
     @Column(name = "ev_off_address")
     public String ev_off_address;
 
+    @Expose
     @SerializedName("EV_OFFTELP")
     @Column(name = "ev_off_telp")
     public String ev_off_telp;
 
+    @Expose
     @SerializedName("EV_PIN")
     @Column(name = "ev_pim")
     public String ev_pin;
 
+    @Expose
     @SerializedName("EV_TOTALPENJUALAN")
     @Column(name = "ev_taotal_penjualan")
     public double ev_total_penjualan;
 
+    @Expose
     @SerializedName("EV_CUSTID2")
     @Column(name = "ev_cust_id_2")
     public String ev_cust_id_2;
 
+    @Expose
     @SerializedName("EV_SALESID")
     @Column(name = "ev_sales_id")
     public String ev_sales_id;
 
+    @Expose
     @SerializedName("EV_AKTIF")
     @Column(name = "ev_active")
     public String ev_aktive;
 
+    @Expose
     @SerializedName("USRCREATE")
     @Column(name = "creator")
     public String creator;
 
+    @Expose
     @SerializedName("DATECREATE")
     @Column(name = "created_at")
     public Date created_at;
 
+    @Expose
     @SerializedName("USRUPDATE")
     @Column(name = "updater")
     public String updater;
 
+    @Expose
     @SerializedName("DATEUPDATE")
     @Column(name = "updated_at")
     public Date updated_at;

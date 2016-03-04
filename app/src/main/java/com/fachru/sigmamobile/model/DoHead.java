@@ -7,6 +7,7 @@ import com.activeandroid.query.Select;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -24,70 +25,100 @@ import java.util.Locale;
 @Table(name = "DoHeads")
 public class DoHead extends Model {
 
+    @Expose
     @SerializedName("DOCNO")
-    @Column(name = "docno", unique = true)
+    @Column(name = "docno", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public String doc_no;
 
+    @Expose
     @SerializedName("DOCDATE")
     @Column(name = "doc_date")
     public Date doc_date;
 
+    @Expose
     @SerializedName("CUSTID")
     @Column(name = "custid")
     public String custid;
 
+    @Expose
     @SerializedName("EMPID")
     @Column(name = "empid")
     public String empid;
 
+    @Expose
     @SerializedName("TOPID")
     @Column(name = "topid")
     public String topid = "7";
 
+    @Expose
     @SerializedName("VATID")
     @Column(name = "vatid")
     public String vatid = "10";
 
+    @Expose
     @SerializedName("CURRID")
     @Column(name = "currid")
     public String currid = "RP";
 
-    @SerializedName("")
+    @Expose
+    @SerializedName("TYPEOFSO")
     @Column(name = "typeofso")
     public String typeofso = "7";
 
+    @Expose
     @SerializedName("VATNO")
     @Column(name = "vatno")
     public String vatno;
 
+    @Expose
     @SerializedName("NETAMT")
     @Column(name = "netamt")
     public double netamt; //
 
+    @Expose
     @SerializedName("VATAMT")
     @Column(name = "vatamt")
     public double vatamt; //
 
+    @Expose
     @SerializedName("WHID")
     @Column(name = "whid")
     public String whid;
 
+    @Expose
     @SerializedName("PAYTYPE")
     @Column(name = "paytype")
     public int paytype = 5;
 
+    @Expose
     @SerializedName("PERIOD")
     @Column(name = "period")
     public String period;
 
+    @Expose
     @SerializedName("DOCPRINT")
     @Column(name = "docprint")
     public int docprint = 0;
 
+    @Expose
     @SerializedName("DIBAYAR")
     @Column(name = "dibayar")
     public double dibayar;
 
+    @Expose
+    @SerializedName("DATECREATE")
+    @Column(name = "created_at")
+    public Date created_at = new Date();
+
+    @Expose
+    @SerializedName("DATEUPDATE")
+    @Column(name = "updated_at")
+    public Date updated_at = new Date();
+
+    @Expose
+    @SerializedName("uploaded")
+    @Column(name = "uploaded")
+    public boolean uploaded = false;
 
     public DoHead() {
         super();
@@ -101,7 +132,7 @@ public class DoHead extends Model {
         this.custid = builder.custid;
         this.empid = builder.empid;
         this.whid = builder.whid;
-        this.period = new SimpleDateFormat("yyyydd", Locale.US).format(this.doc_date);
+        this.period = new SimpleDateFormat("yyyydd", Locale.US).format(new Date());
     }
 
     public static DoHead last() {
@@ -137,6 +168,25 @@ public class DoHead extends Model {
                 .execute();
     }
 
+    public static boolean hasPrint(String doc_no) {
+        return  new Select()
+                .from(DoHead.class)
+                .where("docno = ?", doc_no)
+                .and("docprint =?", 1)
+                .count() > 0;
+    }
+
+    public static List<DoHead> getAllNotUpload() {
+        return new Select()
+                .from(DoHead.class)
+                .where("uploaded =?", false)
+                .execute();
+    }
+
+    public static boolean hasDataToUpload() {
+        return DoHead.getAllNotUpload().size() > 0;
+    }
+
     public static DoHead findOrCreateFromJson(JSONObject json) throws JSONException {
         String docno = json.getString("DOCNO");
         DoHead existingDoHead = new Select().from(DoHead.class).where("docno = ?", docno).executeSingle();
@@ -158,19 +208,18 @@ public class DoHead extends Model {
         return gson.fromJson(json.toString(), DoHead.class);
     }
 
-    public static int count(String whid) {
+    public static int count() {
         return new Select()
                 .from(DoHead.class)
-                .where("empid =?", whid).execute().size();
+                .where("docno like ?", "%" + getFirstId() + "%").execute().size();
     }
 
-    public static String generateId(String empid, Date date) {
-        String id = empid.substring(0, 2).toUpperCase();
-        int size = count(empid);
-        SimpleDateFormat format = new SimpleDateFormat("DDD", Locale.getDefault());
-        id += "-" + format.format(date);
+    public static String generateId() {
+        String id = getFirstId();
+        int size = count();
+
         if (size > 0) {
-            long v = Long.parseLong(last().doc_no.substring(7));
+            long v = Long.parseLong(last().doc_no.substring(8));
             if (size <= 9) {
                 id += "00" + (v + 1);
             } else if (size > 9) {
@@ -182,6 +231,13 @@ public class DoHead extends Model {
             id += "001";
         }
 
+        return id;
+    }
+
+    private static String getFirstId() {
+        String id = "PS.";
+        SimpleDateFormat format = new SimpleDateFormat("MMdd.", Locale.getDefault());
+        id += format.format(new Date());
         return id;
     }
 
@@ -220,6 +276,10 @@ public class DoHead extends Model {
                 ", paytype=" + paytype +
                 ", period='" + period + '\'' +
                 ", docprint=" + docprint +
+                ", dibayar=" + dibayar +
+                ", created_at=" + created_at +
+                ", updated_at=" + updated_at +
+                ", uploaded=" + uploaded +
                 '}';
     }
 

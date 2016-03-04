@@ -18,4 +18,13 @@
         android:text="Show PDF sample"
         android:onClick="onShowPdf"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/btn_show_pdf"
+        android:layout_marginTop="20dp"
+        android:text="Store DoHead To Server"
+        android:onClick="onStore" />
+
 </RelativeLayout>

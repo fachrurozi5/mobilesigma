@@ -43,6 +43,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 
 public class PointOfSaleActivity extends AppCompatActivity implements
         OnTabSelectedListener, OnSetDoHeadListener, OnSetDoItemListener {
@@ -208,10 +209,15 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                         doHead.netamt = grand_total;
                         doHead.dibayar = bayar;
                         doHead.docprint = 1;
+                        doHead.uploaded = false;
+                        doHead.doc_date = new Date();
+                        int i = 1;
                         for (DoItem item : doHead.doItems()) {
+                            item.noitem = String.format("%04d", i++);
                             WarehouseStock stock = WarehouseStock.findById(doHead.whid, item.product_id);
                             stock.balance -= item.qty;
                             stock.save();
+                            item.save();
                         }
                         doHead.save();
                         actionPrint(doHead.doc_no);

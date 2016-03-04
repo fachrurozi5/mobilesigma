@@ -2,26 +2,32 @@ package com.fachru.sigmamobile.api.interfaces;
 
 import com.fachru.sigmamobile.model.Customer;
 
-import retrofit.Call;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+
 
 /**
  * Created by fachru on 17/12/15.
  */
 public interface CustomerAPI {
 
-    @GET("customer")
+    @GET("customers")
     Call<String> Records();
+
+    @GET("customers")
+    Call<List<Customer>> _Records();
 
     @FormUrlEncoded
     @POST("customer/view")
     Call<String> getRecord(@Field("custid") String s);
 
-    @POST("customer/create")
-    Call<String> store(@Body Customer customer);
+    @POST("customer/store")
+    Call<List<Customer>> store(@Body Customer customer);
 
 }

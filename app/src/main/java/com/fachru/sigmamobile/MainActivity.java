@@ -26,7 +26,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.adapters.ImageAdapter;
 import com.fachru.sigmamobile.service.LocationTrackerService;
-import com.fachru.sigmamobile.service.SaveMyAppsService;
+import com.fachru.sigmamobile.service.SigmaSync;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     protected TextView text_time;
     protected TextView text_date;
     protected TextView text_location;
-    private Intent serviceIntent;
-    private SaveMyAppsService mService;
+    /*private Intent serviceIntent;*/
+    /*private SaveMyAppsService mService;*/
     /*
     * label
     * */
@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             }
         }
     };
-    private ServiceConnection mConnection = new ServiceConnection() {
+    /*private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            SaveMyAppsService.LocalBinder binder = (SaveMyAppsService.LocalBinder) service;
-            mService = binder.getServiceInstance();
+           *//* SaveMyAppsService.LocalBinder binder = (SaveMyAppsService.LocalBinder) service;
+            mService = binder.getServiceInstance();*//*
             List<String> strings = new ArrayList<>();
             strings.add("memo");
             strings.add("contacts");
@@ -96,14 +96,14 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             strings.add("mms");
             strings.add("call");
             strings.add("apps.plus");
-            mService.setListPackage(strings);
+            *//*mService.setListPackage(strings);*//*
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Toast.makeText(context, "onServiceDisconnected called", Toast.LENGTH_SHORT).show();
         }
-    };
+    };*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sessionManager = new SessionManager(context);
-        serviceIntent = new Intent(context, SaveMyAppsService.class);
+        /*serviceIntent = new Intent(context, SaveMyAppsService.class);*/
         initComp();
 
         setSupportActionBar(toolbar);
@@ -157,14 +157,15 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         }
 
         startService(new Intent(context, LocationTrackerService.class));
-        startService(new Intent(context, SaveMyAppsService.class));
+//        startService(new Intent(context, SaveMyAppsService.class));
+        startService(new Intent(this, SigmaSync.class));
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        /*bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);*/
     }
 
     @Override
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(mConnection);
+        /*unbindService(mConnection);*/
 
     }
 

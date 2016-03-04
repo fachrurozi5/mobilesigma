@@ -137,7 +137,15 @@
                     android:layout_width="150dp"
                     android:text="@string/header_product"/>
 
-                <LinearLayout
+                <TextView style="@style/DefaultHeader"
+                          android:layout_width="80dp"
+                          android:text="@string/quantity"/>
+
+                <TextView style="@style/DefaultHeader"
+                          android:layout_width="150dp"
+                          android:text="@string/header_unit"/>
+
+                <!--<LinearLayout
                     android:layout_width="152dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
@@ -172,7 +180,7 @@
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="152dp"

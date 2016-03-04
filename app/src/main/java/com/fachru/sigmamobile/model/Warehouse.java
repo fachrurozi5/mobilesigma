@@ -3,6 +3,7 @@ package com.fachru.sigmamobile.model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -11,32 +12,36 @@ import java.util.List;
  * Created by fachru on 07/01/16.
  */
 @Table(name = "Warehouse")
-public class Warehouse extends MasterModel {
+public class Warehouse extends MasterModel<Warehouse> {
 
     public static final String PRIMARYKEY = "whid";
 
+    @Expose
     @SerializedName("WHID")
     @Column(name = "whid")
     public String whid;
 
+    @Expose
     @SerializedName("WHNAME")
     @Column(name = "name")
     public String name;
 
+    @Expose
     @SerializedName("whgroupid")
     @Column(name = "whgroup")
     public String whgroup;
 
+    @Expose
     @SerializedName("REMARKS")
     @Column(name = "remarks")
     public String remarks;
 
     public Warehouse() {
-        super();
+        super(Warehouse.class);
     }
 
     public Warehouse(Builder builder) {
-        super();
+        super(Warehouse.class);
         whid = builder.whid;
         name = builder.name;
         whgroup = builder.whgroup;

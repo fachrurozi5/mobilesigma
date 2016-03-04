@@ -1,7 +1,8 @@
 package com.fachru.sigmamobile.api.interfaces;
 
-import retrofit.Call;
-import retrofit.http.GET;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 /**
  * Created by fachru on 06/01/16.

@@ -10,6 +10,7 @@ import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -28,14 +29,17 @@ public class WarehouseStock extends Model {
 
     public static final String UNIQCOLUM = "whid";
 
+    @Expose
     @SerializedName("whid")
     @Column(name = "whid")
     public String whid;
 
+    @Expose
     @SerializedName("prodid")
     @Column(name = "product_id")
     public String product_id;
 
+    @Expose
     @SerializedName("balance")
     @Column(name = "balance")
     public double balance;
@@ -73,7 +77,6 @@ public class WarehouseStock extends Model {
             Product product = stock.product;
 
             if (product != null) {
-                Log.d(Constanta.TAG, product.toString());
                 map.put(Constanta.SIMPLE_LIST_ITEM_1, product.prodid);
                 map.put(Constanta.SIMPLE_LIST_ITEM_2, product.name);
                 map.put(Constanta.SIMPLE_LIST_ITEM_STOCK, new DecimalFormat("#,##0.0000").format(stock.balance));

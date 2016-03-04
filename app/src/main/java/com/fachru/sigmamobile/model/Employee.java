@@ -6,6 +6,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -19,18 +20,22 @@ import java.util.Date;
 @Table(name = "Employees")
 public class Employee extends Model {
 
+    @Expose
     @SerializedName("EMPID")
     @Column(name = "employee_id")
     public String employee_id;
 
+    @Expose
     @SerializedName("EMPNAME")
     @Column(name = "name")
     public String name;
 
+    @Expose
     @SerializedName("DATECREATE")
     @Column(name = "created_at")
     public Date created_at;
 
+    @Expose
     @SerializedName("DATEUPDATE")
     @Column(name = "updated_at")
     public Date updated_at;
