@@ -12,11 +12,7 @@ android {
         versionName "1.0"
         buildConfigField("String", "ENV", "\"http://192.168.1.9/sigmamobile/\"")
     }
-    /*dexOptions {
-        incremental true
-        javaMaxHeapSize "2048M"
-        jumboMode = true
-    }*/
+
     buildTypes {
         release {
             minifyEnabled true
