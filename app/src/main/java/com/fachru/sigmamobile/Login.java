@@ -61,7 +61,6 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
 
     @Override
     public void onFetchProgress(Employee employee) {
-        Log.e(Constanta.TAG, employee.toString());
         sessionManager.setEmployee(employee.getId());
     }
 

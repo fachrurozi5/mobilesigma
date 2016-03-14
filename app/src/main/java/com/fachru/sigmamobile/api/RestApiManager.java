@@ -1,5 +1,7 @@
 package com.fachru.sigmamobile.api;
 
+import android.content.Context;
+
 import com.fachru.sigmamobile.BuildConfig;
 import com.fachru.sigmamobile.api.interfaces.CustomerAPI;
 import com.fachru.sigmamobile.api.interfaces.DoHeadAPI;
@@ -11,9 +13,16 @@ import com.fachru.sigmamobile.api.interfaces.ProductAPI;
 import com.fachru.sigmamobile.api.interfaces.WarehouseAPI;
 import com.fachru.sigmamobile.api.interfaces.WhStockAPI;
 import com.fachru.sigmamobile.utils.Constanta;
+import com.fachru.sigmamobile.utils.ServiceGenerator;
 import com.fachru.sigmamobile.utils.StringDesirializer;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,6 +35,8 @@ import retrofit.Retrofit;*/
  * Created by fachru on 17/12/15.
  */
 public class RestApiManager {
+
+    private Context context;
 
     private GsonBuilder builder;
 
@@ -40,6 +51,7 @@ public class RestApiManager {
     private WarehouseAPI warehouseAPI;
 
     public RestApiManager() {
+
         builder = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .excludeFieldsWithoutExposeAnnotation();
@@ -80,7 +92,8 @@ public class RestApiManager {
     * */
     public EmployeeAPI getEmployeeApi() {
         if (employeeApi == null) {
-            employeeApi = retrofit().create(EmployeeAPI.class);
+//            employeeApi = retrofit().create(EmployeeAPI.class);
+            employeeApi = ServiceGenerator.createService(EmployeeAPI.class, "1234");
         }
 
         return employeeApi;
@@ -142,7 +155,6 @@ public class RestApiManager {
     private Retrofit retrofit() {
         return new Retrofit.Builder()
                 .baseUrl(Constanta.BASE_URL)
-//                .baseUrl(BuildConfig.ENV)
                 .addConverterFactory(GsonConverterFactory.create(builder.create()))
                 .build();
     }

@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         /*multiDexEnabled true*/
         applicationId "com.fachru.sigmamobile"
@@ -11,28 +10,27 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "ENV", "\"http://192.168.1.9/sigmamobile/\"")
     }
-
     /*dexOptions {
         incremental true
         javaMaxHeapSize "2048M"
         jumboMode = true
     }*/
-
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            /*minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig getSigningConfig()
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent,
-                            output.outputFile.name.replace("-release", "-sigma")
-                    )
-                }
-            }*/
+        }
+    }
+    productFlavors {
+        flavor {
+            minSdkVersion 16
+            applicationId 'com.fachru.sigmamobile'
+            targetSdkVersion 23
+            versionCode 1
+            versionName 'dev-1.0'
+            buildConfigField("String", "ENV", "\"http://192.168.0.107/sigmamobile/\"")
         }
     }
 }

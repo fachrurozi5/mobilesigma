@@ -1,5 +1,7 @@
 package com.fachru.sigmamobile.utils;
 
+import com.fachru.sigmamobile.BuildConfig;
+
 /**
  * Created by fachru on 23/10/15.
  */
@@ -8,7 +10,8 @@ public final class Constanta {
     public static String IP_ADDRESS = "http://192.168.1.9";
     public static final String TAG = "com.fachru.sigma";
     //    public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
-    public static final String BASE_URL = IP_ADDRESS + "/sigmamobile/";
+//    public static final String BASE_URL = IP_ADDRESS + "/sigmamobile/";
+    public static final String BASE_URL = BuildConfig.ENV;
 
     /*
     * for date time

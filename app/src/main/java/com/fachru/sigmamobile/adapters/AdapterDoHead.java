@@ -2,10 +2,13 @@ package com.fachru.sigmamobile.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
@@ -14,24 +17,29 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Warehouse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fachru on 31/12/15.
  */
-public class AdapterDoHead extends BaseAdapter {
+public class AdapterDoHead extends BaseAdapter implements Filterable {
 
     private static LayoutInflater inflater = null;
     private Context context;
     private List<DoHead> list;
+    private List<DoHead> listFiltered;
+    private ItemFilter filter = new ItemFilter();
 
     public AdapterDoHead(Context context, List<DoHead> list) {
         this.context = context;
         this.list = list;
+        this.listFiltered = this.list;
     }
 
     public void update(List<DoHead> list) {
         this.list = list;
+        this.listFiltered = this.list;
         this.notifyDataSetChanged();
     }
 
@@ -56,12 +64,12 @@ public class AdapterDoHead extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return listFiltered.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return listFiltered.get(i);
     }
 
     @Override
@@ -102,6 +110,41 @@ public class AdapterDoHead extends BaseAdapter {
         holder.tv_salesman.setText(Employee.getEmployeeName(doHead.empid));
 
         return view;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private class ItemFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<DoHead> doHeads = new ArrayList<>();
+
+            for (DoHead doHead : getList()) {
+                if (doHead.doc_no.toLowerCase().contains(filterString) ||
+                        doHead.vatno.toLowerCase().contains(filterString))
+                    doHeads.add(doHead);
+            }
+
+            results.values = doHeads;
+            results.count = doHeads.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            listFiltered = (List<DoHead>) results.values;
+            notifyDataSetChanged();
+        }
     }
 
     private class Holder {

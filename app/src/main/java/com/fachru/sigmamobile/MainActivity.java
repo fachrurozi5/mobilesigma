@@ -1,18 +1,16 @@
 package com.fachru.sigmamobile;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,9 +30,6 @@ import com.fachru.sigmamobile.utils.Constanta;
 import com.fachru.sigmamobile.utils.SessionManager;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListener {
@@ -128,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sessionManager = new SessionManager(context);
+        Log.e(Constanta.TAG, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
         /*serviceIntent = new Intent(context, SaveMyAppsService.class);*/
         initComp();
 

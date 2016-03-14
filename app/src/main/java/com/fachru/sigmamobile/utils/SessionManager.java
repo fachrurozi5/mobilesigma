@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.fachru.sigmamobile.app.MyApplication;
+
 /**
  * Created by fachru on 29/10/15.
  */
@@ -22,6 +24,7 @@ public class SessionManager {
     public static final String KEY_DOWNLOAD_WAREHOUSE = "download_warehouse";
     public static final String KEY_DOWNLOAD_WAREHOUSE_STOCK = "download_warehouse_stock";
     public static final String KEY_IP_ADDRESS = "ipaddress";
+    public static final String KEY_TOKEN = "api_token";
     /*
     * service
     * */
@@ -30,10 +33,8 @@ public class SessionManager {
     private static final String PREF_NAME = "sigma_preference";
     private SharedPreferences preferences;
     private Editor editor;
-    private Context context;
 
     public SessionManager(Context context) {
-        this.context = context;
         preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = preferences.edit();
     }
@@ -167,5 +168,27 @@ public class SessionManager {
 
     public boolean isPinSaved() {
         return preferences.getBoolean(IS_PIN_SAVED, false);
+    }
+
+    /*
+    * for token
+    *
+    * */
+
+    public static SharedPreferences pref() {
+        return MyApplication.getAppContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+    }
+
+    public static SharedPreferences.Editor prefEdit() {
+        return MyApplication.getAppContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE).edit();
+    }
+
+    public void setToken(String token) {
+        editor.putString(KEY_TOKEN, token);
+        editor.commit();
+    }
+
+    public String getToken() {
+        return preferences.getString(KEY_TOKEN, "");
     }
 }

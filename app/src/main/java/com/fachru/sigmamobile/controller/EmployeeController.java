@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Header;
 
 
 /**
@@ -37,7 +38,6 @@ public class EmployeeController {
             public void onResponse(Call<Employee> call, Response<Employee> response) {
                 Log.i(Constanta.TAG, "Status " + response.code() + " " + response.message() + " " + response.headers());
                 if (response.isSuccess() && response.body() != null) {
-                    Log.d(Constanta.TAG, response.body().toString());
                     Employee employee = response.body();
                     employee.save();
                     listener.onFetchProgress(employee);
