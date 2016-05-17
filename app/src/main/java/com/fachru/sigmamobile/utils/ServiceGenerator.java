@@ -1,13 +1,8 @@
 package com.fachru.sigmamobile.utils;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.fachru.sigmamobile.app.MyApplication;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -22,9 +17,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
     private static GsonBuilder gsonBuilder = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd HH:mm:ss").excludeFieldsWithoutExposeAnnotation();
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .excludeFieldsWithoutExposeAnnotation();
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
@@ -42,12 +37,19 @@ public class ServiceGenerator {
                 public Response intercept(Interceptor.Chain chain) throws IOException {
                     Request original = chain.request();
 
+                    String remember_token = "";
+
+                    if (authToken.length() > 21) {
+                        int length = authToken.length();
+                        remember_token = authToken.substring(length - 20, length);
+                    }
 
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
-                            .header("User-Agent", "FachruTampan")
+                            .header("User-Agent", "Sigma User")
                             .header("Authorization", authToken)
+                            .header("Remember-Token", remember_token)
                             .method(original.method(), original.body());
 
                     Request request = requestBuilder.build();

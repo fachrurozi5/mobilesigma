@@ -104,8 +104,13 @@ public abstract class BaseFragmentForm extends Fragment {
         if (view instanceof EditText) view.setEnabled(b);
 
         if (view instanceof Spinner) {
-            ((Spinner) view).getSelectedView().setEnabled(b);
-            view.setEnabled(b);
+            try {
+                ((Spinner) view).getSelectedView().setEnabled(b);
+                view.setEnabled(b);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
         }
 
         if (view instanceof ViewGroup && (((ViewGroup) view).getChildCount() > 0)) {

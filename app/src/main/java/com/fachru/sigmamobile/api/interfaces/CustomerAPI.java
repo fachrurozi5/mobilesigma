@@ -23,6 +23,9 @@ public interface CustomerAPI {
     @GET("customers")
     Call<List<Customer>> _Records();
 
+    @GET("customers/sync")
+    Call<List<Customer>> Sync();
+
     @FormUrlEncoded
     @POST("customer/view")
     Call<String> getRecord(@Field("custid") String s);

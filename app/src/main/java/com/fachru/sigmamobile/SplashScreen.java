@@ -1,7 +1,6 @@
 package com.fachru.sigmamobile;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,10 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.model.Discount;
+import com.fachru.sigmamobile.model.DiscountStructure;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.UnitConverter;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -25,7 +27,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 public class SplashScreen extends AppCompatActivity {
@@ -34,43 +35,37 @@ public class SplashScreen extends AppCompatActivity {
     private static final int KEY_CUSTOMER = 0;
     private static final int KEY_WAREHOUSE = 1;
     private static final int KEY_WAREHOUSE_STOCK = 2;
-    private static final int KEY_PRODUCT_STATUS = 3;
-    private static final int KEY_PRODUCT_STATUS2 = 4;
-    private static final int KEY_PRODUCT = 5;
-
+    private static final int KEY_PRODUCT = 3;
+    private static final int KEY_UNIT_CONVERSION = 4;
+    private static final int KEY_DISCOUNT = 5;
+    /*
+    * label
+    * */
+    String stringLabel;
     private RestApiManager apiManager = new RestApiManager();
-
-
     /*
     * utils
     * */
     private SessionManager manager;
-
     /*
     * widget
     * */
     private ProgressBar progressBar;
     private TextView label;
-
     /*
     * android.os
     * */
     private Handler handler = new Handler();
     private Thread thread;
-
     /*
     * Retrofit Call for Callback
     * */
-    private Call<String> callback;
     private Call<List<Customer>> customerCall;
     private Call<List<Product>> productCall;
     private Call<List<WarehouseStock>> whStockCall;
     private Call<List<Warehouse>> whouseCall;
-
-    /*
-    * label
-    * */
-    String stringLabel;
+    private Call<List<Discount>> discountCall;
+    private Call<List<UnitConverter>> unitConverterCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +75,12 @@ public class SplashScreen extends AppCompatActivity {
 
         manager = new SessionManager(this);
 
-        downloadOrContinue();
+        SyncOrContinue();
 
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     private void initComp() {
@@ -101,43 +100,42 @@ public class SplashScreen extends AppCompatActivity {
 
                 switch (state) {
                     case KEY_CUSTOMER:
-                        stringLabel = "Load Customer";
+                        stringLabel = "Sync Customer";
                         downloadCustomer();
                         break;
                     case KEY_WAREHOUSE:
-                        stringLabel = "Load Warehouse";
+                        stringLabel = "Sync Warehouse";
                         downloadWarehouse();
                         break;
                     case KEY_WAREHOUSE_STOCK:
-                        stringLabel = "Load WarehouseStock";
+                        stringLabel = "Sync WarehouseStock";
                         downloadWarehouseStock();
                         break;
-                    /*case KEY_PRODUCT_STATUS:
-                        stringLabel = "Load Prstatid";
-                        downloadPrstat();
-                        break;
-                    case KEY_PRODUCT_STATUS2:
-                        stringLabel = "Load Prstatid2";
-                        downloadPrstat2();
-                        break;*/
                     case KEY_PRODUCT:
-                        stringLabel = "Load Product";
+                        stringLabel = "Sync Product";
                         downloadProduct();
                         break;
+                    case KEY_UNIT_CONVERSION:
+                        stringLabel = "Sync Unit Conversion";
+                        downloadUnitConversion();
+                        break;
+                    case KEY_DISCOUNT:
+                        stringLabel = "Sync Discount";
+                        downloadDiscount();
+                        break;
                     default:
-                        stringLabel = "Loading...";
+                        stringLabel = manager.hasCustomer() ? "Finising Sync" : "Starting";
                 }
 
                 while (progress < progressBar.getMax()) {
                     progress += 1;
                     final int progressFinal = progress;
-                    final String finalLebel = stringLabel;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             progressBar.setProgress(progressFinal);
                             progressBar.setSecondaryProgress(progressFinal + 5);
-                            label.setText(finalLebel);
+                            label.setText(stringLabel);
                         }
                     });
 
@@ -152,8 +150,6 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), Login.class));
                     finish();
                 } else {
-                    if (callback != null)
-                        callback.cancel();
                     if (customerCall != null)
                         customerCall.cancel();
                     if (productCall != null)
@@ -179,15 +175,17 @@ public class SplashScreen extends AppCompatActivity {
     * Download Customer
     * */
     private void downloadCustomer() {
-        customerCall = apiManager.getCustomerAPI()._Records();
+        // TODO: 10/05/16 SELECT NOW() as CurrentDate, ADDTIME(NOW(), '0:5:0') as NewDate ;
+        Log.i(Constanta.TAG, "downloadCustomer");
+        customerCall = apiManager.getCustomerAPI().Sync();
         customerCall.enqueue(new Callback<List<Customer>>() {
             @Override
             public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
                 if (response.isSuccess() && response.body() != null) {
+                    Log.e(Constanta.TAG, response.body().toString());
                     storeCustomer(response.body());
-                }else {
-                    label.setText(response.message());
-                    label.setTextColor(Color.RED);
+                } else {
+                    LoadingThread(1000, KEY_PRODUCT, false);
                 }
             }
 
@@ -203,15 +201,16 @@ public class SplashScreen extends AppCompatActivity {
     * Download Warehouse
     * */
     private void downloadWarehouse() {
-        whouseCall = apiManager.getWarehouseAPI()._Records();
+        Log.i(Constanta.TAG, "downloadWarehouse");
+        whouseCall = apiManager.getWarehouseAPI().Sync();
         whouseCall.enqueue(new Callback<List<Warehouse>>() {
             @Override
             public void onResponse(Call<List<Warehouse>> call, Response<List<Warehouse>> response) {
                 if (response.isSuccess() && response.body() != null) {
+                    Log.e(Constanta.TAG, response.body().toString());
                     storeWarehouse(response.body());
-                }else {
-                    label.setText(response.message());
-                    label.setTextColor(Color.RED);
+                } else {
+                    LoadingThread(1000, KEY_WAREHOUSE_STOCK, false);
                 }
             }
 
@@ -227,16 +226,16 @@ public class SplashScreen extends AppCompatActivity {
     * Download WarehouseStock
     * */
     private void downloadWarehouseStock() {
-        whStockCall = apiManager.getWhStock()._Records();
+        Log.i(Constanta.TAG, "downloadWarehouseStock");
+        whStockCall = apiManager.getWhStock().Sync();
         whStockCall.enqueue(new Callback<List<WarehouseStock>>() {
             @Override
             public void onResponse(Call<List<WarehouseStock>> call, Response<List<WarehouseStock>> response) {
                 if (response.isSuccess() && response.body() != null) {
+                    Log.e(Constanta.TAG, response.body().toString());
                     storeWarehouseStock(response.body());
                 } else {
-                    thread.interrupt();
-                    label.setText(response.message());
-                    label.setTextColor(Color.RED);
+                    LoadingThread(1000, KEY_UNIT_CONVERSION, false);
                 }
             }
 
@@ -252,15 +251,16 @@ public class SplashScreen extends AppCompatActivity {
     * Download Product
     * */
     private void downloadProduct() {
-        productCall = apiManager.getProduct()._Records();
+        Log.i(Constanta.TAG, "downloadProduct");
+        productCall = apiManager.getProduct().Sync();
         productCall.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccess() && response.body() != null) {
+                    Log.e(Constanta.TAG, response.body().toString());
                     storeProduct(response.body());
                 } else {
-                    label.setText(response.message());
-                    label.setTextColor(Color.RED);
+                    LoadingThread(1000, KEY_WAREHOUSE, false);
                 }
             }
 
@@ -268,6 +268,57 @@ public class SplashScreen extends AppCompatActivity {
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 Log.e(Constanta.TAG, "On Product Failure", t);
                 showError("Prodcut", t.getMessage());
+            }
+        });
+    }
+
+    /*
+    * Download UnitConversion
+    * */
+    private void downloadUnitConversion() {
+        Log.i(Constanta.TAG, "downloadUnitConversion");
+        unitConverterCall = apiManager.getUnitConverter().Sync();
+        unitConverterCall.enqueue(new Callback<List<UnitConverter>>() {
+            @Override
+            public void onResponse(Call<List<UnitConverter>> call, Response<List<UnitConverter>> response) {
+                if (response.isSuccess() && response.body() != null) {
+                    Log.e(Constanta.TAG, response.body().toString());
+                    storeUnitConverter(response.body());
+                } else {
+                    LoadingThread(1000, KEY_DISCOUNT, false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UnitConverter>> call, Throwable t) {
+                Log.e(Constanta.TAG, "On Unit Converter Failure", t);
+                showError("Unit Converter", t.getMessage());
+            }
+        });
+    }
+
+    /*
+    * Download Discount
+    * */
+    private void downloadDiscount() {
+        Log.i(Constanta.TAG, "downloadDiscount");
+        discountCall = apiManager.getDiscountAPI().Sync();
+        discountCall.enqueue(new Callback<List<Discount>>() {
+            @Override
+            public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
+                Log.d(Constanta.TAG, "Responses : " + response.message());
+                if (response.isSuccess() && response.body() != null) {
+                    Log.e(Constanta.TAG, "Response : " + response.body().toString());
+                    storeDiscount(response.body());
+                } else {
+                    LoadingThread(10, 100, true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Discount>> call, Throwable t) {
+                Log.e(Constanta.TAG, "On Discount Failur", t);
+                showError("Discount", t.getMessage());
             }
         });
     }
@@ -280,6 +331,7 @@ public class SplashScreen extends AppCompatActivity {
     * Store Customer into SQLite3
     * */
     private void storeCustomer(final List<Customer> list) {
+        Log.i(Constanta.TAG, "storeCustomer");
         thread.interrupt();
         progressBar.setProgress(0);
         final int max = list.size();
@@ -299,7 +351,7 @@ public class SplashScreen extends AppCompatActivity {
                             public void run() {
                                 progressBar.setProgress((finalProgress * 100) / max);
                                 progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Customer");
+                                label.setText("Updating Customer");
                             }
                         });
                     }
@@ -307,89 +359,17 @@ public class SplashScreen extends AppCompatActivity {
                 } finally {
                     ActiveAndroid.endTransaction();
                 }
-                manager.setCustomerDone(true);
                 LoadingThread(1000, KEY_PRODUCT, false);
 
             }
         }).start();
     }
-
-    /*
-    * Store Prstatid into SQLite3
-    * */
-    /*private void storePrstat(final JSONArray jsonArray) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = jsonArray.length();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < max; i++) {
-                    try {
-                        ProductStatus.findOrCreateFromJson(jsonArray.getJSONObject(i));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    final int finali = i;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setProgress((finali * 100) / max);
-                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
-                            label.setText("Inserting Prastatid");
-                        }
-                    });
-                }
-                manager.setPrstatDone(true);
-                LoadingThread(1000, KEY_PRODUCT_STATUS2, false);
-
-            }
-        }).start();
-    }
-
-    *//*
-    * Store Prstatid2 into SLQite3
-    * *//*
-    private void storePrstat2(final JSONArray jsonArray) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = jsonArray.length();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < max; i++) {
-                    try {
-                        ProductStatus2.findOrCreateFromJson(jsonArray.getJSONObject(i));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    final int finali = i;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setProgress((finali * 100) / max);
-                            progressBar.setSecondaryProgress(((finali * 100) / max) + 5);
-                            label.setText("Inserting Prastatid2");
-                        }
-                    });
-                }
-                manager.setPrstat2Done(true);
-                LoadingThread(1000, KEY_PRODUCT, false);
-
-            }
-        }).start();
-    }*/
 
     /*
     * Insert Product into SQLite3
     * */
     private void storeProduct(final List<Product> list) {
+        Log.i(Constanta.TAG, "storeProduct");
         thread.interrupt();
         progressBar.setProgress(0);
         final int max = list.size();
@@ -401,7 +381,7 @@ public class SplashScreen extends AppCompatActivity {
                 try {
                     int progress = 0;
                     for (Product product : list) {
-
+                        Log.d(Constanta.TAG, product.toString());
                         product.save();
                         progress++;
                         final int finalProgress = progress;
@@ -410,7 +390,7 @@ public class SplashScreen extends AppCompatActivity {
                             public void run() {
                                 progressBar.setProgress((finalProgress * 100) / max);
                                 progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Product");
+                                label.setText("Updating Product");
                             }
                         });
                     }
@@ -418,7 +398,6 @@ public class SplashScreen extends AppCompatActivity {
                 } finally {
                     ActiveAndroid.endTransaction();
                 }
-                manager.setProductDone(true);
                 LoadingThread(1000, KEY_WAREHOUSE, false);
 
             }
@@ -429,6 +408,7 @@ public class SplashScreen extends AppCompatActivity {
     * Store Warehouse into SQLite3
     * */
     private void storeWarehouse(final List<Warehouse> list) {
+        Log.i(Constanta.TAG, "storeWarehouse");
         thread.interrupt();
         progressBar.setProgress(0);
         final int max = list.size();
@@ -448,7 +428,7 @@ public class SplashScreen extends AppCompatActivity {
                             public void run() {
                                 progressBar.setProgress((finalProgress * 100) / max);
                                 progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Warehouse");
+                                label.setText("Updating Warehouse");
                             }
                         });
                     }
@@ -456,7 +436,6 @@ public class SplashScreen extends AppCompatActivity {
                 } finally {
                     ActiveAndroid.endTransaction();
                 }
-                manager.setWarehouseDone(true);
                 LoadingThread(1000, KEY_WAREHOUSE_STOCK, false);
 
             }
@@ -467,6 +446,7 @@ public class SplashScreen extends AppCompatActivity {
     * Store WarehouseStock inti SLQite3
     * */
     private void storeWarehouseStock(final List<WarehouseStock> list) {
+        Log.i(Constanta.TAG, "storeWarehouseStock");
         thread.interrupt();
         progressBar.setProgress(0);
         final int max = list.size();
@@ -478,8 +458,17 @@ public class SplashScreen extends AppCompatActivity {
                 try {
                     int progress = 0;
                     for (WarehouseStock warehouseStock : list) {
-                        warehouseStock.product = Product.find(warehouseStock.product_id);
-                        warehouseStock.save();
+                        WarehouseStock stock = WarehouseStock.find(warehouseStock.whid, warehouseStock.product_id);
+                        if (stock != null) {
+                            Log.d(Constanta.TAG, "Stock != null");
+                            stock.balance = warehouseStock.balance;
+                            stock.product = Product.find(warehouseStock.product_id);
+                            stock.save();
+                        } else {
+                            Log.d(Constanta.TAG, "Stock == null");
+                            warehouseStock.product = Product.find(warehouseStock.product_id);
+                            warehouseStock.save();
+                        }
                         progress++;
                         final int finalProgress = progress;
                         handler.post(new Runnable() {
@@ -487,7 +476,7 @@ public class SplashScreen extends AppCompatActivity {
                             public void run() {
                                 progressBar.setProgress((finalProgress * 100) / max);
                                 progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting WarehouseStock");
+                                label.setText("Updating WarehouseStock");
                             }
                         });
                     }
@@ -495,10 +484,95 @@ public class SplashScreen extends AppCompatActivity {
                 } finally {
                     ActiveAndroid.endTransaction();
                 }
-                manager.setWarehouseStockDone(true);
-                startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                LoadingThread(1000, KEY_UNIT_CONVERSION, false);
 
+            }
+        }).start();
+    }
+
+    /*
+    * Insert Unit Converter into SQLite3
+    * */
+    private void storeUnitConverter(final List<UnitConverter> list) {
+        Log.i(Constanta.TAG, "storeUnitConverter");
+        thread.interrupt();
+        progressBar.setProgress(0);
+        final int max = list.size();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ActiveAndroid.beginTransaction();
+                try {
+                    int progress = 0;
+                    for (UnitConverter unitConverter : list) {
+                        UnitConverter converter = UnitConverter.find(unitConverter.unitId, unitConverter.unitCon);
+                        if (converter != null) {
+                            converter.factor = unitConverter.factor;
+                            Log.e(Constanta.TAG, converter.toString());
+                            converter.save();
+                        } else {
+                            unitConverter.save();
+                        }
+                        progress++;
+                        final int finalProgress = progress;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setProgress((finalProgress * 100) / max);
+                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+                                label.setText("Updating Unit Converter");
+                            }
+                        });
+                    }
+                    ActiveAndroid.setTransactionSuccessful();
+                } finally {
+                    ActiveAndroid.endTransaction();
+                }
+                LoadingThread(1000, KEY_DISCOUNT, false);
+
+            }
+        }).start();
+    }
+
+    /*
+    * Store discount into SQLite3
+    * */
+    private void storeDiscount(final List<Discount> list) {
+        Log.i(Constanta.TAG, "storeDiscount");
+        thread.interrupt();
+        progressBar.setProgress(0);
+        final int max = list.size();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ActiveAndroid.beginTransaction();
+                try {
+                    int progress = 0;
+                    for (Discount discount : list) {
+                        discount.save();
+                        progress++;
+                        for (DiscountStructure discountStructure : discount.structures) {
+                            discountStructure.discount = discount;
+                            discountStructure.save();
+
+                        }
+                        final int finalProgress = progress;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setProgress((finalProgress * 100) / max);
+                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+                                label.setText("Updating Discount");
+                            }
+                        });
+                    }
+                    ActiveAndroid.setTransactionSuccessful();
+                } finally {
+                    ActiveAndroid.endTransaction();
+                }
+                LoadingThread(10, 100, true);
             }
         }).start();
     }
@@ -520,7 +594,7 @@ public class SplashScreen extends AppCompatActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        downloadOrContinue();
+                        SyncOrContinue();
                     }
                 })
                 .show();
@@ -529,19 +603,9 @@ public class SplashScreen extends AppCompatActivity {
     /*
     * method for continue download
     * */
-    private void downloadOrContinue() {
-        if (!manager.hasCustomer()) {
+    private void SyncOrContinue() {
+        if (manager.hasCustomer()) {
             LoadingThread(INTERVAL, KEY_CUSTOMER, false);
-        /*} else if (!manager.hasPrstat()) {
-            LoadingThread(INTERVAL, KEY_PRODUCT_STATUS, false);
-        } else if (!manager.hasPrstat2()) {
-            LoadingThread(INTERVAL, KEY_PRODUCT_STATUS2, false);*/
-        } else if (!manager.hasProduct()) {
-            LoadingThread(INTERVAL, KEY_PRODUCT, false);
-        } else if (!manager.hasWarehouse()) {
-            LoadingThread(INTERVAL, KEY_WAREHOUSE, false);
-        } else if (!manager.hasWarehouseStock()) {
-            LoadingThread(INTERVAL, KEY_WAREHOUSE_STOCK, false);
         } else {
             LoadingThread(10, 100, true);
         }

@@ -22,6 +22,9 @@ public interface WhStockAPI {
     @GET("whstocks")
     Call<List<WarehouseStock>> _Records();
 
+    @GET("whstocks/sync")
+    Call<List<WarehouseStock>> Sync();
+
     @FormUrlEncoded
     @POST("whstock/getwhstock")
     Call<String> getwhstock(@Field("whid") String whid);

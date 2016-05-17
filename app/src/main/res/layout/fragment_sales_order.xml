@@ -1,109 +1,120 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".PointOfSaleActivity$PlaceholderFragment"
-    android:id="@+id/vg_fragment_so">
+<RelativeLayout android:id="@+id/vg_fragment_so"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context=".PointOfSaleActivity">
 
     <AutoCompleteTextView
         android:id="@+id/act_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/act_product"
         android:inputType="textPersonName"
-        android:singleLine="true"
-        android:hint="@string/act_product" />
+        android:singleLine="true"/>
+
+    <Spinner
+        android:id="@+id/sp_unit_conv"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_product"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/et_qty"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/act_product"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/sp_unit_conv"
+        android:hint="@string/hint_qty"
         android:inputType="numberDecimal"
         android:paddingRight="16dp"
-        android:singleLine="true"
-        android:hint="@string/hint_qty" />
+        android:singleLine="true"/>
 
     <EditText
         android:id="@+id/et_product_price"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/sp_unit_conv"
         android:layout_toLeftOf="@id/et_qty"
-        android:layout_below="@id/act_product"
-        android:paddingRight="16dp"
         android:editable="false"
         android:focusable="false"
-        android:hint="@string/hint_product_price" />
+        android:hint="@string/hint_product_price"
+        android:paddingRight="16dp"/>
 
     <EditText
         android:id="@+id/et_disc_nusantara"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_product_price"
-        android:paddingLeft="16dp"
-        android:inputType="numberDecimal"
+        android:focusable="false"
         android:hint="@string/hint_disc"
-        android:visibility="gone"/>
+        android:inputType="numberDecimal"
+        android:paddingLeft="16dp"/>
 
-    <EditText android:visibility="gone"
+    <EditText
         android:id="@+id/et_disc_nusantara_value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_product_price"
-        android:paddingRight="16dp"
+        android:layout_toRightOf="@id/et_disc_nusantara"
         android:editable="false"
         android:focusable="false"
-        android:layout_toRightOf="@id/et_disc_nusantara"
-        android:hint="@string/hint_disc_nusantara_value"/>
+        android:hint="@string/hint_disc_nusantara_value"
+        android:paddingRight="16dp"/>
 
-    <EditText android:visibility="gone"
+    <EditText
         android:id="@+id/et_disc_principal"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_disc_nusantara"
-        android:paddingLeft="16dp"
+        android:focusable="false"
+        android:hint="@string/hint_disc"
         android:inputType="numberDecimal"
-        android:hint="@string/hint_disc"/>
+        android:paddingLeft="16dp"/>
 
-    <EditText android:visibility="gone"
+    <EditText
         android:id="@+id/et_disc_principal_value"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_disc_nusantara_value"
-        android:paddingRight="16dp"
+        android:layout_toRightOf="@id/et_disc_principal"
         android:editable="false"
         android:focusable="false"
-        android:layout_toRightOf="@id/et_disc_principal"
-        android:hint="@string/hint_disc_principal_value"/>
+        android:hint="@string/hint_disc_principal_value"
+        android:paddingRight="16dp"/>
 
     <Button
         android:id="@+id/btn_add"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_margin="4dp"
-        android:background="@drawable/button_add"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/et_disc_principal_value"
-        android:layout_alignParentRight="true"/>
+        android:layout_margin="4dp"
+        android:background="@drawable/button_add"/>
 
     <Button
         android:id="@+id/btn_edit"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_margin="4dp"
-        android:background="@drawable/button_edit"
         android:layout_below="@id/et_disc_principal_value"
-        android:layout_toLeftOf="@id/btn_add"/>
+        android:layout_margin="4dp"
+        android:layout_toLeftOf="@id/btn_add"
+        android:background="@drawable/button_edit"/>
 
     <Button
         android:id="@+id/btn_delete"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_margin="4dp"
-        android:background="@drawable/button_delete"
         android:layout_below="@id/et_disc_principal_value"
-        android:layout_toLeftOf="@id/btn_edit"/>
+        android:layout_margin="4dp"
+        android:layout_toLeftOf="@id/btn_edit"
+        android:background="@drawable/button_delete"/>
 
     <EditText
         android:id="@+id/et_sub_total"
@@ -111,44 +122,44 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_disc_principal"
         android:layout_toLeftOf="@id/btn_delete"
-        android:paddingRight="16dp"
         android:editable="false"
-        android:hint="@string/hint_subtotal"/>
+        android:hint="@string/hint_subtotal"
+        android:paddingRight="16dp"/>
 
     <LinearLayout
         android:id="@+id/ll_footer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:paddingRight="16dp"
         android:background="#424242"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingRight="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="100dp"
-            android:textStyle="bold"
+            android:text="Total "
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Total "/>
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/et_total"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:editable="false"
             android:gravity="right"
-            android:paddingRight="16dp"
-            android:layout_weight="1"/>
+            android:paddingRight="16dp"/>
 
     </LinearLayout>
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_below="@id/btn_add"
-        android:layout_above="@+id/ll_footer">
+        android:layout_above="@+id/ll_footer"
+        android:layout_below="@id/btn_add">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -182,11 +193,12 @@
                     android:layout_gravity="center"
                     android:text="@string/harga_list_rp" />
 
-                <LinearLayout android:visibility="gone"
+                <LinearLayout
                     android:layout_width="152dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView style="@style/DefaultHeader"
                         android:layout_width="match_parent"
@@ -217,11 +229,12 @@
 
                 </LinearLayout>
 
-                <LinearLayout android:visibility="gone"
+                <LinearLayout
                     android:layout_width="152dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView style="@style/DefaultHeader"
                         android:layout_width="match_parent"

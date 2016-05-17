@@ -48,8 +48,8 @@
 
     <string-array name="sub_menus_osc">
         <item>Scan Barcode</item>
-        <item>RO</item>
-        <item>Outlet Baru</item>
+        <item>Registered Outlet</item>
+        <item>New Outlet</item>
     </string-array>
 
     <string-array name="icon_sub_menu_osc">
@@ -100,7 +100,7 @@
     <string name="hint_input_total">TOTAL</string>
     <string name="hint_input_bonus">BONUS</string>
     <string name="hint_input_grand_total">GRAND TOTAL</string>
-    <string name="title_dialog_order">DO HEAD</string>
+    <string name="title_dialog_order">TOTAL POS</string>
     <string name="tab_order_done">PAID OFF</string>
     <string name="title_activity_sub_menu_osc">OSC</string>
     <string name="title_activity_osc">OSC</string>

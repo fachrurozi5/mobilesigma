@@ -1,5 +1,7 @@
 package com.fachru.sigmamobile.model;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -22,8 +24,6 @@ import java.util.List;
  */
 @Table(name = "Products")
 public class Product extends Model {
-
-    public static final String UNIQCOLUMN = "product_id";
 
     @Expose
     @SerializedName("prodid")
@@ -121,6 +121,20 @@ public class Product extends Model {
         Gson gson = gsonBuilder.create();
 
         return gson.fromJson(json.toString(), Product.class);
+    }
+
+    public boolean isUnitIdAsCarton() {
+        Unit unit = new Select()
+                .from(Unit.class)
+                .where("unit_id = ?", this.unitid)
+                .executeSingle();
+
+        if (unit != null) {
+            Log.e(Constanta.TAG, unit.toString());
+            return unit.unitName.contains("Karton");
+        } else {
+            return false;
+        }
     }
 
     @Override

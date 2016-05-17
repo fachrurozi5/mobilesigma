@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +20,6 @@ import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.fachru.sigmamobile.BuildConfig;
 import com.fachru.sigmamobile.CustomerActivity;
 import com.fachru.sigmamobile.Login;
 import com.fachru.sigmamobile.R;
@@ -33,7 +31,6 @@ import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
-import com.fachru.sigmamobile.utils.Constanta;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,7 +120,6 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
         initListener();
 
         et_doc_no.setText(DoHead.generateId());
-
 
         lv_do_head_items.setOnItemLongClickListener(onDoHeadLongClicked);
         sp_warehause.setOnItemSelectedListener(onWarehouseSelected);
@@ -237,8 +233,13 @@ public class HeaderPOSFragment extends BaseFragmentForm implements
 
     @Override
     protected void actionEdit() {
-        btn_edit.setBackground(getResources().getDrawable(R.drawable.button_save));
-        btn_del.setBackground(getResources().getDrawable(R.drawable.button_close));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            btn_edit.setBackground(getResources().getDrawable(R.drawable.button_save, activity.getTheme()));
+            btn_del.setBackground(getResources().getDrawable(R.drawable.button_close, activity.getTheme()));
+        } else {
+            btn_edit.setBackground(getResources().getDrawable(R.drawable.button_save));
+            btn_del.setBackground(getResources().getDrawable(R.drawable.button_close));
+        }
         isUpdate = true;
         enableForm(layout);
         setButtonDisable(btn_add);

@@ -1,6 +1,8 @@
 package com.fachru.sigmamobile.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +21,7 @@ import com.fachru.sigmamobile.model.Warehouse;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,6 +33,8 @@ import java.util.Locale;
  * Created by fachru on 15/10/15.
  */
 public class CommonUtil {
+
+    public static final String MIME_TYPE_PDF = "application/pdf";
 
     /*
     * number format
@@ -43,7 +48,8 @@ public class CommonUtil {
     }
 
     public static String percentFormat(double v) {
-        return new DecimalFormat("##0").format(v);
+        NumberFormat numberFormat = NumberFormat.getPercentInstance();
+        return numberFormat.format(v / 100);
     }
 
     /*
@@ -67,7 +73,7 @@ public class CommonUtil {
     }
 
     public static Date stringToDateLong(String s) throws ParseException {
-        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+        SimpleDateFormat sf = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
         sf.setLenient(true);
         return sf.parse(s);
     }
@@ -304,6 +310,12 @@ public class CommonUtil {
         return address.getThoroughfare() + ", " + address.getLocality() + ", " + address.getAdminArea() + " " + address.getPostalCode();
     }
 
+    /**
+     * @param context
+     * @param location
+     * @return
+     * @throws IOException
+     */
     public static String getAddress(Context context, Location location) throws IOException {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -331,11 +343,22 @@ public class CommonUtil {
         return "";
     }
 
+    /**
+     * @param context
+     * @param dimensionDp
+     * @return
+     */
     public static int getPx(Context context, int dimensionDp) {
         float density = context.getResources().getDisplayMetrics().density;
         return (int) (dimensionDp * density + 0.5f);
     }
 
+    /**
+     *
+     * @param o
+     * @param <T>
+     * @return
+     */
     public static <T extends Model> Class<T> getInstance(Object o) {
         if (o instanceof Customer)
             return (Class<T>) o;
@@ -343,6 +366,17 @@ public class CommonUtil {
             return (Class<T>) o;
         else
             return null;
+    }
+
+    /**
+     * @param context
+     * @return
+     */
+    public static boolean canDisplayPdf(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        testIntent.setType(MIME_TYPE_PDF);
+        return packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
 
 }

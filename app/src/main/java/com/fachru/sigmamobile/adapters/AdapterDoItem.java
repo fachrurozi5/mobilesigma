@@ -13,7 +13,6 @@ import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.utils.CommonUtil;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -80,7 +79,7 @@ public class AdapterDoItem extends BaseAdapter {
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         if (view == null) {
-            view = mInflater.inflate(R.layout.item_sales_order, null);
+            view = mInflater.inflate(R.layout.item_point_of_sale, null);
             holder = new Holder();
             holder.no = (TextView) view.findViewById(R.id.item_so_no);
             holder.jenis_barang = (TextView) view.findViewById(R.id.item_so_jenis_barang);
@@ -102,8 +101,8 @@ public class AdapterDoItem extends BaseAdapter {
 
         holder.no.setText(String.valueOf(i + 1));
         holder.jenis_barang.setText(product.name);
-        holder.unit.setText(product.unitid);
-        holder.harga_list.setText(CommonUtil.priceFormat(product.sellprice));
+        holder.unit.setText(doItem.unit_id);
+        holder.harga_list.setText(CommonUtil.priceFormat(doItem.pricelist));
         holder.jumlah_order.setText(CommonUtil.priceFormat(doItem.qty));
 //        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
 //        double nilai_nusantara = (doItem.product.price * doItem.discount_nusantara) / 100;

@@ -19,4 +19,7 @@ public interface ProductAPI {
     @GET("products")
     Call<List<Product>> _Records();
 
+    @GET("products/sync")
+    Call<List<Product>> Sync();
+
 }

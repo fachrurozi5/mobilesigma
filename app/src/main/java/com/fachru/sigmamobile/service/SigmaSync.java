@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
+import com.fachru.sigmamobile.model.SoHead;
+import com.fachru.sigmamobile.model.SoItem;
 import com.fachru.sigmamobile.utils.Upload;
 
 import java.util.Timer;
@@ -66,6 +68,15 @@ public class SigmaSync extends Service {
                     if (DoItem.hasDataToUpload())
                         for (DoItem doItem : DoItem.getAllNotUpload())
                             if (DoHead.hasPrint(doItem.docno)) new Upload<DoItem>().setData(doItem);
+
+                    if (SoHead.hasDataToUpload())
+                        for (SoHead soHead : SoHead.getAllNotUpload())
+                            new Upload<SoHead>().setData(soHead);
+
+                    if (SoItem.hasDataToUpload())
+                        for (SoItem soItem : SoItem.getAllNotUpload())
+                            if (SoHead.hasPrint(soItem.so)) new Upload<SoItem>().setData(soItem);
+
                 }
             });
         }

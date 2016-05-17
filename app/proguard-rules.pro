@@ -20,10 +20,14 @@
 -keep class com.activeandroid.**.** { *; }
 -keep class * extends com.activeandroid.Model
 -keep class * extends com.activeandroid.serializer.TypeSerializer
--dontwarn retrofit.**
--keep class retrofit.** { *; }
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
 -keepattributes Signature
 -keepattributes Exceptions
+
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
 
 -dontwarn okio.**
 
@@ -50,3 +54,8 @@
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
+
+# -keep class org.spongycastle.** { ; } means keep all class name and class methods/fields in package
+# -keep class org.spongycastle.* means keep all class in package
+-dontwarn org.spongycastle.**
+-keep class org.spongycastle.** { *; }

@@ -1,24 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <TextView
         android:id="@+id/simple_list_item_1"
         style="?android:attr/spinnerItemStyle"
-        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="marquee" />
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="IKMS"/>
 
     <TextView
         android:id="@+id/simple_list_item_2"
         style="?android:attr/spinnerItemStyle"
-        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_1"
         android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="Kecap Manis Sachet New 14 ml"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_stock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/simple_list_item_2"
+        android:ellipsize="marquee"
+        android:gravity="right"
+        android:padding="6dp"
+        android:singleLine="true"
+        android:text="284"
+        android:textColor="#33ff88"/>
+
+    <TextView
+        android:id="@+id/text_sell_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:padding="6dp"
+        android:text="Price:"/>
+
+    <TextView
+        android:id="@+id/tv_sell_price"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:layout_toRightOf="@id/text_sell_price"
+        android:padding="6dp"
+        android:text="999.999.999"
+        android:textColor="#33ff88"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/simple_list_item_2"
+        android:layout_toLeftOf="@id/tv_stock"
+        android:gravity="right"
+        android:padding="6dp"
+        android:text="STOCK:"/>
+
+</RelativeLayout>

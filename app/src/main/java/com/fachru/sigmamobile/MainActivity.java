@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.adapters.ImageAdapter;
+import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.service.LocationTrackerService;
 import com.fachru.sigmamobile.service.SigmaSync;
 import com.fachru.sigmamobile.utils.CommonUtil;
@@ -155,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         startService(new Intent(context, LocationTrackerService.class));
 //        startService(new Intent(context, SaveMyAppsService.class));
         startService(new Intent(this, SigmaSync.class));
+
+        Log.d(Constanta.TAG, Discount.getDiscountsVal().toString());
 
     }
 

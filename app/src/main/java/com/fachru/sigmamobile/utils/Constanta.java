@@ -7,10 +7,7 @@ import com.fachru.sigmamobile.BuildConfig;
  */
 public final class Constanta {
 
-    public static String IP_ADDRESS = "http://192.168.1.9";
     public static final String TAG = "com.fachru.sigma";
-    //    public static final String BASE_URL = "http://192.168.0.104/sigmamobile/";
-//    public static final String BASE_URL = IP_ADDRESS + "/sigmamobile/";
     public static final String BASE_URL = BuildConfig.ENV;
 
     /*

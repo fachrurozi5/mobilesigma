@@ -381,6 +381,15 @@ public class Customer extends Model {
                 .execute();
     }
 
+    public static List<Customer> getAll(int limit, int offset) {
+        return new Select()
+                .from(Customer.class)
+                .orderBy("name ASC")
+                .limit(limit)
+                .offset(offset)
+                .execute();
+    }
+
     public static Customer findOrCreateFromJson(JSONObject json) throws JSONException {
         String custid = json.getString("CUSTID");
         Customer existingCustomer = new Select().from(Customer.class).where("custid = ?", custid).executeSingle();

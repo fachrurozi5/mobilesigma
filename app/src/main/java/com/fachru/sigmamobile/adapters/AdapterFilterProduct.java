@@ -66,6 +66,7 @@ public class AdapterFilterProduct extends BaseAdapter implements Filterable {
             holder.simple_list_item_2 = (TextView) view.findViewById(R.id.simple_list_item_2);
             holder.tv_stock = (TextView) view.findViewById(R.id.tv_stock);
             holder.tv_sell_price = (TextView) view.findViewById(R.id.tv_sell_price);
+            holder.tv_discount = (TextView) view.findViewById(R.id.tv_discount);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -77,6 +78,8 @@ public class AdapterFilterProduct extends BaseAdapter implements Filterable {
         holder.simple_list_item_2.setText(map.get(Constanta.SIMPLE_LIST_ITEM_2));
         holder.tv_stock.setText(map.get(Constanta.SIMPLE_LIST_ITEM_STOCK));
         holder.tv_sell_price.setText(map.get(Constanta.SIMPLE_LIST_ITEM_PRICE));
+        holder.tv_discount.setText("20%");
+        holder.tv_discount.setRotation(40);
 
         return view;
     }
@@ -129,5 +132,6 @@ public class AdapterFilterProduct extends BaseAdapter implements Filterable {
         TextView simple_list_item_2;
         TextView tv_stock;
         TextView tv_sell_price;
+        TextView tv_discount;
     }
 }

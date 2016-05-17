@@ -23,20 +23,32 @@ public class SessionManager {
     public static final String KEY_DOWNLOAD_PRODUCT = "dowbload_product";
     public static final String KEY_DOWNLOAD_WAREHOUSE = "download_warehouse";
     public static final String KEY_DOWNLOAD_WAREHOUSE_STOCK = "download_warehouse_stock";
-    public static final String KEY_IP_ADDRESS = "ipaddress";
+    public static final String KEY_DOWNLOAD_UNIT_CONVERSION = "download_unit_converter";
+    public static final String KEY_DOWNLOAD_UNIT = "download_unit";
     public static final String KEY_TOKEN = "api_token";
+    public static final String KEY_USERNAME = "key_username";
+
     /*
     * service
     * */
     public static final String KEY_LOCATION_TRACKER_SERVICE = "key_location_tracker_service";
     private static final int PRIVATE_MODE = 0;
     private static final String PREF_NAME = "sigma_preference";
+    private static final String KEY_DOWNLOAD_DISCOUNT = "download_discount";
     private SharedPreferences preferences;
     private Editor editor;
 
     public SessionManager(Context context) {
         preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = preferences.edit();
+    }
+
+    public static SharedPreferences pref() {
+        return MyApplication.getAppContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+    }
+
+    public static SharedPreferences.Editor prefEdit() {
+        return MyApplication.getAppContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE).edit();
     }
 
     public boolean getLocationTrackerService() {
@@ -48,6 +60,15 @@ public class SessionManager {
     * */
     public void setLocationTrackerService(boolean b) {
         editor.putBoolean(KEY_LOCATION_TRACKER_SERVICE, b);
+        editor.commit();
+    }
+
+    public String getUsername() {
+        return preferences.getString(KEY_USERNAME, "");
+    }
+
+    public void setUsername(String username) {
+        editor.putString(KEY_USERNAME, username);
         editor.commit();
     }
 
@@ -102,6 +123,21 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void setUnitConverterDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_UNIT_CONVERSION, done);
+        editor.commit();
+    }
+
+    public void setUnitDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_UNIT, done);
+        editor.commit();
+    }
+
+    public void setDiscountDone(boolean done) {
+        editor.putBoolean(KEY_DOWNLOAD_DISCOUNT, done);
+        editor.commit();
+    }
+
     public boolean hasCustomer() {
         return preferences.getBoolean(KEY_DOWNLOAD_CUSTOMER, false);
     }
@@ -112,6 +148,18 @@ public class SessionManager {
 
     public boolean hasPrstat2() {
         return preferences.getBoolean(KEY_DOWNLOAD_PRSTAT2, false);
+    }
+
+    public boolean hasUnitConversion() {
+        return preferences.getBoolean(KEY_DOWNLOAD_UNIT_CONVERSION, false);
+    }
+
+    public boolean hasUnit() {
+        return preferences.getBoolean(KEY_DOWNLOAD_UNIT, false);
+    }
+
+    public boolean hasDiscount() {
+        return preferences.getBoolean(KEY_DOWNLOAD_DISCOUNT, false);
     }
 
     public boolean hasProduct() {
@@ -151,36 +199,22 @@ public class SessionManager {
         return preferences.getLong(KEY_EMPLOYEE, -1);
     }
 
+    /*
+    * for token
+    *
+    * */
+
     public void setEmployee(long employee_id) {
         editor.putLong(KEY_EMPLOYEE, employee_id);
         editor.commit();
-    }
-
-    public void setIpAddress(String ipAddress) {
-        Constanta.IP_ADDRESS = ipAddress;
-        editor.putString(KEY_IP_ADDRESS, ipAddress);
-        editor.commit();
-    }
-
-    public String getIpAddress() {
-        return preferences.getString(KEY_IP_ADDRESS, Constanta.IP_ADDRESS);
     }
 
     public boolean isPinSaved() {
         return preferences.getBoolean(IS_PIN_SAVED, false);
     }
 
-    /*
-    * for token
-    *
-    * */
-
-    public static SharedPreferences pref() {
-        return MyApplication.getAppContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-    }
-
-    public static SharedPreferences.Editor prefEdit() {
-        return MyApplication.getAppContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE).edit();
+    public String getToken() {
+        return preferences.getString(KEY_TOKEN, "");
     }
 
     public void setToken(String token) {
@@ -188,7 +222,5 @@ public class SessionManager {
         editor.commit();
     }
 
-    public String getToken() {
-        return preferences.getString(KEY_TOKEN, "");
-    }
+
 }

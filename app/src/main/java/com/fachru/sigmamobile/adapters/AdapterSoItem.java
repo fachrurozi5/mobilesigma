@@ -88,11 +88,7 @@ public class AdapterSoItem extends BaseAdapter {
             holder.jenis_barang = (TextView) view.findViewById(R.id.item_so_jenis_barang);
             holder.unit = (TextView) view.findViewById(R.id.item_so_unit);
             holder.harga_list = (TextView) view.findViewById(R.id.item_so_harga_list);
-            holder.jumlah_order = (TextView) view.findViewById(R.id.item_so_jumlah_order);/*
-            holder.persen_d_nusantara = (TextView) view.findViewById(R.id.item_so_persen_d_nusantara);
-            holder.nilai_d_nusantara = (TextView) view.findViewById(R.id.item_so_nilai_d_nusantara);
-            holder.persen_d_principal = (TextView) view.findViewById(R.id.item_so_persen_d_principal);
-            holder.nilai_d_principal = (TextView) view.findViewById(R.id.item_so_nilai_d_principal);*/
+            holder.jumlah_order = (TextView) view.findViewById(R.id.item_so_jumlah_order);
             holder.sub_total = (TextView) view.findViewById(R.id.item_so_sub_total);
             view.setTag(holder);
         } else {
@@ -101,37 +97,11 @@ public class AdapterSoItem extends BaseAdapter {
 
         SoItem soItem = (SoItem) getItem(i);
         Product product = Product.find(soItem.product_id);
-        String product_price = null;
-
-        switch (type_price_list) {
-            case 1:
-                product_price = CommonUtil.priceFormat(product.po_price);
-                break;
-            case 2:
-                product_price = CommonUtil.priceFormat(product.sellprice);
-                break;
-            case 3:
-                product_price = CommonUtil.priceFormat(product.base_price);
-                break;
-            case 4:
-                product_price = CommonUtil.priceFormat(product.old_price);
-                break;
-            case 5:
-                product_price = CommonUtil.priceFormat(product.test_price);
-                break;
-        }
-
         holder.no.setText(String.valueOf(i + 1));
         holder.jenis_barang.setText(product.name);
-        holder.unit.setText(product.unitid);
-        holder.harga_list.setText(product_price);
+        holder.unit.setText(soItem.unit_id);
+        holder.harga_list.setText(CommonUtil.priceFormat(soItem.pricelist));
         holder.jumlah_order.setText(CommonUtil.priceFormat(soItem.qty));
-//        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(soItem.discount_nusantara));
-//        double nilai_nusantara = (soItem.product.price * soItem.discount_nusantara) / 100;
-//        holder.nilai_d_nusantara.setText(CommonUtil.priceFormat(nilai_nusantara));
-//        holder.persen_d_principal.setText(CommonUtil.percentFormat(soItem.discount_principal));
-//        double nilai_principal = (soItem.product.price * soItem.discount_principal) / 100;
-//        holder.nilai_d_principal.setText(CommonUtil.priceFormat(nilai_principal));
         holder.sub_total.setText(CommonUtil.priceFormat(soItem.sub_total));
 
         return view;
@@ -142,11 +112,7 @@ public class AdapterSoItem extends BaseAdapter {
         TextView jenis_barang;
         TextView unit;
         TextView harga_list;
-        TextView jumlah_order;/*
-        TextView persen_d_nusantara;
-        TextView nilai_d_nusantara;
-        TextView persen_d_principal;
-        TextView nilai_d_principal;*/
+        TextView jumlah_order;
         TextView sub_total;
     }
 }

@@ -38,6 +38,12 @@ public class AdapterCustomer extends BaseAdapter implements Filterable {
         notifyDataSetChanged();
     }
 
+    public void add(Customer customer) {
+        original.add(customer);
+        listFiltered = original;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return listFiltered.size();

@@ -9,11 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -24,6 +23,7 @@ import com.fachru.sigmamobile.fragment.SalesOrderFragment;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetSoHeadListener;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetSoItemListener;
 import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.SoHead;
@@ -33,8 +33,6 @@ import com.fachru.sigmamobile.utils.Constanta;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -44,12 +42,13 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SalesOrderActivity extends AppCompatActivity implements
         OnTabSelectedListener, OnSetSoHeadListener, OnSetSoItemListener {
+
+    private static final String TAG = "SalesOrderActivity";
 
 
     /*
@@ -62,12 +61,6 @@ public class SalesOrderActivity extends AppCompatActivity implements
     * */
     protected Toolbar toolbar;
     protected TabLayout tabLayout;
-
-    /*
-    * plain old java object
-    * */
-    SoHead soHead;
-
     /*
     * label
     * */
@@ -76,8 +69,10 @@ public class SalesOrderActivity extends AppCompatActivity implements
     protected long neto = 0;
     protected long ppn = 0;
     protected long grand_total = 0;
-    protected long bayar = 0;
-    protected long kembali = 0;
+    /*
+    * plain old java object
+    * */
+    SoHead soHead;
     private long custid;
     private long emplid;
 
@@ -110,14 +105,12 @@ public class SalesOrderActivity extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            return true;
-        } else if (id == R.id.action_done) {
+        if (id == R.id.action_done) {
+            Log.i(TAG, "Action Done Click");
             for (SoItem doItem : soHead.soItems()) {
                 total += doItem.sub_total;
             }
+            Log.e(TAG, soHead.toString());
             showDialogOrder();
         }
 
@@ -187,7 +180,8 @@ public class SalesOrderActivity extends AppCompatActivity implements
 
     private void showDialogOrder() {
 
-        neto = total;
+        bonus = Discount.getDiscountValAsString(total);
+        neto = total - bonus;
         ppn = (neto * 10) / 100;
         grand_total = neto + ppn;
 
@@ -201,8 +195,18 @@ public class SalesOrderActivity extends AppCompatActivity implements
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
                         soHead.vatamt = ppn;
                         soHead.netamt = grand_total;
-                        /*soHead.dibayar = bayar;*/
-
+                        soHead.uploaded = false;
+                        soHead.date_order = new Date();
+                        int i = 1;
+                        for (SoItem item : soHead.soItems()) {
+                            item.noitem = String.format("%04d", i++);
+                            Log.e(TAG, item.toString());
+                            item.save();
+                        }
+                        soHead.printed = true;
+                        soHead.save();
+                        Log.d(TAG, "sohead Saved");
+                        Log.d(TAG, soHead.toString());
                         actionPrint(soHead.so);
                         tabLayout.getTabAt(0).select();
                     }
@@ -216,12 +220,15 @@ public class SalesOrderActivity extends AppCompatActivity implements
         final EditText et_grand_total = (EditText) dialog.getCustomView().findViewById(R.id.et_grand_total);
 
         et_total.setText(CommonUtil.priceFormat2Decimal(total));
-        et_bonus.setText("0");
-        et_neto.setText(CommonUtil.priceFormat2Decimal(total));
+        et_bonus.setText(CommonUtil.priceFormat2Decimal(bonus));
+        et_neto.setText(CommonUtil.priceFormat2Decimal(neto));
         et_ppn.setText(CommonUtil.priceFormat2Decimal(ppn));
         et_grand_total.setText(CommonUtil.priceFormat2Decimal(grand_total));
 
-        et_bonus.addTextChangedListener(new TextWatcher() {
+        et_bayar.setVisibility(View.GONE);
+        et_kembali.setVisibility(View.GONE);
+
+        /*et_bonus.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -246,31 +253,7 @@ public class SalesOrderActivity extends AppCompatActivity implements
             public void afterTextChanged(Editable s) {
 
             }
-        });
-
-        et_bayar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    bayar = Long.parseLong(s.toString());
-                    kembali = bayar - grand_total;
-                    et_kembali.setText(CommonUtil.priceFormat2Decimal(kembali));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    et_kembali.getText().clear();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        });*/
 
         dialog.show();
     }
@@ -278,18 +261,24 @@ public class SalesOrderActivity extends AppCompatActivity implements
     @Override
     public void onSetSoHead(SoHead soHead) {
         this.soHead = soHead;
+        // TODO: 24/03/16 delete onsetsohead
+        Log.i(TAG, "SoHead set");
+        Log.d(TAG, soHead.toString());
         tabLayout.getTabAt(1).select();
         action_done.setVisible(true);
     }
 
     @Override
     public void unSetSoHead() {
-
+        // TODO: 24/03/16 delete unsetsohead
+        Log.i(TAG, "unset SoHead");
     }
 
     @Override
     public void unSetDoItem() {
+        // TODO: 24/03/16 deltee unsetdoitem
         soHead = null;
+        Log.i(TAG, "unset doitem");
         action_done.setVisible(false);
     }
 
@@ -328,8 +317,6 @@ public class SalesOrderActivity extends AppCompatActivity implements
             Log.e("PDFCreator", "ioException:" + e);
         } finally {
             document.close();
-            soHead.docprint = 1;
-            soHead.save();
             total = bonus = 0;
             if (file != null)
                 openPDf(file);
@@ -387,15 +374,16 @@ public class SalesOrderActivity extends AppCompatActivity implements
 
     public void fillTable(PdfPTable table) {
 
-        Product product = null;
+        Product product;
         for (SoItem item : soHead.soItems()) {
             product = Product.find(item.product_id);
             table.addCell(createCell(product.prodid, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
             table.addCell(createCell(product.name, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
             table.addCell(createCell("PCS", Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
             table.addCell(createCell(String.valueOf(item.qty),Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell(getProductPriceAsString(product, soHead.priceType), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell(CommonUtil.percentFormat(/*item.discount_principal + item.discount_nusantara*/0), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+//            table.addCell(createCell(getProductPriceAsString(product, soHead.priceType), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(item.pricelist), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.percentFormat(item.discount_principal + item.discount_nusantara), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
         }
 
@@ -464,8 +452,27 @@ public class SalesOrderActivity extends AppCompatActivity implements
     }
 
     private void openPDf(File file) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-        startActivity(intent);
+        if (CommonUtil.canDisplayPdf(getApplicationContext())) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+            startActivity(intent);
+        } else {
+            new MaterialDialog.Builder(this)
+                    .title("Information")
+                    .content("there's not pdf reader in this device, please install them")
+                    .positiveText(R.string.agree)
+                    .negativeText(R.string.disagree)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.adobe.reader")));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.adobe.reader")));
+                            }
+                        }
+                    })
+                    .show();
+        }
     }
 }

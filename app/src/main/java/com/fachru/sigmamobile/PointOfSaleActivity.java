@@ -23,9 +23,11 @@ import com.fachru.sigmamobile.fragment.HeaderPOSFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment;
 import com.fachru.sigmamobile.fragment.PointOfSaleFragment.OnSetDoItemListener;
 import com.fachru.sigmamobile.fragment.interfaces.OnSetDoHeadListener;
+import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.UnitConverter;
 import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.CommonUtil;
 import com.fachru.sigmamobile.utils.Constanta;
@@ -107,11 +109,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            return true;
-        } else if (id == R.id.action_done) {
+        if (id == R.id.action_done) {
             for (DoItem doItem : doHead.doItems()) {
                 total += doItem.sub_total;
             }
@@ -193,7 +191,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
 
     private void showDialogOrder() {
 
-        neto = total;
+        bonus = Discount.getDiscountValAsString(total);
+        neto = total - bonus;
         ppn = (neto * 10) / 100;
         grand_total = neto + ppn;
 
@@ -215,11 +214,18 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                         for (DoItem item : doHead.doItems()) {
                             item.noitem = String.format("%04d", i++);
                             WarehouseStock stock = WarehouseStock.findById(doHead.whid, item.product_id);
-                            stock.balance -= item.qty;
+                            Product product = Product.find(item.product_id);
+                            UnitConverter unitConverter = UnitConverter.find(product.unitid, item.unit_id);
+                            if (unitConverter == null) {
+                                stock.balance -= item.qty;
+                            } else {
+                                double balance = (stock.balance * unitConverter.factor) - item.qty;
+                                stock.balance = balance / unitConverter.factor;
+                            }
+
                             stock.save();
                             item.save();
                         }
-                        doHead.save();
                         actionPrint(doHead.doc_no);
                         tabLayout.getTabAt(0).select();
                     }
@@ -233,8 +239,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
         final EditText et_grand_total = (EditText) dialog.getCustomView().findViewById(R.id.et_grand_total);
 
         et_total.setText(CommonUtil.priceFormat2Decimal(total));
-        et_bonus.setText("0");
-        et_neto.setText(CommonUtil.priceFormat2Decimal(total));
+        et_bonus.setText(CommonUtil.priceFormat2Decimal(bonus));
+        et_neto.setText(CommonUtil.priceFormat2Decimal(neto));
         et_ppn.setText(CommonUtil.priceFormat2Decimal(ppn));
         et_grand_total.setText(CommonUtil.priceFormat2Decimal(grand_total));
 
@@ -318,9 +324,9 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 product = Product.find(item.product_id);
                 table.addCell(createCell(product.prodid, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(product.name, font, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
-                table.addCell(createCell("PCS", font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(item.unit_id, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(String.valueOf(item.qty), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.priceFormat(product.sellprice), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(CommonUtil.priceFormat(item.pricelist), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(CommonUtil.percentFormat(/*item.discount_principal + item.discount_nusantara*/0), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             }
@@ -344,6 +350,8 @@ public class PointOfSaleActivity extends AppCompatActivity implements
             Log.e("PDFCreator", "ioException:" + e);
         } finally {
             doc.close();
+            doHead.docprint = 1;
+            doHead.save();
             total = bonus = 0;
             if (file != null)
                 openPDf(file);
@@ -380,8 +388,33 @@ public class PointOfSaleActivity extends AppCompatActivity implements
     }
 
     private void openPDf(File file) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-        startActivity(intent);
+        if (CommonUtil.canDisplayPdf(getApplicationContext())) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+            startActivity(intent);
+        } else {
+            new MaterialDialog.Builder(this)
+                    .title("Information")
+                    .content("there's not pdf reader in this device, please install them")
+                    .positiveText(R.string.agree)
+                    .negativeText(R.string.disagree)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.adobe.reader")));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.adobe.reader")));
+                            }
+                        }
+                    })
+                    .show();
+        }
     }
+
+    /*private void openPDf(File file) {
+        *//*Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+        startActivity(intent);*//*
+    }*/
 }

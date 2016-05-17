@@ -64,6 +64,8 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
             holder = new ViewHolder();
             holder.simple_list_item_1 = (TextView) view.findViewById(R.id.simple_list_item_1);
             holder.simple_list_item_2 = (TextView) view.findViewById(R.id.simple_list_item_2);
+            holder.tv_stock = (TextView) view.findViewById(R.id.tv_stock);
+            holder.tv_sell_price = (TextView) view.findViewById(R.id.tv_sell_price);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -73,6 +75,8 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
 
         holder.simple_list_item_1.setText(map.get(Constanta.SIMPLE_LIST_ITEM_1));
         holder.simple_list_item_2.setText(map.get(Constanta.SIMPLE_LIST_ITEM_2));
+        holder.tv_stock.setText(map.get(Constanta.SIMPLE_LIST_ITEM_STOCK));
+        holder.tv_sell_price.setText(map.get(Constanta.SIMPLE_LIST_ITEM_PRICE));
 
         return view;
     }
@@ -80,6 +84,12 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
     @Override
     public Filter getFilter() {
         return mFilter;
+    }
+
+    public void update(List<HashMap<String, String>> hashMapList) {
+        datas = hashMapList;
+        filtered = datas;
+        this.notifyDataSetChanged();
     }
 
     private class ItemFilter extends Filter {
@@ -117,5 +127,7 @@ public class AdapterFilter extends BaseAdapter implements Filterable {
     private class ViewHolder {
         TextView simple_list_item_1;
         TextView simple_list_item_2;
+        TextView tv_stock;
+        TextView tv_sell_price;
     }
 }

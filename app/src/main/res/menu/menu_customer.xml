@@ -5,11 +5,15 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never"
         android:title="Settings"
-        />
+        app:showAsAction="never"/>
     <item android:id="@+id/action_sync"
-        android:icon="@drawable/ic_sync_white_24dp"
-        android:title="Camera"
+          android:icon="@drawable/ic_sync_white_24dp"
+          android:title="Sync"
+          app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_swipe"
+        android:icon="@android:drawable/button_onoff_indicator_on"
+        android:title="Swipe"
         app:showAsAction="always"/>
 </menu>

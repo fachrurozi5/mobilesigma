@@ -19,4 +19,7 @@ public interface WarehouseAPI {
     @GET("whouses")
     Call<List<Warehouse>> _Records();
 
+    @GET("whouses/sync")
+    Call<List<Warehouse>> Sync();
+
 }

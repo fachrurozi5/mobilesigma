@@ -36,16 +36,20 @@ import com.fachru.sigmamobile.utils.Constanta;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by fachru on 28/12/15.
  */
 public class HeaderSOFragment extends BaseFragmentForm implements
         View.OnClickListener, DatePickerDialog.OnDateSetListener {
+
+    private static final String TAG = "SalesOrderActivity";
 
     protected boolean isUpdate = false;
     protected boolean isReadyAddItem = false;
@@ -114,7 +118,9 @@ public class HeaderSOFragment extends BaseFragmentForm implements
         adapter = ArrayAdapter.createFromResource(activity, R.array.type_of_price, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        soHeads = SoHead.getAllWhereCustomer(customer.custid);
+        soHeads = SoHead.getAllWhereCust(customer.custid);
+        for (SoHead soHead : soHeads)
+            Log.e(TAG, soHead.so + " Printed : " + soHead.printed + " uploaded : " + soHead.uploaded);
         adapterSoHead = new AdapterSoHead(activity, soHeads);
 
     }
@@ -159,9 +165,11 @@ public class HeaderSOFragment extends BaseFragmentForm implements
         initComp();
         initListener();
 
-        et_so.setText(SoHead.generateId());
+        et_so.setText(SoHead.generateId(employee.employee_id));
         et_customer.setText(customer.name);
         et_salesman.setText(employee.name);
+
+        et_po_date.setText(new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH).format(new Date()));
 
         btn_po_date_picker.setOnClickListener(this);
         btn_del_date_picker.setOnClickListener(this);
@@ -185,22 +193,21 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     protected void actionAdd() {
         if (!errorChecked()) {
             try {
-                soHead = new SoHead.Builder()
-                        .setSo(et_so.getText().toString())
-                        .setDate_order(CommonUtil.stringToDateLong(et_po_date.getText().toString()))
-                        .setDeldate(CommonUtil.stringToDateLong(et_del_date.getText().toString()))
-                        .setCustid(customer.custid)
-                        .setPurchaseOrder(et_customer_po.getText().toString())
-                        .setEmpid(employee.employee_id)
-                        .setWhid(warehouse.whid)
-                        .setPriceType(type_of_price)
-                        .Build();
-
+                soHead = new SoHead();
+                soHead.so = et_so.getText().toString();
+                soHead.so_date = new Date();
+                soHead.date_order = CommonUtil.stringToDateLong(et_po_date.getText().toString());
+                soHead.delivery_date = CommonUtil.stringToDateLong(et_del_date.getText().toString());
+                soHead.custid = customer.custid;
+                soHead.purchase_order = et_customer_po.getText().toString();
+                soHead.empid = employee.employee_id;
+                soHead.whid = warehouse.whid;
+                soHead.priceType = type_of_price;
+                soHead.printed = false;
                 soHead.save();
                 clearForm(layout);
 
                 adapterSoHead.add(soHead);
-
                 Log.e(Constanta.TAG, soHead.toString());
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -274,7 +281,7 @@ public class HeaderSOFragment extends BaseFragmentForm implements
     @Override
     protected void clearForm(ViewGroup group) {
         super.clearForm(group);
-        et_so.setText(SoHead.generateId());
+        et_so.setText(SoHead.generateId(employee.employee_id));
         et_customer.setText(customer.name);
         et_salesman.setText(employee.name);
         et_customer_po.requestFocus();

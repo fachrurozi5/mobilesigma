@@ -5,17 +5,15 @@ import android.util.Log;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.controller.interfaces.OnFetchListener;
 import com.fachru.sigmamobile.controller.interfaces.OnStoreListener;
-import com.fachru.sigmamobile.model.Customer;
+import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.utils.Constanta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 /**
@@ -24,7 +22,7 @@ import retrofit2.Retrofit;
 public class Controller {
 
     protected RestApiManager apiManager;
-    protected OnFetchListener<Customer> fetchListener;
+    protected OnFetchListener<Discount> fetchListener;
     protected OnStoreListener storeListener;
 
 
@@ -33,12 +31,18 @@ public class Controller {
         this.apiManager = new RestApiManager();
     }
 
+    public Controller(OnFetchListener<Discount> fetchListener) {
+        this.fetchListener = fetchListener;
+        this.apiManager = new RestApiManager();
+    }
+
     public void startFetching() {
         fetchListener.onFetchStart();
-        Call<List<Customer>> listCall = apiManager.getCustomerAPI()._Records();
-        listCall.enqueue(new Callback<List<Customer>>() {
+        Call<List<Discount>> listCall = apiManager.getDiscountAPI()._Records();
+        listCall.enqueue(new Callback<List<Discount>>() {
             @Override
-            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
+            public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
+                Log.i(Constanta.TAG, response.toString());
                 Log.i(Constanta.TAG, "Status " + response.code() + " " + response.message() + " " + response.headers());
                 if (response.isSuccess() && response.body() != null) {
                     fetchListener.onFetchProgress(response.body());
@@ -47,7 +51,7 @@ public class Controller {
             }
 
             @Override
-            public void onFailure(Call<List<Customer>> call, Throwable t) {
+            public void onFailure(Call<List<Discount>> call, Throwable t) {
                 fetchListener.onFetchFailed(t);
             }
         });

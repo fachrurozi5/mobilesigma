@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.fachru.sigmamobile.R;
@@ -14,26 +16,31 @@ import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.SoHead;
 import com.fachru.sigmamobile.model.Warehouse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fachru on 31/12/15.
  */
-public class AdapterSoHead extends BaseAdapter {
+public class AdapterSoHead extends BaseAdapter implements Filterable {
 
     private static LayoutInflater inflater = null;
     private Context context;
     private List<SoHead> list;
     private String[] strings;
+    private List<SoHead> listFiltered;
+    private ItemFilter filter = new ItemFilter();
 
     public AdapterSoHead(Context context, List<SoHead> list) {
         this.context = context;
         this.list = list;
+        this.listFiltered = this.list;
         strings = context.getResources().getStringArray(R.array.type_of_price);
     }
 
     public void update(List<SoHead> list) {
         this.list = list;
+        this.listFiltered = this.list;
         this.notifyDataSetChanged();
     }
 
@@ -43,27 +50,30 @@ public class AdapterSoHead extends BaseAdapter {
 
     public void add(SoHead soHead) {
         this.list.add(soHead);
+        this.listFiltered = this.list;
         this.notifyDataSetChanged();
     }
 
     public void set(SoHead soHead) {
         this.list.set(this.list.indexOf(soHead), soHead);
+        this.listFiltered = this.list;
         this.notifyDataSetChanged();
     }
 
     public void delete(SoHead soHead) {
         this.list.remove(soHead);
+        this.listFiltered = this.list;
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return listFiltered.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return listFiltered.get(i);
     }
 
     @Override
@@ -109,6 +119,41 @@ public class AdapterSoHead extends BaseAdapter {
         holder.tv_warehouse.setText(Warehouse.getWarehouseName(soHead.whid));
         holder.tv_type_of_price.setText(strings[soHead.priceType - 1]);
         return view;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private class ItemFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<SoHead> doHeads = new ArrayList<>();
+
+            for (SoHead soHead : getList()) {
+                if (soHead.so.toLowerCase().contains(filterString) ||
+                        soHead.purchase_order.toLowerCase().contains(filterString))
+                    doHeads.add(soHead);
+            }
+
+            results.values = doHeads;
+            results.count = doHeads.size();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            listFiltered = (List<SoHead>) results.values;
+            notifyDataSetChanged();
+        }
     }
 
     private class Holder {

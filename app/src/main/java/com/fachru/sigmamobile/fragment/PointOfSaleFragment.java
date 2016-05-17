@@ -14,11 +14,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -26,9 +29,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.R;
 import com.fachru.sigmamobile.adapters.AdapterDoItem;
 import com.fachru.sigmamobile.adapters.AdapterFilterProduct;
+import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.UnitConverter;
 import com.fachru.sigmamobile.model.WarehouseStock;
 import com.fachru.sigmamobile.utils.BaseFragmentForm;
 import com.fachru.sigmamobile.utils.CommonUtil;
@@ -55,12 +60,13 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     protected View view;
     protected RelativeLayout layout;
     protected AutoCompleteTextView act_product;
+    protected Spinner sp_unit_conv;
     protected EditText et_product_price;
     protected EditText et_qty;
-    /*protected EditText et_disc_nusantara;
+    protected EditText et_disc_nusantara;
     protected EditText et_disc_nusantara_value;
     protected EditText et_disc_principal;
-    protected EditText et_disc_principal_value;*/
+    protected EditText et_disc_principal_value;
     protected EditText et_sub_total;
     protected EditText et_total;
     protected Button btn_add;
@@ -74,11 +80,13 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     protected DoHead doHead;
     protected DoItem doItem;
     protected Product product;
+    protected UnitConverter unitConverter;
 
     /*
     * list of object
     * */
     protected List<DoItem> doItems;
+    protected List<String> unitConverters = new ArrayList<>();
     protected List<HashMap<String, String>> hashMapList;
 
     /*
@@ -86,21 +94,30 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     * */
     protected AdapterFilterProduct productFilter;
     protected AdapterDoItem adapterDoItem;
+    protected ArrayAdapter<String> unitConverterArrayAdapter;
 
     /*
     * label
     * */
-    int QTY;
-    double total = 0;
-    double sub_total = 0;
-    boolean isUpdate = false;
-    private int noitem = 0;
+    private int QTY;
+    private double total = 0;
+    private double sub_total = 0;
+    private double price;
+    private boolean isUpdate = false;
+    private String unit_conversion;
+    private long nusantara_value;
+    private long principal_value;
+    private double disc_nusantara;
+    private double disc_principal;
+    private double[] discount;
     /*
     * mListener
     * */
     private OnItemClickListener onActProductItemClicked;
     private OnItemLongClickListener onDoItemLongClicked;
+    private OnItemSelectedListener onUnitConvSelected;
     private TextWatcher qtyWatcher;
+    private TextWatcher productWatcher;
 
 
     @Override
@@ -112,6 +129,8 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         hashMapList = new ArrayList<>();
 
         adapterDoItem = new AdapterDoItem(activity, doItems);
+        unitConverterArrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, unitConverters);
+        unitConverterArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productFilter = new AdapterFilterProduct(activity.getApplicationContext(), hashMapList);
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
@@ -121,9 +140,14 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         view = inflater.inflate(R.layout.fragment_point_of_sale, container, false);
         iniComp();
         initListener();
+
+        act_product.addTextChangedListener(productWatcher);
         et_qty.addTextChangedListener(qtyWatcher);
+
         act_product.setOnItemClickListener(onActProductItemClicked);
+        sp_unit_conv.setOnItemSelectedListener(onUnitConvSelected);
         lv_do_items.setOnItemLongClickListener(onDoItemLongClicked);
+
         btn_add.setOnClickListener(this);
         btn_edit.setOnClickListener(this);
         btn_del.setOnClickListener(this);
@@ -143,6 +167,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         }
 
         lv_do_items.setAdapter(adapterDoItem);
+        sp_unit_conv.setAdapter(unitConverterArrayAdapter);
         act_product.setAdapter(productFilter);
 
         return view;
@@ -184,7 +209,9 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         if (!errorChecked()) {
             doItem = new DoItem.Builder()
                     .setDocno(doHead.doc_no)
-                    .setProduct_id(product.prodid)
+                    .setProductId(product.prodid)
+                    .setUnitId(unit_conversion)
+                    .setPriceList(price)
                     .setQty(QTY)
                     .setSubTotal(sub_total)
                     .build();
@@ -204,6 +231,8 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     protected void actionUpdate() {
         if (!errorChecked()) {
             doItem.product_id = product.prodid;
+            doItem.pricelist = price;
+            doItem.unit_id = unit_conversion;
             doItem.qty = QTY;
             doItem.sub_total = sub_total;
             doItem.save();
@@ -223,6 +252,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        doItem.delete();
                         adapterDoItem.delete(doItem);
                     }
                 }).show();
@@ -231,7 +261,6 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     @Override
     protected void clearForm(ViewGroup group) {
         super.clearForm(group);
-        doItem = null;
         product = null;
         act_product.requestFocus();
         QTY = 0;
@@ -269,16 +298,35 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             }
         };
 
+        productWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    if (s.length() == 0) sp_unit_conv.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    sp_unit_conv.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+
         onActProductItemClicked = new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, String> map = (HashMap<String, String>) adapterView.getItemAtPosition(i);
                 product = Product.find(map.get(Constanta.SIMPLE_LIST_ITEM_1));
                 act_product.setText(product.name);
-                et_product_price.setGravity(Gravity.RIGHT);
-                et_product_price.setText(CommonUtil.priceFormat2Decimal(product.sellprice));
-                calcAll();
-                et_qty.requestFocus();
+                setUpAdapterUnitConv();
+
             }
         };
 
@@ -291,17 +339,53 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
             }
         };
 
+        onUnitConvSelected = new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                unit_conversion = (String) parent.getItemAtPosition(position);
+                if (product.unitid.equals(unit_conversion)) {
+                    price = product.sellprice;
+                } else {
+                    unitConverter = UnitConverter.find(product.unitid, unit_conversion);
+                    price = product.sellprice / unitConverter.factor;
+                }
+                et_product_price.setText(CommonUtil.priceFormat2Decimal(price));
+                et_product_price.setGravity(Gravity.RIGHT);
+                et_qty.requestFocus();
+                discount = Discount.getDiscounts(product.prodid, (long) product.sellprice);
+                et_disc_nusantara.setText(CommonUtil.percentFormat(discount[0]));
+                et_disc_principal.setText(CommonUtil.percentFormat(discount[1]));
+                calcAll();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
+
+    }
+
+    private void setUpAdapterUnitConv() {
+        unitConverters.clear();
+        unitConverters.add(product.unitid);
+        unitConverters.addAll(UnitConverter.getAllByUnitIdArray(product.unitid));
+        unitConverterArrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, unitConverters);
+        unitConverterArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_unit_conv.setVisibility(View.VISIBLE);
+        sp_unit_conv.setAdapter(unitConverterArrayAdapter);
     }
 
     private void iniComp() {
         layout = (RelativeLayout) view.findViewById(R.id.vg_fragment_pos);
+        sp_unit_conv = (Spinner) view.findViewById(R.id.sp_unit_conv);
         act_product = (AutoCompleteTextView) view.findViewById(R.id.act_product);
         et_product_price = (EditText) view.findViewById(R.id.et_product_price);
         et_qty = (EditText) view.findViewById(R.id.et_qty);
-        /*et_disc_nusantara = (EditText) view.findViewById(R.id.et_disc_nusantara);
+        et_disc_nusantara = (EditText) view.findViewById(R.id.et_disc_nusantara);
         et_disc_nusantara_value = (EditText) view.findViewById(R.id.et_disc_nusantara_value);
         et_disc_principal = (EditText) view.findViewById(R.id.et_disc_principal);
-        et_disc_principal_value = (EditText) view.findViewById(R.id.et_disc_principal_value);*/
+        et_disc_principal_value = (EditText) view.findViewById(R.id.et_disc_principal_value);
         et_sub_total = (EditText) view.findViewById(R.id.et_sub_total);
         et_total = (EditText) view.findViewById(R.id.et_total);
         lv_do_items = (ListView) view.findViewById(R.id.lv_do_items);
@@ -314,11 +398,29 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         this.listener = listener;
     }
 
-    /* TODO: private long calcDiscNusantara(String s) {
+
+    private void calcAll() {
+        if (product != null) {
+
+            if (!et_disc_nusantara.getText().toString().equals("") ||
+                    et_disc_nusantara.getText() != null)
+                nusantara_value = calcDiscNusantara(et_disc_nusantara.getText().toString());
+
+            if (!et_disc_principal.getText().toString().equals("") ||
+                    et_disc_principal.getText() != null)
+                principal_value = calcDiscPrincipal(et_disc_principal.getText().toString());
+
+            if (!et_qty.getText().toString().equals("") &&
+                    et_qty.getText() != null)
+                QTY = callSubTotal(Integer.parseInt(et_qty.getText().toString()));
+        }
+    }
+
+    private long calcDiscNusantara(String s) {
         long value = 0;
         try {
-            disc_nusantara = Double.parseDouble(s);
-            value = (long) ((product.price * disc_nusantara) / 100);
+            disc_nusantara = discount[0];
+            value = (long) ((product.sellprice * disc_nusantara) / 100);
             et_disc_nusantara_value.setGravity(Gravity.RIGHT);
             et_disc_nusantara_value.setText(CommonUtil.priceFormat2Decimal(value));
         } catch (Exception e) {
@@ -332,8 +434,8 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     private long calcDiscPrincipal(String s) {
         long value = 0;
         try {
-            disc_principal = Double.parseDouble(s);
-            value = (long) ((product.price * disc_principal) / 100);
+            disc_principal = discount[1];
+            value = (long) ((product.sellprice * disc_principal) / 100);
             et_disc_principal_value.setGravity(Gravity.RIGHT);
             et_disc_principal_value.setText(CommonUtil.priceFormat2Decimal(value));
         } catch (Exception e) {
@@ -342,27 +444,11 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         }
 
         return value;
-    }*/
-
-    private void calcAll() {
-        if (product != null) {
-            /*if (!et_disc_nusantara.getText().toString().equals("") ||
-                    et_disc_nusantara.getText() != null)
-                nusantara_value = calcDiscNusantara(et_disc_nusantara.getText().toString());
-
-            if (!et_disc_principal.getText().toString().equals("") ||
-                    et_disc_principal.getText() != null)
-                principal_value = calcDiscPrincipal(et_disc_principal.getText().toString());*/
-
-            if (!et_qty.getText().toString().equals("") &&
-                    et_qty.getText() != null)
-                QTY = callSubTotal(Integer.parseInt(et_qty.getText().toString()));
-        }
     }
 
     private int callSubTotal(int QTY) {
         if (QTY > 0 || product != null) {
-            sub_total = QTY * product.sellprice;/*(product.price - (nusantara_value + principal_value));*/
+            sub_total = QTY * (price - (nusantara_value + principal_value));
             et_sub_total.setGravity(Gravity.RIGHT);
             et_sub_total.setText(CommonUtil.priceFormat2Decimal(sub_total));
         }
@@ -371,6 +457,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
 
     private void onEdit() {
         enableForm(layout);
+        lv_do_items.setEnabled(false);
         isUpdate = true;
         et_qty.requestFocus();
         et_qty.selectAll();
@@ -383,6 +470,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         btn_edit.setBackground(getResources().getDrawable(R.drawable.button_edit));
         btn_del.setBackground(getResources().getDrawable(R.drawable.button_delete));
         isUpdate = false;
+        lv_do_items.setEnabled(true);
     }
 
     private boolean errorChecked() {
@@ -396,15 +484,7 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
         } else if (Long.parseLong(et_qty.getText().toString()) > WarehouseStock.findById(doHead.whid, product.prodid).balance) {
             et_qty.setError(getString(R.string.error_input_qty_and_stock));
             return true;
-        }/* TODO: else if (et_disc_nusantara.getText().toString().equals("") ||
-                et_disc_nusantara.getText() == null) {
-            et_disc_nusantara.setError(getString(R.string.error_input_disc));
-            return true;
-        } else if (et_disc_principal.getText().toString().equals("") ||
-                et_disc_principal.getText() == null) {
-            et_disc_principal.setError(getString(R.string.error_input_disc));
-            return true;
-        }*/ else {
+        } else {
             return false;
         }
     }
@@ -412,11 +492,15 @@ public class PointOfSaleFragment extends BaseFragmentForm implements OnClickList
     private void editDoItem(DoItem doItem) {
         product = Product.find(doItem.product_id);
         act_product.setText(product.name);
-        et_product_price.setText(CommonUtil.priceFormat2Decimal(product.sellprice));
+        setUpAdapterUnitConv();
+        unit_conversion = doItem.unit_id;
+        int posUnit = unitConverterArrayAdapter.getPosition(unit_conversion);
+        sp_unit_conv.setSelection(posUnit);
+        et_product_price.setText(CommonUtil.priceFormat2Decimal(doItem.pricelist));
         et_qty.setText(String.valueOf(doItem.qty));
-        /*
-        et_disc_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
-        et_disc_principal.setText(CommonUtil.percentFormat(doItem.discount_principal));*/
+        discount = Discount.getDiscounts(product.prodid, (long) product.sellprice);
+        et_disc_nusantara.setText(CommonUtil.percentFormat(discount[0]));
+        et_disc_principal.setText(CommonUtil.percentFormat(discount[1]));
         calcAll();
         disableForm(layout);
         setButtonDisable(btn_add);

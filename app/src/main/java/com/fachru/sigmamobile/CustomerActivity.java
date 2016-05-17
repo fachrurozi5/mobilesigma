@@ -4,13 +4,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
@@ -33,22 +40,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerActivity extends AppCompatActivity implements
-        OnQueryTextListener, OnCustomerCallbackListener, OnItemLongClickListener, AdapterView.OnItemClickListener {
+        OnQueryTextListener, OnCustomerCallbackListener, OnItemLongClickListener, AdapterView.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
 
     public static final String CUSTID = "key_custid";
+    private static final int limit = 5000;
+    private static int offset = 0;
+    private static int list_position = 0;
+    private Context context = this;
+    private LoadCustomerTask customerTask;
     /*
     * label
     * */
-    String text_time = "";
-    String text_date = "";
-    String text_location = "";
-    private Context context = this;
+    private String text_time = "";
+    private String text_date = "";
+    private String text_location = "";
+    private boolean swipe_refresh = true;
+
     /*
     * widget
     * */
+    private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
     private SearchView searchView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listview;
     private MenuItem menuItem;
     private TextView tv_name;
@@ -138,15 +154,61 @@ public class CustomerActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_customer);
         initComp();
 
+        customerTask = new LoadCustomerTask();
+
         controller = new CustomerController(this);
 
-        adapter = new AdapterCustomer(context, Customer.getAll());
+        adapter = new AdapterCustomer(context, list);
 
         searchView.setOnQueryTextListener(this);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+
+                customerTask.execute(limit, offset);
+            }
+        });
 
         listview.setAdapter(adapter);
         listview.setOnItemLongClickListener(this);
         listview.setOnItemClickListener(this);
+        listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                list_position = firstVisibleItem + visibleItemCount;
+            }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listview.smoothScrollToPosition(list_position - 50);
+            }
+        });
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listview.smoothScrollToPosition(0);
+                return false;
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 
@@ -177,6 +239,7 @@ public class CustomerActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        customerTask.onCancelled();
     }
 
     @Override
@@ -206,6 +269,18 @@ public class CustomerActivity extends AppCompatActivity implements
                 menuItem.setActionView(R.layout.progressbar);
                 menuItem.expandActionView();
                 return true;
+            case R.id.action_swipe:
+                if (swipe_refresh) {
+                    swipe_refresh = false;
+                    swipeRefreshLayout.setEnabled(false);
+                    item.setIcon(android.R.drawable.button_onoff_indicator_off);
+                    showSnackBar("Swipe Refresh Off", true).show();
+                } else {
+                    swipe_refresh = true;
+                    swipeRefreshLayout.setEnabled(true);
+                    item.setIcon(android.R.drawable.button_onoff_indicator_on);
+                    showSnackBar("Swipe Refresh On", false).show();
+                }
             case R.id.action_settings:
                 return true;
         }
@@ -267,10 +342,17 @@ public class CustomerActivity extends AppCompatActivity implements
         Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onRefresh() {
+        new LoadCustomerTask().execute(limit, offset);
+    }
+
     private void initComp() {
 
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         searchView = (SearchView) findViewById(R.id.search_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         listview = (ListView) findViewById(R.id.lv_customer);
 
         setSupportActionBar(toolbar);
@@ -522,5 +604,53 @@ public class CustomerActivity extends AppCompatActivity implements
         intent.putExtra(Constanta.RESULT_ADDRESS, text_location);
         setResult(Constanta.RESULT_OK, intent);
         finish();
+    }
+
+    private Snackbar showSnackBar(String message, final boolean b) {
+        return Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
+                .setAction("BATAL", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        swipe_refresh = b;
+                    }
+                });
+    }
+
+    private class LoadCustomerTask extends AsyncTask<Integer, Customer, Integer> {
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+
+            for (Customer customer : Customer.getAll(params[0], params[1])) {
+                offset++;
+                publishProgress(customer);
+                /*try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+            }
+            Log.e(Constanta.TAG, "Offset " + offset);
+            return 0;
+        }
+
+        @Override
+        protected void onProgressUpdate(Customer... values) {
+            adapter.add(values[0]);
+            listview.setSelection(adapter.getCount() - 1);
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            menuItem.collapseActionView();
+            menuItem.setActionView(null);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        @Override
+        protected void onCancelled() {
+            Log.e(Constanta.TAG, "OnCancelled");
+            offset = 0;
+        }
     }
 }

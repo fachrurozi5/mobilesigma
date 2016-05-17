@@ -1,7 +1,6 @@
 package com.fachru.sigmamobile;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,35 +8,24 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.controller.Controller;
-import com.fachru.sigmamobile.controller.interfaces.OnStoreListener;
-import com.fachru.sigmamobile.model.DoHead;
-import com.fachru.sigmamobile.service.SigmaSync;
+import com.fachru.sigmamobile.controller.interfaces.OnFetchListener;
+import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.utils.Constanta;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-public class ActivityTest extends AppCompatActivity implements OnStoreListener{
+import java.util.List;
+
+public class ActivityTest extends AppCompatActivity implements OnFetchListener<Discount> {
 
 
     private MaterialDialog dialog;
 
     private Controller controller;
-    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_test);
-
         controller = new Controller(this);
-        GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .excludeFieldsWithoutExposeAnnotation();
-        gson = builder.create();
-
-        startService(new Intent(this, SigmaSync.class));
-
-        Log.e(Constanta.TAG, DoHead.getAllNotUpload().toString());
-
     }
 
     public void onShowPdf(View view) {
@@ -45,16 +33,13 @@ public class ActivityTest extends AppCompatActivity implements OnStoreListener{
     }
 
     public void onStore(View view) {
-
-        DoHead doHead = DoHead.last();
-        Log.e(Constanta.TAG, gson.toJson(doHead));
-        controller.startStore(doHead);
+        controller.startFetching();
     }
 
     @Override
-    public void onStoreStart() {
+    public void onFetchStart() {
         dialog = new MaterialDialog.Builder(this)
-                .title("Store DoHead")
+                .title("Geting Discount")
                 .content("Please Wait")
                 .progress(true, 0)
                 .progressIndeterminateStyle(true)
@@ -62,14 +47,23 @@ public class ActivityTest extends AppCompatActivity implements OnStoreListener{
     }
 
     @Override
-    public void onStoreComplete() {
+    public void onFetchProgress(Discount discount) {
+
+    }
+
+    @Override
+    public void onFetchProgress(List<Discount> list) {
+        Log.e(Constanta.TAG, list.toString());
+    }
+
+    @Override
+    public void onFetchComplete() {
         dialog.dismiss();
     }
 
     @Override
-    public void onStoreFailed(Throwable t) {
+    public void onFetchFailed(Throwable t) {
         dialog.dismiss();
         Log.e(Constanta.TAG, t.getMessage(), t);
     }
-
 }

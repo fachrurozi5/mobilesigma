@@ -14,11 +14,9 @@ import java.util.List;
 @Table(name = "Warehouse")
 public class Warehouse extends MasterModel<Warehouse> {
 
-    public static final String PRIMARYKEY = "whid";
-
     @Expose
     @SerializedName("WHID")
-    @Column(name = "whid")
+    @Column(name = "whid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public String whid;
 
     @Expose
