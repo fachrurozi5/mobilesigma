@@ -15,7 +15,10 @@ import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.model.DiscountStructure;
+import com.fachru.sigmamobile.model.DiscountStructureLPD;
+import com.fachru.sigmamobile.model.DiscountStructureMul;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.TableInfo;
 import com.fachru.sigmamobile.model.UnitConverter;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.model.WarehouseStock;
@@ -38,6 +41,8 @@ public class SplashScreen extends AppCompatActivity {
     private static final int KEY_PRODUCT = 3;
     private static final int KEY_UNIT_CONVERSION = 4;
     private static final int KEY_DISCOUNT = 5;
+    private static final int KEY_TABLE_INFO = 6;
+
     /*
     * label
     * */
@@ -66,6 +71,7 @@ public class SplashScreen extends AppCompatActivity {
     private Call<List<Warehouse>> whouseCall;
     private Call<List<Discount>> discountCall;
     private Call<List<UnitConverter>> unitConverterCall;
+    private Call<List<TableInfo>> tableInfoCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +129,12 @@ public class SplashScreen extends AppCompatActivity {
                         stringLabel = "Sync Discount";
                         downloadDiscount();
                         break;
+                    case KEY_TABLE_INFO:
+                        stringLabel = "Sync Field";
+                        downloadTableInfo();
+                        break;
                     default:
-                        stringLabel = manager.hasCustomer() ? "Finising Sync" : "Starting";
+                        stringLabel = manager.hasCustomer() ? "Finishing Sync" : "Starting";
                 }
 
                 while (progress < progressBar.getMax()) {
@@ -306,17 +316,38 @@ public class SplashScreen extends AppCompatActivity {
         discountCall.enqueue(new Callback<List<Discount>>() {
             @Override
             public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
+                if (response.isSuccess() && response.body() != null) {
+                    storeDiscount(response.body());
+                } else {
+                    LoadingThread(1000, KEY_TABLE_INFO, false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Discount>> call, Throwable t) {
+                Log.e(Constanta.TAG, "On Discount Failur", t);
+                showError("Discount", t.getMessage());
+            }
+        });
+    }
+
+    private void downloadTableInfo() {
+        Log.i(Constanta.TAG, "downloadTableInfo");
+        tableInfoCall = apiManager.getTableInfoAPI().Sync();
+        tableInfoCall.enqueue(new Callback<List<TableInfo>>() {
+            @Override
+            public void onResponse(Call<List<TableInfo>> call, Response<List<TableInfo>> response) {
                 Log.d(Constanta.TAG, "Responses : " + response.message());
                 if (response.isSuccess() && response.body() != null) {
                     Log.e(Constanta.TAG, "Response : " + response.body().toString());
-                    storeDiscount(response.body());
+                    storeTableInfo(response.body());
                 } else {
                     LoadingThread(10, 100, true);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Discount>> call, Throwable t) {
+            public void onFailure(Call<List<TableInfo>> call, Throwable t) {
                 Log.e(Constanta.TAG, "On Discount Failur", t);
                 showError("Discount", t.getMessage());
             }
@@ -554,9 +585,21 @@ public class SplashScreen extends AppCompatActivity {
                         discount.save();
                         progress++;
                         for (DiscountStructure discountStructure : discount.structures) {
+                            Log.e(Constanta.TAG, discountStructure.toString());
                             discountStructure.discount = discount;
                             discountStructure.save();
+                        }
 
+                        for (DiscountStructureLPD discountStructureLPD : discount.structuresLPD) {
+                            Log.e(Constanta.TAG, discountStructureLPD.toString());
+                            discountStructureLPD.discount = discount;
+                            discountStructureLPD.save();
+                        }
+
+                        for (DiscountStructureMul discountStructureMul : discount.structuresMul) {
+                            Log.e(Constanta.TAG, discountStructureMul.toString());
+                            discountStructureMul.discount = discount;
+                            discountStructureMul.save();
                         }
                         final int finalProgress = progress;
                         handler.post(new Runnable() {
@@ -565,6 +608,40 @@ public class SplashScreen extends AppCompatActivity {
                                 progressBar.setProgress((finalProgress * 100) / max);
                                 progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
                                 label.setText("Updating Discount");
+                            }
+                        });
+                    }
+                    ActiveAndroid.setTransactionSuccessful();
+                } finally {
+                    ActiveAndroid.endTransaction();
+                }
+                LoadingThread(1000, KEY_TABLE_INFO, false);
+            }
+        }).start();
+    }
+
+    private void storeTableInfo(final List<TableInfo> list) {
+        Log.i(Constanta.TAG, "storeTableInfo");
+        thread.interrupt();
+        progressBar.setProgress(0);
+        final int max = list.size();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ActiveAndroid.beginTransaction();
+                try {
+                    int progress = 0;
+                    for (TableInfo tableInfo : list) {
+                        TableInfo.save(tableInfo);
+                        progress++;
+                        final int finalProgress = progress;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setProgress((finalProgress * 100) / max);
+                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+                                label.setText("Updating Field");
                             }
                         });
                     }

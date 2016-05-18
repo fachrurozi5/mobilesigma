@@ -327,7 +327,7 @@ public class PointOfSaleActivity extends AppCompatActivity implements
                 table.addCell(createCell(item.unit_id, font, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(String.valueOf(item.qty), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(CommonUtil.priceFormat(item.pricelist), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-                table.addCell(createCell(CommonUtil.percentFormat(/*item.discount_principal + item.discount_nusantara*/0), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+                table.addCell(createCell(CommonUtil.percentFormat(/*item.discountPrinc + item.discountNst*/0), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
                 table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), font, Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
             }
 

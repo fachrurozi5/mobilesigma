@@ -323,7 +323,7 @@ public class Customer extends Model {
 
     @Expose
     @SerializedName("DATECREATE")
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     public Date created_at;
 
     @Expose
@@ -333,7 +333,7 @@ public class Customer extends Model {
 
     @Expose
     @SerializedName("DATEUPDATE")
-    @Column(name = "updated_at")
+    @Column(name = "updatedAt")
     public Date updated_at;
 
 
@@ -478,9 +478,9 @@ public class Customer extends Model {
                 ", ev_sales_id='" + ev_sales_id + '\'' +
                 ", ev_aktive='" + ev_aktive + '\'' +
                 ", creator='" + creator + '\'' +
-                ", created_at=" + created_at +
+                ", createdAt=" + created_at +
                 ", updater='" + updater + '\'' +
-                ", updated_at=" + updated_at +
+                ", updatedAt=" + updated_at +
                 '}';
     }
 

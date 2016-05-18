@@ -20,7 +20,7 @@ public class DiscountStructure extends Model {
 
     @Expose
     @SerializedName("no_item")
-    @Column(name = "noitem")
+    @Column(name = "noItem")
     public String no_item;
 
     @Expose
@@ -62,7 +62,7 @@ public class DiscountStructure extends Model {
         return new Select()
                 .from(DiscountStructure.class)
                 .where("id_disc = ? ", id_disc)
-                .and("noitem = ? ", noitem)
+                .and("noItem = ? ", noitem)
                 .executeSingle();
     }
 

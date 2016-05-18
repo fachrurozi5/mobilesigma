@@ -107,12 +107,12 @@ public class DoHead extends Model {
 
     @Expose
     @SerializedName("DATECREATE")
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     public Date created_at = new Date();
 
     @Expose
     @SerializedName("DATEUPDATE")
-    @Column(name = "updated_at")
+    @Column(name = "updatedAt")
     public Date updated_at = new Date();
 
     @Expose
@@ -277,8 +277,8 @@ public class DoHead extends Model {
                 ", period='" + period + '\'' +
                 ", docprint=" + docprint +
                 ", dibayar=" + dibayar +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
+                ", createdAt=" + created_at +
+                ", updatedAt=" + updated_at +
                 ", uploaded=" + uploaded +
                 '}';
     }

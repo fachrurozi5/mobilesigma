@@ -221,10 +221,11 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
                     .setPriceList(price)
                     .setUnitId(unit_conversion)
                     .setQty(qty)
+                    .setBonus(Discount.getMulDiscount(product.prodid, qty, unit_conversion))
+                    .setDiscountNst(disc_nusantara)
+                    .setDiscountPrinc(disc_principal)
                     .setSubTotal(sub_total)
                     .build();
-            soItem.discount_nusantara = disc_nusantara;
-            soItem.discount_principal = disc_principal;
             soItem.save();
 
             adapterSoItem.add(soItem);
@@ -240,13 +241,14 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
     @Override
     protected void actionUpdate() {
         if (!errorChecked()) {
-            soItem.product_id = product.prodid;
-            soItem.pricelist = price;
-            soItem.unit_id = unit_conversion;
+            soItem.productId = product.prodid;
+            soItem.priceList = price;
+            soItem.unitId = unit_conversion;
             soItem.qty = qty;
-            soItem.discount_nusantara = disc_nusantara;
-            soItem.discount_principal = disc_principal;
-            soItem.sub_total = sub_total;
+            soItem.discountNst = disc_nusantara;
+            soItem.discountPrinc = disc_principal;
+            soItem.subTotal = sub_total;
+            soItem.mulBonus = Discount.getMulDiscount(product.prodid, qty, unit_conversion);
             soItem.save();
             adapterSoItem.set(soItem);
             onCancelOrAfterEdit();
@@ -420,11 +422,11 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
     private int callSubTotal(int QTY) {
         if (QTY > 0 || product != null) {
             /*if (!unit_conversion.equalsIgnoreCase("pcs")) {
-                sub_total = QTY * price;
-                discount = Discount.getDiscounts(product.prodid, (long) sub_total, unit_conversion.equalsIgnoreCase("pcs"));
+                subTotal = QTY * price;
+                discount = Discount.getDiscounts(product.prodId, (long) subTotal, unit_conversion.equalsIgnoreCase("pcs"));
             } else {
-                sub_total = QTY * price;
-                discount = Discount.getDiscounts(product.prodid, (long) sub_total, false);
+                subTotal = QTY * price;
+                discount = Discount.getDiscounts(product.prodId, (long) subTotal, false);
             }*/
 
             sub_total = QTY * price;
@@ -506,16 +508,16 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
     }
 
     private void editDoItem(SoItem soItem) {
-        product = Product.find(soItem.product_id);
+        product = Product.find(soItem.productId);
         act_product.setText(product.name);
         sp_unit_conv.setVisibility(View.VISIBLE);
         setUpAdapterUnitConv();
-        unit_conversion = soItem.unit_id;
+        unit_conversion = soItem.unitId;
         int posUnit = unitConverterArrayAdapter.getPosition(unit_conversion);
         sp_unit_conv.setSelection(posUnit);
-        et_product_price.setText(CommonUtil.priceFormat2Decimal(soItem.pricelist));
+        et_product_price.setText(CommonUtil.priceFormat2Decimal(soItem.priceList));
         et_qty.setText(String.valueOf(soItem.qty));
-//        discount = Discount.getDiscounts(product.prodid, (long) product.sellprice, unit_conversion.equalsIgnoreCase("Pcs"));
+//        discount = Discount.getDiscounts(product.prodId, (long) product.sellprice, unit_conversion.equalsIgnoreCase("Pcs"));
         et_disc_nusantara.setText(CommonUtil.percentFormat(discount[0]));
         et_disc_principal.setText(CommonUtil.percentFormat(discount[1]));
         calcAll();
@@ -591,7 +593,7 @@ public class SalesOrderFragment extends BaseFragmentForm implements OnClickListe
         if (adapterSoItem.getList().size() != 0) {
             total = 0;
             for (SoItem item : adapterSoItem.getList()) {
-                total += item.sub_total;
+                total += item.subTotal;
             }
         }
         et_total.setText(CommonUtil.priceFormat2Decimal(total));

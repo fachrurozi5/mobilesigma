@@ -120,7 +120,7 @@
     <string name="title_location_dialog">GPS</string>
     <string name="content_location_dialog">GPS pada handhel ini tidak aktif, apakah anda akan mengaktifkannya?</string>
     <string name="title_activity_camera">Camera</string>
-    <string name="title_activity_customer">Pilih Customer</string>
+    <string name="title_activity_customer">Registered Outlet</string>
     <string name="id">ID.</string>
     <string name="name">Nama</string>
     <string name="search">Cari Disini …</string>

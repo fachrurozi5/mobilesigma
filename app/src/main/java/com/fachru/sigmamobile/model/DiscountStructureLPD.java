@@ -18,7 +18,8 @@ public class DiscountStructureLPD extends Model {
     public String _id_disc;
 
     @Expose
-    @Column(name = "product_id")
+    @SerializedName("product_id")
+    @Column(name = "productId")
     public String product_id;
 
     @Expose
@@ -52,7 +53,7 @@ public class DiscountStructureLPD extends Model {
     public String toString() {
         return "DiscountStructureLPD{" +
                 "_id_disc='" + _id_disc + '\'' +
-                ", product_id='" + product_id + '\'' +
+                ", productId='" + product_id + '\'' +
                 ", principal_value=" + principal_value +
                 ", principal_percent=" + principal_percent +
                 ", nusantara_value=" + nusantara_value +

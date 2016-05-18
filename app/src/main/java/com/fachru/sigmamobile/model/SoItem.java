@@ -27,23 +27,23 @@ public class SoItem extends Model {
 
     @Expose
     @SerializedName("NOITEM")
-    @Column(name = "noitem")
-    public String noitem;
+    @Column(name = "noItem")
+    public String noItem;
 
     @Expose
     @SerializedName("PRODID")
-    @Column(name = "product_id")
-    public String product_id;
+    @Column(name = "productId")
+    public String productId;
 
     @Expose
     @SerializedName("PRICELIST")
-    @Column(name = "pricelist")
-    public double pricelist;
+    @Column(name = "priceList")
+    public double priceList;
 
     @Expose
     @SerializedName("UNITID")
     @Column(name = "unitid")
-    public String unit_id;
+    public String unitId;
 
     @Expose
     @SerializedName("QUANTITY")
@@ -52,29 +52,30 @@ public class SoItem extends Model {
 
     @Expose
     @SerializedName("DATECREATE")
-    @Column(name = "created_at")
-    public Date created_at = new Date();
+    @Column(name = "createdAt")
+    public Date createdAt = new Date();
 
     @Expose
     @SerializedName("DATEUPDATE")
-    @Column(name = "updated_at")
-    public Date updated_at = new Date();
+    @Column(name = "updatedAt")
+    public Date updatedAt = new Date();
 
     @Expose
     @SerializedName("uploaded")
     @Column(name = "uploaded")
     public boolean uploaded = false;
 
-    @Column(name = "sub_total")
-    public double sub_total;
+    @Column(name = "subTotal")
+    public double subTotal;
 
     @Column(name = "p_disc")
-    public double discount_principal;
+    public double discountPrinc;
+
     @Column(name = "n_disc")
-    public double discount_nusantara;
+    public double discountNst;
 
     @Column(name = "bonus")
-    public int mul_bonus = 0;
+    public int mulBonus = 0;
 
     public SoItem() {
         super();
@@ -83,11 +84,14 @@ public class SoItem extends Model {
     public SoItem(Builder builder) {
         super();
         so = builder.so;
-        product_id = builder.prodid;
-        pricelist = builder.price_list;
+        productId = builder.prodId;
+        priceList = builder.priceList;
         qty = builder.qty;
-        sub_total = builder.total;
-        unit_id = builder.unitid;
+        mulBonus = builder.bonus;
+        discountPrinc = builder.discountPrinc;
+        discountNst = builder.discountNst;
+        subTotal = builder.total;
+        unitId = builder.unitid;
     }
 
     public static List<SoItem> getAllNotUpload() {
@@ -103,7 +107,7 @@ public class SoItem extends Model {
             return new Select()
                     .from(SoItem.class)
                     .where("so = ? ", so)
-                    .and("noitem = ? ", noitem)
+                    .and("noItem = ? ", noitem)
                     .executeSingle();
         } catch (Exception e) {
             Log.e(TAG, "So FIND", e);
@@ -127,31 +131,37 @@ public class SoItem extends Model {
     public String toString() {
         return "SoItem{" +
                 "so='" + so + '\'' +
-                ", noitem='" + noitem + '\'' +
-                ", product_id='" + product_id + '\'' +
-                ", pricelist=" + pricelist +
-                ", unit_id='" + unit_id + '\'' +
+                ", noItem='" + noItem + '\'' +
+                ", productId='" + productId + '\'' +
+                ", priceList=" + priceList +
+                ", unitId='" + unitId + '\'' +
                 ", qty=" + qty +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", uploaded=" + uploaded +
-                ", sub_total=" + sub_total +
-                ", discount_principal=" + discount_principal +
-                ", discount_nusantara=" + discount_nusantara +
-                ", mul_bonus=" + mul_bonus +
+                ", subTotal=" + subTotal +
+                ", discountPrinc=" + discountPrinc +
+                ", discountNst=" + discountNst +
+                ", mulBonus=" + mulBonus +
                 '}';
     }
 
     public static class Builder {
         public String so;
 
-        public String prodid;
+        public String prodId;
 
         public String unitid;
 
-        public double price_list;
+        public double priceList;
 
         public int qty;
+
+        public int bonus;
+
+        public double discountNst;
+
+        public double discountPrinc;
 
         public double total;
 
@@ -160,13 +170,13 @@ public class SoItem extends Model {
             return Builder.this;
         }
 
-        public Builder setProductId(String prodid) {
-            this.prodid = prodid;
+        public Builder setProductId(String prodId) {
+            this.prodId = prodId;
             return Builder.this;
         }
 
-        public Builder setPriceList(double price_list) {
-            this.price_list = price_list;
+        public Builder setPriceList(double priceList) {
+            this.priceList = priceList;
             return Builder.this;
         }
 
@@ -177,6 +187,21 @@ public class SoItem extends Model {
 
         public Builder setQty(int qty) {
             this.qty = qty;
+            return Builder.this;
+        }
+
+        public Builder setBonus(int bonus) {
+            this.bonus = bonus;
+            return Builder.this;
+        }
+
+        public Builder setDiscountNst(double discountNst) {
+            this.discountNst = discountNst;
+            return Builder.this;
+        }
+
+        public Builder setDiscountPrinc(double discountPrinc) {
+            this.discountPrinc = discountPrinc;
             return Builder.this;
         }
 

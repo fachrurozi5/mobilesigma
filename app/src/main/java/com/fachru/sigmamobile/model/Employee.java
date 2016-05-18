@@ -32,12 +32,12 @@ public class Employee extends Model {
 
     @Expose
     @SerializedName("DATECREATE")
-    @Column(name = "created_at")
+    @Column(name = "createdAt")
     public Date created_at;
 
     @Expose
     @SerializedName("DATEUPDATE")
-    @Column(name = "updated_at")
+    @Column(name = "updatedAt")
     public Date updated_at;
 
     public Employee() {
@@ -100,8 +100,8 @@ public class Employee extends Model {
         return "Employee{" +
                 "employee_id='" + employee_id + '\'' +
                 ", name='" + name + '\'' +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
+                ", createdAt=" + created_at +
+                ", updatedAt=" + updated_at +
                 '}';
     }
 

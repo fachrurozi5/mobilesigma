@@ -66,7 +66,7 @@ public class Upload<T extends Model> {
         }
 
         if (t instanceof SoItem) {
-            SoItem soItem = SoItem.find(((SoItem) t).so, ((SoItem) t).noitem);
+            SoItem soItem = SoItem.find(((SoItem) t).so, ((SoItem) t).noItem);
             if (soItem != null) {
                 soItem.uploaded = true;
                 soItem.save();

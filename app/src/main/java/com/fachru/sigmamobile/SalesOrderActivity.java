@@ -108,7 +108,7 @@ public class SalesOrderActivity extends AppCompatActivity implements
         if (id == R.id.action_done) {
             Log.i(TAG, "Action Done Click");
             for (SoItem doItem : soHead.soItems()) {
-                total += doItem.sub_total;
+                total += doItem.subTotal;
             }
             Log.e(TAG, soHead.toString());
             showDialogOrder();
@@ -199,7 +199,7 @@ public class SalesOrderActivity extends AppCompatActivity implements
                         soHead.date_order = new Date();
                         int i = 1;
                         for (SoItem item : soHead.soItems()) {
-                            item.noitem = String.format("%04d", i++);
+                            item.noItem = String.format("%04d", i++);
                             Log.e(TAG, item.toString());
                             item.save();
                         }
@@ -376,15 +376,15 @@ public class SalesOrderActivity extends AppCompatActivity implements
 
         Product product;
         for (SoItem item : soHead.soItems()) {
-            product = Product.find(item.product_id);
+            product = Product.find(item.productId);
             table.addCell(createCell(product.prodid, Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
             table.addCell(createCell(product.name, Element.ALIGN_LEFT, Rectangle.NO_BORDER, 4));
             table.addCell(createCell("PCS", Element.ALIGN_CENTER, Rectangle.NO_BORDER, 1));
             table.addCell(createCell(String.valueOf(item.qty),Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
 //            table.addCell(createCell(getProductPriceAsString(product, soHead.priceType), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell(CommonUtil.priceFormat(item.pricelist), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell(CommonUtil.percentFormat(item.discount_principal + item.discount_nusantara), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
-            table.addCell(createCell(CommonUtil.priceFormat(item.sub_total), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(item.priceList), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.percentFormat(item.discountPrinc + item.discountNst), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
+            table.addCell(createCell(CommonUtil.priceFormat(item.subTotal), Element.ALIGN_RIGHT, Rectangle.NO_BORDER, 1));
         }
 
 

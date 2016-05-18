@@ -96,13 +96,13 @@ public class AdapterSoItem extends BaseAdapter {
         }
 
         SoItem soItem = (SoItem) getItem(i);
-        Product product = Product.find(soItem.product_id);
+        Product product = Product.find(soItem.productId);
         holder.no.setText(String.valueOf(i + 1));
         holder.jenis_barang.setText(product.name);
-        holder.unit.setText(soItem.unit_id);
-        holder.harga_list.setText(CommonUtil.priceFormat(soItem.pricelist));
-        holder.jumlah_order.setText(CommonUtil.priceFormat(soItem.qty));
-        holder.sub_total.setText(CommonUtil.priceFormat(soItem.sub_total));
+        holder.unit.setText(soItem.unitId);
+        holder.harga_list.setText(CommonUtil.priceFormat(soItem.priceList));
+        holder.jumlah_order.setText(CommonUtil.priceFormat(soItem.qty + soItem.mulBonus));
+        holder.sub_total.setText(CommonUtil.priceFormat(soItem.subTotal));
 
         return view;
     }

@@ -23,12 +23,12 @@ public class DoItem extends Model {
 
     @Expose
     @SerializedName("NOITEM")
-    @Column(name = "noitem")
+    @Column(name = "noItem")
     public String noitem;
 
     @Expose
     @SerializedName("PRODID")
-    @Column(name = "product_id")
+    @Column(name = "productId")
     public String product_id;
 
     @Expose
@@ -43,7 +43,7 @@ public class DoItem extends Model {
 
     @Expose
     @SerializedName("PRICELIST")
-    @Column(name = "pricelist")
+    @Column(name = "priceList")
     public double pricelist;
 
     @Expose
@@ -61,18 +61,18 @@ public class DoItem extends Model {
     @Column(name = "nilai")
     public double nilai;
 
-    @Column(name = "sub_total")
+    @Column(name = "subTotal")
     public double sub_total;
 
     @Expose
     @SerializedName("DATECREATE")
-    @Column(name = "created_at")
-    public Date created_at = new Date();
+    @Column(name = "createdAt")
+    public Date createdAt = new Date();
 
     @Expose
     @SerializedName("DATEUPDATE")
-    @Column(name = "updated_at")
-    public Date updated_at = new Date();
+    @Column(name = "updatedAt")
+    public Date updatedAt = new Date();
 
     @Expose
     @SerializedName("uploaded")
@@ -115,7 +115,7 @@ public class DoItem extends Model {
         return new Select()
                 .from(DoItem.class)
                 .where("docno = ? ", docno)
-                .and("noitem = ? ", noitem)
+                .and("noItem = ? ", noitem)
                 .executeSingle();
     }
 
@@ -137,16 +137,16 @@ public class DoItem extends Model {
     public String toString() {
         return "DoItem{" +
                 "docno='" + docno + '\'' +
-                ", noitem='" + noitem + '\'' +
-                ", product_id='" + product_id + '\'' +
+                ", noItem='" + noitem + '\'' +
+                ", productId='" + product_id + '\'' +
                 ", qty=" + qty +
-                ", pricelist=" + pricelist +
+                ", priceList=" + pricelist +
                 ", pricelist2=" + pricelist2 +
                 ", unitprice=" + unitprice +
                 ", nilai=" + nilai +
-                ", sub_total=" + sub_total +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
+                ", subTotal=" + sub_total +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", uploaded=" + uploaded +
                 '}';
     }

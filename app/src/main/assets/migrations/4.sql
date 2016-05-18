@@ -2,3 +2,4 @@
 --ALTER TABLE products ADD base_price REAL;
 --ALTER TABLE products ADD old_price REAL;
 --ALTER TABLE products ADD test_price REAL;
+ALTER TABLE Discount ADD started INTEGER;

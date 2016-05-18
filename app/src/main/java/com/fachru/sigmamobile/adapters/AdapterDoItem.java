@@ -104,11 +104,11 @@ public class AdapterDoItem extends BaseAdapter {
         holder.unit.setText(doItem.unit_id);
         holder.harga_list.setText(CommonUtil.priceFormat(doItem.pricelist));
         holder.jumlah_order.setText(CommonUtil.priceFormat(doItem.qty));
-//        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(doItem.discount_nusantara));
-//        double nilai_nusantara = (doItem.product.price * doItem.discount_nusantara) / 100;
+//        holder.persen_d_nusantara.setText(CommonUtil.percentFormat(doItem.discountNst));
+//        double nilai_nusantara = (doItem.product.price * doItem.discountNst) / 100;
 //        holder.nilai_d_nusantara.setText(CommonUtil.priceFormat(nilai_nusantara));
-//        holder.persen_d_principal.setText(CommonUtil.percentFormat(doItem.discount_principal));
-//        double nilai_principal = (doItem.product.price * doItem.discount_principal) / 100;
+//        holder.persen_d_principal.setText(CommonUtil.percentFormat(doItem.discountPrinc));
+//        double nilai_principal = (doItem.product.price * doItem.discountPrinc) / 100;
 //        holder.nilai_d_principal.setText(CommonUtil.priceFormat(nilai_principal));
         holder.sub_total.setText(CommonUtil.priceFormat(doItem.sub_total));
 

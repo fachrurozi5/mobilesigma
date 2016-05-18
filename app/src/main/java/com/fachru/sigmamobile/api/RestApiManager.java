@@ -10,6 +10,7 @@ import com.fachru.sigmamobile.api.interfaces.PrdStatusAPI;
 import com.fachru.sigmamobile.api.interfaces.ProductAPI;
 import com.fachru.sigmamobile.api.interfaces.SoHeadAPI;
 import com.fachru.sigmamobile.api.interfaces.SoItemAPI;
+import com.fachru.sigmamobile.api.interfaces.TableInfoAPI;
 import com.fachru.sigmamobile.api.interfaces.UnitAPI;
 import com.fachru.sigmamobile.api.interfaces.UnitConverterAPI;
 import com.fachru.sigmamobile.api.interfaces.WarehouseAPI;
@@ -49,6 +50,7 @@ public class RestApiManager {
     private WarehouseAPI warehouseAPI;
     private UnitAPI unitAPI;
     private UnitConverterAPI unitConverterAPI;
+    private TableInfoAPI tableInfoAPI;
 
     public RestApiManager() {
 
@@ -69,6 +71,13 @@ public class RestApiManager {
             doHeadAPI = ServiceGenerator.createService(DoHeadAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
         }
         return doHeadAPI;
+    }
+
+    public TableInfoAPI getTableInfoAPI() {
+        if (tableInfoAPI == null)
+            tableInfoAPI = ServiceGenerator.createService(TableInfoAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+
+        return tableInfoAPI;
     }
 
     /*

@@ -3,6 +3,7 @@ package com.fachru.sigmamobile.model;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +15,7 @@ public class Unit extends Model {
 
     @Expose
     @SerializedName("unitid")
-    @Column(name = "unit_id", unique = true, onUniqueConflicts = Column.ConflictAction.REPLACE)
+    @Column(name = "unitId", unique = true, onUniqueConflicts = Column.ConflictAction.REPLACE)
     public String unitId;
 
     @Expose
@@ -24,6 +25,13 @@ public class Unit extends Model {
 
     public Unit() {
         super();
+    }
+
+    public static Unit find(String unitId) {
+        return new Select()
+                .from(Unit.class)
+                .where("unitid = ?", unitId)
+                .executeSingle();
     }
 
     @Override

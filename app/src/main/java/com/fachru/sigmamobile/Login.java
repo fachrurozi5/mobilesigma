@@ -24,6 +24,7 @@ import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Discount;
 import com.fachru.sigmamobile.model.DiscountStructure;
 import com.fachru.sigmamobile.model.DiscountStructureLPD;
+import com.fachru.sigmamobile.model.DiscountStructureMul;
 import com.fachru.sigmamobile.model.Employee;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.Unit;
@@ -643,13 +644,21 @@ public class Login extends AppCompatActivity implements OnClickListener, OnEmplo
                         discount.save();
                         progress++;
                         for (DiscountStructure discountStructure : discount.structures) {
+                            Log.e(Constanta.TAG, discountStructure.toString());
                             discountStructure.discount = discount;
                             discountStructure.save();
                         }
 
                         for (DiscountStructureLPD discountStructureLPD : discount.structuresLPD) {
+                            Log.e(Constanta.TAG, discountStructureLPD.toString());
                             discountStructureLPD.discount = discount;
                             discountStructureLPD.save();
+                        }
+
+                        for (DiscountStructureMul discountStructureMul : discount.structuresMul) {
+                            Log.e(Constanta.TAG, discountStructureMul.toString());
+                            discountStructureMul.discount = discount;
+                            discountStructureMul.save();
                         }
                         final int finalProgress = progress;
                         handler.post(new Runnable() {
