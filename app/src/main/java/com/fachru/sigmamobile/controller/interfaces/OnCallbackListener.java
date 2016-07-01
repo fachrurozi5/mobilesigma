@@ -4,9 +4,9 @@ package com.fachru.sigmamobile.controller.interfaces;
  * Created by fachru on 29/12/15.
  */
 public interface OnCallbackListener {
-    void onFetchStart();
+	void onFetchStart();
 
-    void onFetchComplete();
+	void onFetchComplete();
 
-    void onFetchFailed(Throwable t);
+	void onFetchFailed(Throwable t);
 }

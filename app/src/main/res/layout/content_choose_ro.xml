@@ -2,13 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
     android:background="@drawable/background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_choose_ro" tools:context=".ChooseROActivity">
+
+    <TextView
+        android:id="@+id/textViewOutletInfo"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical"
+        android:background="@color/colorPrimary"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:textStyle="bold"
+        android:textColor="@color/light_blue"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="Wicak G Bastian Wicak G Bastian Wicak G Bastian Wicak G Bastian Wicak G Bastian"/>
 
     <include
         android:id="@+id/linear_layout_date_time"
@@ -18,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout_date_time"
-        android:layout_marginTop="16dp"
+        android:layout_margin="16dp"
         layout="@layout/snippet_grid_menu"/>
 
 </RelativeLayout>

@@ -13,13 +13,13 @@ import retrofit2.http.GET;
  */
 public interface ProductAPI {
 
-    @GET("product")
-    Call<String> Records();
+	@GET("products")
+	Call<List<Product>> _Records();
 
-    @GET("products")
-    Call<List<Product>> _Records();
+	@GET("products/sync")
+	Call<List<Product>> Sync();
 
-    @GET("products/sync")
-    Call<List<Product>> Sync();
+	@GET("products/picking")
+	Call<List<Product>> Records();
 
 }

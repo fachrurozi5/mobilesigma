@@ -10,7 +10,6 @@ import com.fachru.sigmamobile.utils.Constanta;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 /**
@@ -18,31 +17,31 @@ import retrofit2.Retrofit;
  */
 public class DoHeadController {
 
-    private RestApiManager apiManager;
-    private OnResponseListener responseListener;
+	private RestApiManager apiManager;
+	private OnResponseListener responseListener;
 
-    public DoHeadController(OnResponseListener responseListener) {
-        this.apiManager = new RestApiManager();
-        this.responseListener = responseListener;
-    }
+	public DoHeadController(OnResponseListener responseListener) {
+		this.apiManager = new RestApiManager();
+		this.responseListener = responseListener;
+	}
 
-    public void startStore(DoHead doHead) {
-        responseListener.onStoreStart();
-        Call<String> call = apiManager.getDoHeadAPI().Store(doHead);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    responseListener.onStoreComplete();
-                    Log.d(Constanta.TAG, response.body());
-                }
-            }
+	public void startStore(DoHead doHead) {
+		responseListener.onStoreStart();
+		Call<String> call = apiManager.getDoHeadAPI().Store(doHead);
+		call.enqueue(new Callback<String>() {
+			@Override
+			public void onResponse(Call<String> call, Response<String> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					responseListener.onStoreComplete();
+					Log.d(Constanta.TAG, response.body());
+				}
+			}
 
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                responseListener.onFetchFailed(t);
-            }
-        });
-    }
+			@Override
+			public void onFailure(Call<String> call, Throwable t) {
+				responseListener.onFetchFailed(t);
+			}
+		});
+	}
 
 }

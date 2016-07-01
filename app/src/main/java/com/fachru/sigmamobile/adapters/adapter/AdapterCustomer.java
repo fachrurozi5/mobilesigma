@@ -19,83 +19,83 @@ import java.util.List;
  */
 public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.ViewHolder> implements Filterable {
 
-    private List<Customer> list;
-    private List<Customer> listFiltered;
-    private ItemFilter filter = new ItemFilter();
+	private List<Customer> list;
+	private List<Customer> listFiltered;
+	private ItemFilter filter = new ItemFilter();
 
 
-    public AdapterCustomer(List<Customer> list) {
-        this.list = list;
-        this.listFiltered = list;
-    }
+	public AdapterCustomer(List<Customer> list) {
+		this.list = list;
+		this.listFiltered = list;
+	}
 
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
+	@Override
+	public Filter getFilter() {
+		return filter;
+	}
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_customer, parent, false);
+		View view = LayoutInflater.from(parent.getContext())
+				.inflate(R.layout.item_customer, parent, false);
 
-        ViewHolder holder = new ViewHolder(view);
+		ViewHolder holder = new ViewHolder(view);
 
-        return holder;
-    }
+		return holder;
+	}
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tv_id.setText(listFiltered.get(position).custid);
-        holder.tv_name.setText(listFiltered.get(position).name);
-    }
+	@Override
+	public void onBindViewHolder(ViewHolder holder, int position) {
+		holder.tv_id.setText(listFiltered.get(position).custid);
+		holder.tv_name.setText(listFiltered.get(position).name);
+	}
 
-    @Override
-    public int getItemCount() {
-        return listFiltered.size();
-    }
+	@Override
+	public int getItemCount() {
+		return listFiltered.size();
+	}
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_id;
-        public TextView tv_name;
+		public TextView tv_id;
+		public TextView tv_name;
 
-        public ViewHolder(View view) {
-            super(view);
-            tv_id = (TextView) view.findViewById(R.id.tv_customer_id);
-            tv_name = (TextView) view.findViewById(R.id.tv_custom_name);
-        }
-    }
+		public ViewHolder(View view) {
+			super(view);
+			tv_id = (TextView) view.findViewById(R.id.tv_customer_id);
+			tv_name = (TextView) view.findViewById(R.id.tv_custom_name);
+		}
+	}
 
-    private class ItemFilter extends Filter {
+	private class ItemFilter extends Filter {
 
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
 
-            String filterString = constraint.toString().toLowerCase();
+			String filterString = constraint.toString().toLowerCase();
 
-            FilterResults results = new FilterResults();
+			FilterResults results = new FilterResults();
 
-            final List<Customer> customers = new ArrayList<>();
+			final List<Customer> customers = new ArrayList<>();
 
-            for (Customer customer : AdapterCustomer.this.list) {
-                if (customer.custid.toLowerCase().contains(filterString) ||
-                        customer.name.toLowerCase().contains(filterString))
-                    customers.add(customer);
-            }
+			for (Customer customer : AdapterCustomer.this.list) {
+				if (customer.custid.toLowerCase().contains(filterString) ||
+						customer.name.toLowerCase().contains(filterString))
+					customers.add(customer);
+			}
 
-            results.values = customers;
-            results.count = customers.size();
+			results.values = customers;
+			results.count = customers.size();
 
-            return results;
-        }
+			return results;
+		}
 
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            listFiltered = (List<Customer>) results.values;
-            notifyDataSetChanged();
-        }
-    }
+		@Override
+		protected void publishResults(CharSequence constraint, FilterResults results) {
+			listFiltered = (List<Customer>) results.values;
+			notifyDataSetChanged();
+		}
+	}
 
 }

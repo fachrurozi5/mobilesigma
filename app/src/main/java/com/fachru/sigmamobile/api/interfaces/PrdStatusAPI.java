@@ -9,7 +9,7 @@ import retrofit2.http.GET;
  */
 public interface PrdStatusAPI {
 
-    @GET("prstatid")
-    Call<String> Records();
+	@GET("prstatid")
+	Call<String> Records();
 
 }

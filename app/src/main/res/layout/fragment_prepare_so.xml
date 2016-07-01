@@ -41,9 +41,9 @@
                     android:layout_width="150dp"
                     android:text="Sales Order"/>
 
-                <TextView style="@style/DefaultHeader"
+                <!--<TextView style="@style/DefaultHeader"
                     android:layout_width="120dp"
-                    android:text="PO Date" />
+                    android:text="PO Date" />-->
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="120dp"

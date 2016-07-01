@@ -2,7 +2,7 @@ package com.fachru.sigmamobile.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.IntentFilter;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,136 +25,142 @@ import java.util.List;
  */
 public class AdapterDoHead extends BaseAdapter implements Filterable {
 
-    private static LayoutInflater inflater = null;
-    private Context context;
-    private List<DoHead> list;
-    private List<DoHead> listFiltered;
-    private ItemFilter filter = new ItemFilter();
+	private static LayoutInflater inflater = null;
+	private Context context;
+	private List<DoHead> list;
+	private List<DoHead> listFiltered;
+	private ItemFilter filter = new ItemFilter();
 
-    public AdapterDoHead(Context context, List<DoHead> list) {
-        this.context = context;
-        this.list = list;
-        this.listFiltered = this.list;
-    }
+	public AdapterDoHead(Context context, List<DoHead> list) {
+		this.context = context;
+		this.list = list;
+		this.listFiltered = this.list;
+	}
 
-    public void update(List<DoHead> list) {
-        this.list = list;
-        this.listFiltered = this.list;
-        this.notifyDataSetChanged();
-    }
+	public void update(List<DoHead> list) {
+		this.list = list;
+		this.listFiltered = this.list;
+		this.notifyDataSetChanged();
+	}
 
-    public List<DoHead> getList() {
-        return this.list;
-    }
+	public List<DoHead> getList() {
+		return this.list;
+	}
 
-    public void add(DoHead doHead) {
-        this.list.add(doHead);
-        this.notifyDataSetChanged();
-    }
+	public void add(DoHead doHead) {
+		this.list.add(doHead);
+		this.notifyDataSetChanged();
+	}
 
-    public void set(DoHead doHead) {
-        this.list.set(this.list.indexOf(doHead), doHead);
-        this.notifyDataSetChanged();
-    }
+	public void set(DoHead doHead) {
+		this.list.set(this.list.indexOf(doHead), doHead);
+		this.notifyDataSetChanged();
+	}
 
-    public void delete(DoHead doHead) {
-        this.list.remove(doHead);
-        this.notifyDataSetChanged();
-    }
+	public void delete(DoHead doHead) {
+		this.list.remove(doHead);
+		this.notifyDataSetChanged();
+	}
 
-    @Override
-    public int getCount() {
-        return listFiltered.size();
-    }
+	@Override
+	public int getCount() {
+		return listFiltered.size();
+	}
 
-    @Override
-    public Object getItem(int i) {
-        return listFiltered.get(i);
-    }
+	@Override
+	public Object getItem(int i) {
+		return listFiltered.get(i);
+	}
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+	@Override
+	public long getItemId(int i) {
+		return i;
+	}
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        Holder holder;
+	@Override
+	public View getView(int i, View view, ViewGroup viewGroup) {
+		Holder holder;
 
-        LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-        if (view == null) {
-            view = mInflater.inflate(R.layout.item_pos_header, null);
-            holder = new Holder();
-            holder.no = (TextView) view.findViewById(R.id.tv_item_no);
-            holder.doc_no = (TextView) view.findViewById(R.id.tv_item_doc_no);
-            holder.doc_date = (TextView) view.findViewById(R.id.tv_item_doc_date);
-            holder.invoice = (TextView) view.findViewById(R.id.tv_item_invoice);
-            holder.tv_warehouse = (TextView) view.findViewById(R.id.tv_item_warehosue);
-            holder.tv_customer = (TextView) view.findViewById(R.id.tv_item_customer);
-            holder.tv_salesman = (TextView) view.findViewById(R.id.tv_item_salesman);
+		if (view == null) {
+			view = mInflater.inflate(R.layout.item_pos_header, null);
+			holder = new Holder();
+			holder.no = (TextView) view.findViewById(R.id.tv_item_no);
+			holder.doc_no = (TextView) view.findViewById(R.id.tv_item_doc_no);
+			holder.doc_date = (TextView) view.findViewById(R.id.tv_item_doc_date);
+			holder.invoice = (TextView) view.findViewById(R.id.tv_item_invoice);
+			holder.tv_warehouse = (TextView) view.findViewById(R.id.tv_item_warehosue);
+			holder.tv_customer = (TextView) view.findViewById(R.id.tv_item_customer);
+			holder.tv_salesman = (TextView) view.findViewById(R.id.tv_item_salesman);
 
-            view.setTag(holder);
-        } else {
-            holder = (Holder) view.getTag();
-        }
+			view.setTag(holder);
+		} else {
+			holder = (Holder) view.getTag();
+		}
 
-        DoHead doHead = (DoHead) getItem(i);
+		DoHead doHead = (DoHead) getItem(i);
 
-        holder.no.setText(String.valueOf(i + 1));
-        holder.doc_no.setText(doHead.doc_no);
-        holder.doc_date.setText(doHead.getDocDate());
-        holder.invoice.setText(doHead.vatno);
-        holder.tv_warehouse.setText(Warehouse.getWarehouseName(doHead.whid));
-        holder.tv_customer.setText(Customer.getCustomerName(doHead.custid));
-        holder.tv_salesman.setText(Employee.getEmployeeName(doHead.empid));
+		holder.no.setText(String.valueOf(i + 1));
+		holder.doc_no.setText(doHead.doc_no);
+		holder.doc_date.setText(doHead.getDocDate());
+		holder.invoice.setText(doHead.vatno);
+		holder.tv_warehouse.setText(Warehouse.getWarehouseName(doHead.whid));
+		holder.tv_customer.setText(Customer.getCustomerName(doHead.custid));
+		holder.tv_salesman.setText(Employee.getEmployeeName(doHead.empid));
 
-        return view;
-    }
+		if (i % 2 == 1) {
+			view.setBackgroundColor(Color.parseColor("#424242"));
+		} else {
+			view.setBackgroundColor(Color.TRANSPARENT);
+		}
 
-    @Override
-    public Filter getFilter() {
-        return filter;
-    }
+		return view;
+	}
 
-    private class ItemFilter extends Filter {
+	@Override
+	public Filter getFilter() {
+		return filter;
+	}
 
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
+	private class ItemFilter extends Filter {
 
-            String filterString = constraint.toString().toLowerCase();
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
 
-            FilterResults results = new FilterResults();
+			String filterString = constraint.toString().toLowerCase();
 
-            final List<DoHead> doHeads = new ArrayList<>();
+			FilterResults results = new FilterResults();
 
-            for (DoHead doHead : getList()) {
-                if (doHead.doc_no.toLowerCase().contains(filterString) ||
-                        doHead.vatno.toLowerCase().contains(filterString))
-                    doHeads.add(doHead);
-            }
+			final List<DoHead> doHeads = new ArrayList<>();
 
-            results.values = doHeads;
-            results.count = doHeads.size();
+			for (DoHead doHead : getList()) {
+				if (doHead.doc_no.toLowerCase().contains(filterString) ||
+						doHead.vatno.toLowerCase().contains(filterString))
+					doHeads.add(doHead);
+			}
 
-            return results;
-        }
+			results.values = doHeads;
+			results.count = doHeads.size();
 
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            listFiltered = (List<DoHead>) results.values;
-            notifyDataSetChanged();
-        }
-    }
+			return results;
+		}
 
-    private class Holder {
-        TextView no;
-        TextView doc_no;
-        TextView doc_date;
-        TextView invoice;
-        TextView tv_warehouse;
-        TextView tv_customer;
-        TextView tv_salesman;
-    }
+		@Override
+		protected void publishResults(CharSequence constraint, FilterResults results) {
+			listFiltered = (List<DoHead>) results.values;
+			notifyDataSetChanged();
+		}
+	}
+
+	private class Holder {
+		TextView no;
+		TextView doc_no;
+		TextView doc_date;
+		TextView invoice;
+		TextView tv_warehouse;
+		TextView tv_customer;
+		TextView tv_salesman;
+	}
 
 }

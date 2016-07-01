@@ -13,9 +13,9 @@ import retrofit2.http.POST;
  */
 public interface SoItemAPI {
 
-    @GET("soitem")
-    Call<String> Records();
+	@GET("soitem")
+	Call<String> Records();
 
-    @POST("soitem/store")
-    Call<SoItem> _Store(@Body SoItem doItem);
+	@POST("soitem/store")
+	Call<SoItem> _Store(@Body SoItem doItem);
 }

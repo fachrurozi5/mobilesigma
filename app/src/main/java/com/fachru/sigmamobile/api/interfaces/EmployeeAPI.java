@@ -12,7 +12,7 @@ import retrofit2.http.POST;
  */
 public interface EmployeeAPI {
 
-    @FormUrlEncoded
-    @POST("login")
-    Call<Employee> login(@Field("username") String username, @Field("password") String password);
+	@FormUrlEncoded
+	@POST("login")
+	Call<Employee> login(@Field("username") String username, @Field("password") String password);
 }

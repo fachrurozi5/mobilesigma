@@ -17,20 +17,20 @@ import retrofit2.http.POST;
  */
 public interface CustomerAPI {
 
-    @GET("customers")
-    Call<String> Records();
+	@GET("customers")
+	Call<String> Records();
 
-    @GET("customers")
-    Call<List<Customer>> _Records();
+	@GET("customers")
+	Call<List<Customer>> _Records();
 
-    @GET("customers/sync")
-    Call<List<Customer>> Sync();
+	@GET("customers/sync")
+	Call<List<Customer>> Sync();
 
-    @FormUrlEncoded
-    @POST("customer/view")
-    Call<String> getRecord(@Field("custid") String s);
+	@FormUrlEncoded
+	@POST("customer/view")
+	Call<String> getRecord(@Field("custid") String s);
 
-    @POST("customer/store")
-    Call<List<Customer>> store(@Body Customer customer);
+	@POST("customer/store")
+	Call<List<Customer>> store(@Body Customer customer);
 
 }

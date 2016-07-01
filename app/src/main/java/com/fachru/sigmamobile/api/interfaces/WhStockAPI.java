@@ -16,16 +16,16 @@ import retrofit2.http.POST;
  */
 public interface WhStockAPI {
 
-    @GET("whstock")
-    Call<String> Records();
+	@GET("whstock")
+	Call<String> Records();
 
-    @GET("whstocks")
-    Call<List<WarehouseStock>> _Records();
+	@GET("whstocks")
+	Call<List<WarehouseStock>> _Records();
 
-    @GET("whstocks/sync")
-    Call<List<WarehouseStock>> Sync();
+	@GET("whstocks/sync")
+	Call<List<WarehouseStock>> Sync();
 
-    @FormUrlEncoded
-    @POST("whstock/getwhstock")
-    Call<String> getwhstock(@Field("whid") String whid);
+	@FormUrlEncoded
+	@POST("whstock/getwhstock")
+	Call<String> getwhstock(@Field("whid") String whid);
 }

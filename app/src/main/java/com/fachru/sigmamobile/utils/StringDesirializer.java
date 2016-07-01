@@ -11,8 +11,8 @@ import java.lang.reflect.Type;
  * Created by fachru on 23/09/15.
  */
 public class StringDesirializer implements JsonDeserializer<String> {
-    @Override
-    public String deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return json.toString();
-    }
+	@Override
+	public String deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		return json.toString();
+	}
 }

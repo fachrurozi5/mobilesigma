@@ -12,6 +12,6 @@ import retrofit2.http.GET;
  */
 public interface TableInfoAPI {
 
-    @GET("tableinfo")
-    Call<List<TableInfo>> Sync();
+	@GET("tableinfo")
+	Call<List<TableInfo>> Sync();
 }

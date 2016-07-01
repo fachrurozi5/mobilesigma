@@ -3,22 +3,28 @@ package com.fachru.sigmamobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Delete;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.api.RestApiManager;
-import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Discount;
+import com.fachru.sigmamobile.model.DiscountLv1;
 import com.fachru.sigmamobile.model.DiscountStructure;
 import com.fachru.sigmamobile.model.DiscountStructureLPD;
 import com.fachru.sigmamobile.model.DiscountStructureMul;
+import com.fachru.sigmamobile.model.Outlet;
+import com.fachru.sigmamobile.model.OutletType;
 import com.fachru.sigmamobile.model.Product;
 import com.fachru.sigmamobile.model.TableInfo;
+import com.fachru.sigmamobile.model.Tolerance;
+import com.fachru.sigmamobile.model.Unit;
 import com.fachru.sigmamobile.model.UnitConverter;
 import com.fachru.sigmamobile.model.Warehouse;
 import com.fachru.sigmamobile.model.WarehouseStock;
@@ -34,658 +40,793 @@ import retrofit2.Response;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private static final int INTERVAL = 1000;
-    private static final int KEY_CUSTOMER = 0;
-    private static final int KEY_WAREHOUSE = 1;
-    private static final int KEY_WAREHOUSE_STOCK = 2;
-    private static final int KEY_PRODUCT = 3;
-    private static final int KEY_UNIT_CONVERSION = 4;
-    private static final int KEY_DISCOUNT = 5;
-    private static final int KEY_TABLE_INFO = 6;
-
-    /*
-    * label
+	private static final String TAG = "MyProblemSync";
+	boolean syncProcess = true;
+	private RestApiManager apiManager = new RestApiManager();
+	/*
+	* utils
+	* */
+	private SessionManager manager;
+	/*
+	* widget
+	* */
+	private ProgressBar progressBar;
+	private TextView label;
+	/*
+	* android.os
+	* */
+	private Handler handler = new Handler();
+	private Thread thread;
+	/*
+	* label
     * */
-    String stringLabel;
-    private RestApiManager apiManager = new RestApiManager();
-    /*
-    * utils
+	private String stringLabel;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_splash_screen);
+		initComp();
+
+		manager = new SessionManager(this);
+
+		SyncOrContinue();
+
+	}
+
+	@Override
+	public void onBackPressed() {
+	}
+
+	/*************
+	 * Fetching data from server
+	 ******************/
+
+	private void initComp() {
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		label = (TextView) findViewById(R.id.tv_loading_info);
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/outlets/sync
+	 */
+	private void downloadOutlet() {
+		Log.i(TAG, "downloadOutlet: start");
+		Call<List<Outlet>> outletCall = apiManager.getOutletAPI().Sync();
+		outletCall.enqueue(new Callback<List<Outlet>>() {
+			@Override
+			public void onResponse(Call<List<Outlet>> call, Response<List<Outlet>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeOutlet(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadOutletType();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Outlet>> call, Throwable t) {
+				Log.e(TAG, "On Outlet Failure", t);
+				showError("Outlet", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/outlets/type/sync
+	 */
+	private void downloadOutletType() {
+		Log.i(TAG, "downloadOutletType: start");
+		Call<List<OutletType>> outletTypeCall = apiManager.getOutletAPI().TypeSync();
+		outletTypeCall.enqueue(new Callback<List<OutletType>>() {
+			@Override
+			public void onResponse(Call<List<OutletType>> call, Response<List<OutletType>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeOutletType(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadTolerance();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<OutletType>> call, Throwable t) {
+				Log.e(TAG, "On Outlet Failure", t);
+				showError("Outlet Type", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/tolerances/sync
+	 */
+	private void downloadTolerance() {
+		Log.i(TAG, "downloadTolerance: start");
+		Call<List<Tolerance>> toleranceCall = apiManager.getToleranceAPI().Sync();
+		toleranceCall.enqueue(new Callback<List<Tolerance>>() {
+			@Override
+			public void onResponse(Call<List<Tolerance>> call, Response<List<Tolerance>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeTolerance(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadUnit();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Tolerance>> call, Throwable t) {
+				Log.e(TAG, "On Tolerance Failure", t);
+				showError("Tolerance", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/units/sync
+	 */
+	private void downloadUnit() {
+		Log.i(TAG, "downloadUnit: start");
+		Call<List<Unit>> unitCall = apiManager.getUnitAPI().Sync();
+		unitCall.enqueue(new Callback<List<Unit>>() {
+			@Override
+			public void onResponse(Call<List<Unit>> call, Response<List<Unit>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeUnit(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadUnitConversion();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Unit>> call, Throwable t) {
+				Log.e(TAG, "On Unit Failure", t);
+				showError("Unit", t.getMessage());
+			}
+		});
+	}
+
+	/*
+	* http://new-neosolusi.ddns.net:8000/sigmamobile/unit-converter/sync
+	* */
+	private void downloadUnitConversion() {
+		Log.i(TAG, "downloadUnitConversion: start");
+		Call<List<UnitConverter>> unitConverterCall = apiManager.getUnitConverter().Sync();
+		unitConverterCall.enqueue(new Callback<List<UnitConverter>>() {
+			@Override
+			public void onResponse(Call<List<UnitConverter>> call, Response<List<UnitConverter>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeUnitConverter(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadDiscount();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<UnitConverter>> call, Throwable t) {
+				Log.e(TAG, "On Unit Converter Failure", t);
+				showError("Unit Converter", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/discounts/sync
     * */
-    private SessionManager manager;
-    /*
-    * widget
+	private void downloadDiscount() {
+		Log.i(TAG, "downloadDiscount: start");
+		Call<List<Discount>> discountCall = apiManager.getDiscountAPI().Sync();
+		discountCall.enqueue(new Callback<List<Discount>>() {
+			@Override
+			public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					Log.e(TAG, response.body().toString());
+					storeDiscount(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadDiscountLv1();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Discount>> call, Throwable t) {
+				Log.e(TAG, "On Discount Failure", t);
+				showError("Discount", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/discountslv1/sync
+	 */
+	private void downloadDiscountLv1() {
+		Log.i(TAG, "downloadDiscountLv1: start");
+		Call<List<DiscountLv1>> discountLv1Call = apiManager.getDiscountAPI().Lv1Sync();
+		discountLv1Call.enqueue(new Callback<List<DiscountLv1>>() {
+			@Override
+			public void onResponse(Call<List<DiscountLv1>> call, Response<List<DiscountLv1>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeDiscountLv1(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadProduct();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<DiscountLv1>> call, Throwable t) {
+				Log.e(TAG, "On Discount Lv1 Failure", t);
+				showError("Discount Lv1", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/products/sync
     * */
-    private ProgressBar progressBar;
-    private TextView label;
-    /*
-    * android.os
+	private void downloadProduct() {
+		Log.i(TAG, "downloadProduct: start");
+		Call<List<Product>> productCall = apiManager.getProduct().Sync();
+		productCall.enqueue(new Callback<List<Product>>() {
+			@Override
+			public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeProduct(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadWarehouse();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Product>> call, Throwable t) {
+				Log.e(TAG, "On Product Failure", t);
+				showError("Prodcut", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/whouses
     * */
-    private Handler handler = new Handler();
-    private Thread thread;
-    /*
-    * Retrofit Call for Callback
+	private void downloadWarehouse() {
+		Log.i(TAG, "downloadWarehouse: start");
+		Call<List<Warehouse>> whouseCall = apiManager.getWarehouseAPI().Sync();
+		whouseCall.enqueue(new Callback<List<Warehouse>>() {
+			@Override
+			public void onResponse(Call<List<Warehouse>> call, Response<List<Warehouse>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeWarehouse(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadWarehouseStock();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Warehouse>> call, Throwable t) {
+				Log.e(TAG, "On Warehouse Failure", t);
+				showError("Warehouse", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/whstocks
     * */
-    private Call<List<Customer>> customerCall;
-    private Call<List<Product>> productCall;
-    private Call<List<WarehouseStock>> whStockCall;
-    private Call<List<Warehouse>> whouseCall;
-    private Call<List<Discount>> discountCall;
-    private Call<List<UnitConverter>> unitConverterCall;
-    private Call<List<TableInfo>> tableInfoCall;
+	private void downloadWarehouseStock() {
+		Log.i(TAG, "downloadWarehouseStock: start");
+		Call<List<WarehouseStock>> whStockCall = apiManager.getWhStock().Sync();
+		whStockCall.enqueue(new Callback<List<WarehouseStock>>() {
+			@Override
+			public void onResponse(Call<List<WarehouseStock>> call, Response<List<WarehouseStock>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeWarehouseStock(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					downloadTableInfo();
+				}
+			}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
-        initComp();
+			@Override
+			public void onFailure(Call<List<WarehouseStock>> call, Throwable t) {
+				Log.e(TAG, "On Warehouse Stock Failure", t);
+				showError("Warehouse Stock", t.getMessage());
+			}
+		});
+	}
 
-        manager = new SessionManager(this);
+	private void downloadTableInfo() {
+		Call<List<TableInfo>> tableInfoCall = apiManager.getTableInfoAPI().Sync();
+		tableInfoCall.enqueue(new Callback<List<TableInfo>>() {
+			@Override
+			public void onResponse(Call<List<TableInfo>> call, Response<List<TableInfo>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeTableInfo(response.body());
+				} else {
+					showLoading();
+				}
+			}
 
-        SyncOrContinue();
+			@Override
+			public void onFailure(Call<List<TableInfo>> call, Throwable t) {
+				showError("Table Info", t.getMessage());
+			}
+		});
+	}
 
-    }
+	/*************
+	 * Store data into sqlite
+	 ******************/
 
-    @Override
-    public void onBackPressed() {
-    }
+	private void storeOutlet(final List<Outlet> list) {
+		Log.i(TAG, "storeOutlet: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-    private void initComp() {
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        label = (TextView) findViewById(R.id.tv_loading_info);
-    }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					new Delete().from(Outlet.class);
+					for (Outlet outlet : list) {
+						outlet.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Outlet");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadOutletType();
+			}
+		}).start();
+	}
 
+	private void storeOutletType(final List<OutletType> list) {
+		Log.i(TAG, "storeOutletType: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-    /*
-    * Show progress bar loading with Thread
-    * */
-    private void LoadingThread(final int sleepDuration, final int state, final boolean afterinstall) {
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int progress = 0;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (OutletType outletType : list) {
+						outletType.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Outlet Type");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadTolerance();
+			}
+		}).start();
+	}
 
-                switch (state) {
-                    case KEY_CUSTOMER:
-                        stringLabel = "Sync Customer";
-                        downloadCustomer();
-                        break;
-                    case KEY_WAREHOUSE:
-                        stringLabel = "Sync Warehouse";
-                        downloadWarehouse();
-                        break;
-                    case KEY_WAREHOUSE_STOCK:
-                        stringLabel = "Sync WarehouseStock";
-                        downloadWarehouseStock();
-                        break;
-                    case KEY_PRODUCT:
-                        stringLabel = "Sync Product";
-                        downloadProduct();
-                        break;
-                    case KEY_UNIT_CONVERSION:
-                        stringLabel = "Sync Unit Conversion";
-                        downloadUnitConversion();
-                        break;
-                    case KEY_DISCOUNT:
-                        stringLabel = "Sync Discount";
-                        downloadDiscount();
-                        break;
-                    case KEY_TABLE_INFO:
-                        stringLabel = "Sync Field";
-                        downloadTableInfo();
-                        break;
-                    default:
-                        stringLabel = manager.hasCustomer() ? "Finishing Sync" : "Starting";
-                }
+	private void storeTolerance(final List<Tolerance> list) {
+		Log.i(TAG, "storeTolerance: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-                while (progress < progressBar.getMax()) {
-                    progress += 1;
-                    final int progressFinal = progress;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setProgress(progressFinal);
-                            progressBar.setSecondaryProgress(progressFinal + 5);
-                            label.setText(stringLabel);
-                        }
-                    });
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Tolerance tolerance : list) {
+						tolerance.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Tolerance");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadUnit();
+			}
+		}).start();
+	}
 
-                    try {
-                        Thread.sleep(sleepDuration);
-                    } catch (InterruptedException e) {
-                        thread.interrupt();
-                    }
-                }
+	private void storeUnit(final List<Unit> list) {
+		Log.i(TAG, "storeUnit: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-                if (afterinstall) {
-                    startActivity(new Intent(getApplicationContext(), Login.class));
-                    finish();
-                } else {
-                    if (customerCall != null)
-                        customerCall.cancel();
-                    if (productCall != null)
-                        productCall.cancel();
-                    if (whStockCall != null)
-                        whStockCall.cancel();
-                    if (whouseCall != null)
-                        whouseCall.cancel();
-                }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Unit unit : list) {
+						unit.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Unit");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadUnitConversion();
+			}
+		}).start();
+	}
 
-            }
-        });
+	private void storeUnitConverter(final List<UnitConverter> list) {
+		Log.i(TAG, "storeUnitConverter: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-        thread.start();
-    }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (UnitConverter unitConverter : list) {
+						UnitConverter converter = UnitConverter.find(unitConverter.unitFrom, unitConverter.toUnit);
+						if (converter != null) {
+							converter.factor = unitConverter.factor;
+							Log.e(Constanta.TAG, converter.toString());
+							converter.save();
+						} else {
+							unitConverter.save();
+						}
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Unit Converter");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadDiscount();
 
+			}
+		}).start();
+	}
 
-    /******************
-     * Method Download
-     **************************/
+	private void storeDiscount(final List<Discount> list) {
+		Log.i(TAG, "storeDiscount: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-    /*
-    * Download Customer
-    * */
-    private void downloadCustomer() {
-        // TODO: 10/05/16 SELECT NOW() as CurrentDate, ADDTIME(NOW(), '0:5:0') as NewDate ;
-        Log.i(Constanta.TAG, "downloadCustomer");
-        customerCall = apiManager.getCustomerAPI().Sync();
-        customerCall.enqueue(new Callback<List<Customer>>() {
-            @Override
-            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Log.e(Constanta.TAG, response.body().toString());
-                    storeCustomer(response.body());
-                } else {
-                    LoadingThread(1000, KEY_PRODUCT, false);
-                }
-            }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Discount discount : list) {
+						discount.save();
+						progress++;
+						for (DiscountStructure discountStructure : discount.structures) {
+							discountStructure.discount = discount;
+							discountStructure.save();
+						}
 
-            @Override
-            public void onFailure(Call<List<Customer>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Customer Failure", t);
-                showError("Customer", t.getMessage());
-            }
-        });
-    }
+						for (DiscountStructureLPD discountStructureLPD : discount.structuresLPD) {
+							discountStructureLPD.discount = discount;
+							discountStructureLPD.save();
+						}
 
-    /*
-    * Download Warehouse
-    * */
-    private void downloadWarehouse() {
-        Log.i(Constanta.TAG, "downloadWarehouse");
-        whouseCall = apiManager.getWarehouseAPI().Sync();
-        whouseCall.enqueue(new Callback<List<Warehouse>>() {
-            @Override
-            public void onResponse(Call<List<Warehouse>> call, Response<List<Warehouse>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Log.e(Constanta.TAG, response.body().toString());
-                    storeWarehouse(response.body());
-                } else {
-                    LoadingThread(1000, KEY_WAREHOUSE_STOCK, false);
-                }
-            }
+						for (DiscountStructureMul discountStructureMul : discount.structuresMul) {
+							discountStructureMul.discount = discount;
+							discountStructureMul.save();
+						}
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Discount");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadDiscountLv1();
+			}
+		}).start();
+	}
 
-            @Override
-            public void onFailure(Call<List<Warehouse>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Product Failure", t);
-                showError("Warehouse", t.getMessage());
-            }
-        });
-    }
+	private void storeDiscountLv1(final List<DiscountLv1> list) {
+		Log.i(TAG, "storeDiscountLv1: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-    /*
-    * Download WarehouseStock
-    * */
-    private void downloadWarehouseStock() {
-        Log.i(Constanta.TAG, "downloadWarehouseStock");
-        whStockCall = apiManager.getWhStock().Sync();
-        whStockCall.enqueue(new Callback<List<WarehouseStock>>() {
-            @Override
-            public void onResponse(Call<List<WarehouseStock>> call, Response<List<WarehouseStock>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Log.e(Constanta.TAG, response.body().toString());
-                    storeWarehouseStock(response.body());
-                } else {
-                    LoadingThread(1000, KEY_UNIT_CONVERSION, false);
-                }
-            }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (DiscountLv1 discount : list) {
+						discount.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Discount Lv1");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadProduct();
+			}
+		}).start();
+	}
 
-            @Override
-            public void onFailure(Call<List<WarehouseStock>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Product Failure", t);
-                showError("Warehouse", t.getMessage());
-            }
-        });
-    }
+	private void storeProduct(final List<Product> list) {
+		Log.i(TAG, "storeProduct: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-    /*
-    * Download Product
-    * */
-    private void downloadProduct() {
-        Log.i(Constanta.TAG, "downloadProduct");
-        productCall = apiManager.getProduct().Sync();
-        productCall.enqueue(new Callback<List<Product>>() {
-            @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Log.e(Constanta.TAG, response.body().toString());
-                    storeProduct(response.body());
-                } else {
-                    LoadingThread(1000, KEY_WAREHOUSE, false);
-                }
-            }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					new Delete().from(Product.class).execute();
+					for (Product product : list) {
+						product.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Product");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadWarehouse();
+			}
+		}).start();
+	}
 
-            @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Product Failure", t);
-                showError("Prodcut", t.getMessage());
-            }
-        });
-    }
+	private void storeWarehouse(final List<Warehouse> list) {
+		Log.i(TAG, "storeWarehouse: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-    /*
-    * Download UnitConversion
-    * */
-    private void downloadUnitConversion() {
-        Log.i(Constanta.TAG, "downloadUnitConversion");
-        unitConverterCall = apiManager.getUnitConverter().Sync();
-        unitConverterCall.enqueue(new Callback<List<UnitConverter>>() {
-            @Override
-            public void onResponse(Call<List<UnitConverter>> call, Response<List<UnitConverter>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Log.e(Constanta.TAG, response.body().toString());
-                    storeUnitConverter(response.body());
-                } else {
-                    LoadingThread(1000, KEY_DISCOUNT, false);
-                }
-            }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Warehouse warehouse : list) {
+						warehouse.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Warehouse");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadWarehouseStock();
 
-            @Override
-            public void onFailure(Call<List<UnitConverter>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Unit Converter Failure", t);
-                showError("Unit Converter", t.getMessage());
-            }
-        });
-    }
+			}
+		}).start();
+	}
 
-    /*
-    * Download Discount
-    * */
-    private void downloadDiscount() {
-        Log.i(Constanta.TAG, "downloadDiscount");
-        discountCall = apiManager.getDiscountAPI().Sync();
-        discountCall.enqueue(new Callback<List<Discount>>() {
-            @Override
-            public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    storeDiscount(response.body());
-                } else {
-                    LoadingThread(1000, KEY_TABLE_INFO, false);
-                }
-            }
+	private void storeWarehouseStock(final List<WarehouseStock> list) {
+		Log.i(TAG, "storeWarehouseStock: start");
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-            @Override
-            public void onFailure(Call<List<Discount>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Discount Failur", t);
-                showError("Discount", t.getMessage());
-            }
-        });
-    }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (WarehouseStock warehouseStock : list) {
+						WarehouseStock stock = WarehouseStock.find(warehouseStock.whid, warehouseStock.product_id);
+						if (stock != null) {
+							Log.d(Constanta.TAG, "Stock != null");
+							stock.balance = warehouseStock.balance;
+							stock.product = Product.find(warehouseStock.product_id);
+							stock.save();
+						} else {
+							Log.d(Constanta.TAG, "Stock == null");
+							warehouseStock.product = Product.find(warehouseStock.product_id);
+							warehouseStock.save();
+						}
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating WarehouseStock");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				downloadTableInfo();
+			}
+		}).start();
+	}
 
-    private void downloadTableInfo() {
-        Log.i(Constanta.TAG, "downloadTableInfo");
-        tableInfoCall = apiManager.getTableInfoAPI().Sync();
-        tableInfoCall.enqueue(new Callback<List<TableInfo>>() {
-            @Override
-            public void onResponse(Call<List<TableInfo>> call, Response<List<TableInfo>> response) {
-                Log.d(Constanta.TAG, "Responses : " + response.message());
-                if (response.isSuccess() && response.body() != null) {
-                    Log.e(Constanta.TAG, "Response : " + response.body().toString());
-                    storeTableInfo(response.body());
-                } else {
-                    LoadingThread(10, 100, true);
-                }
-            }
+	private void storeTableInfo(final List<TableInfo> list) {
+		progressBar.setProgress(0);
+		final int max = list.size();
 
-            @Override
-            public void onFailure(Call<List<TableInfo>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Discount Failur", t);
-                showError("Discount", t.getMessage());
-            }
-        });
-    }
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (TableInfo tableInfo : list) {
+						TableInfo.save(tableInfo);
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Updating Field");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				showLoading();
+			}
+		}).start();
+	}
 
-    /*****************
-     * METHOD STORE
-     *************************/
-
-    /*
-    * Store Customer into SQLite3
-    * */
-    private void storeCustomer(final List<Customer> list) {
-        Log.i(Constanta.TAG, "storeCustomer");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Customer customer : list) {
-                        customer.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating Customer");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(1000, KEY_PRODUCT, false);
-
-            }
-        }).start();
-    }
-
-    /*
-    * Insert Product into SQLite3
-    * */
-    private void storeProduct(final List<Product> list) {
-        Log.i(Constanta.TAG, "storeProduct");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Product product : list) {
-                        Log.d(Constanta.TAG, product.toString());
-                        product.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating Product");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(1000, KEY_WAREHOUSE, false);
-
-            }
-        }).start();
-    }
-
-    /*
-    * Store Warehouse into SQLite3
-    * */
-    private void storeWarehouse(final List<Warehouse> list) {
-        Log.i(Constanta.TAG, "storeWarehouse");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Warehouse warehouse : list) {
-                        warehouse.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating Warehouse");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(1000, KEY_WAREHOUSE_STOCK, false);
-
-            }
-        }).start();
-    }
-
-    /*
-    * Store WarehouseStock inti SLQite3
-    * */
-    private void storeWarehouseStock(final List<WarehouseStock> list) {
-        Log.i(Constanta.TAG, "storeWarehouseStock");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (WarehouseStock warehouseStock : list) {
-                        WarehouseStock stock = WarehouseStock.find(warehouseStock.whid, warehouseStock.product_id);
-                        if (stock != null) {
-                            Log.d(Constanta.TAG, "Stock != null");
-                            stock.balance = warehouseStock.balance;
-                            stock.product = Product.find(warehouseStock.product_id);
-                            stock.save();
-                        } else {
-                            Log.d(Constanta.TAG, "Stock == null");
-                            warehouseStock.product = Product.find(warehouseStock.product_id);
-                            warehouseStock.save();
-                        }
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating WarehouseStock");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(1000, KEY_UNIT_CONVERSION, false);
-
-            }
-        }).start();
-    }
-
-    /*
-    * Insert Unit Converter into SQLite3
-    * */
-    private void storeUnitConverter(final List<UnitConverter> list) {
-        Log.i(Constanta.TAG, "storeUnitConverter");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (UnitConverter unitConverter : list) {
-                        UnitConverter converter = UnitConverter.find(unitConverter.unitId, unitConverter.unitCon);
-                        if (converter != null) {
-                            converter.factor = unitConverter.factor;
-                            Log.e(Constanta.TAG, converter.toString());
-                            converter.save();
-                        } else {
-                            unitConverter.save();
-                        }
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating Unit Converter");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(1000, KEY_DISCOUNT, false);
-
-            }
-        }).start();
-    }
-
-    /*
-    * Store discount into SQLite3
-    * */
-    private void storeDiscount(final List<Discount> list) {
-        Log.i(Constanta.TAG, "storeDiscount");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Discount discount : list) {
-                        discount.save();
-                        progress++;
-                        for (DiscountStructure discountStructure : discount.structures) {
-                            Log.e(Constanta.TAG, discountStructure.toString());
-                            discountStructure.discount = discount;
-                            discountStructure.save();
-                        }
-
-                        for (DiscountStructureLPD discountStructureLPD : discount.structuresLPD) {
-                            Log.e(Constanta.TAG, discountStructureLPD.toString());
-                            discountStructureLPD.discount = discount;
-                            discountStructureLPD.save();
-                        }
-
-                        for (DiscountStructureMul discountStructureMul : discount.structuresMul) {
-                            Log.e(Constanta.TAG, discountStructureMul.toString());
-                            discountStructureMul.discount = discount;
-                            discountStructureMul.save();
-                        }
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating Discount");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(1000, KEY_TABLE_INFO, false);
-            }
-        }).start();
-    }
-
-    private void storeTableInfo(final List<TableInfo> list) {
-        Log.i(Constanta.TAG, "storeTableInfo");
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (TableInfo tableInfo : list) {
-                        TableInfo.save(tableInfo);
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Updating Field");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                LoadingThread(10, 100, true);
-            }
-        }).start();
-    }
-
-    /*************
-     * Error Handling
-     ******************/
+	/*************
+	 * Error Handling
+	 ******************/
 
     /*
     * Show dialog Error
     * */
-    private void showError(String title, String message) {
-        thread.interrupt();
-        new MaterialDialog.Builder(this)
-                .title(title)
-                .iconRes(android.R.drawable.ic_dialog_alert)
-                .content(message)
-                .positiveText("Try again")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        SyncOrContinue();
-                    }
-                })
-                .show();
-    }
+	private void showError(String title, String message) {
+		new MaterialDialog.Builder(this)
+				.title(title)
+				.iconRes(android.R.drawable.ic_dialog_alert)
+				.content(message)
+				.positiveText("Try again")
+				.onPositive(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+						SyncOrContinue();
+					}
+				})
+				.show();
+	}
 
-    /*
-    * method for continue download
-    * */
-    private void SyncOrContinue() {
-        if (manager.hasCustomer()) {
-            LoadingThread(INTERVAL, KEY_CUSTOMER, false);
-        } else {
-            LoadingThread(10, 100, true);
-        }
-    }
+	/*
+	* method for continue download
+	* */
+	private void SyncOrContinue() {
+		Log.e(Constanta.TAG, "SyncOrContinue");
+		if (manager.hasOutlet()) {
+			downloadOutlet();
+		} else {
+			showLoading();
+		}
+	}
 
+	private void showLoading() {
+		thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int progress = 0;
+
+				while (progress < progressBar.getMax() && syncProcess) {
+					progress += 1;
+					final int progressFinal = progress;
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							progressBar.setProgress(progressFinal);
+							progressBar.setSecondaryProgress(progressFinal + 5);
+							label.setText(manager.hasOutlet() ? "Finishing Sync" : "Starting");
+						}
+					});
+
+					try {
+						Thread.sleep(100);
+						Log.i(TAG, "run: " + thread.getId() + " sleep");
+					} catch (InterruptedException e) {
+						thread.interrupt();
+					}
+				}
+
+				syncProcess = false;
+
+				startActivity(new Intent(getApplicationContext(), Login.class));
+				finish();
+
+			}
+		});
+
+		thread.start();
+		thread.interrupt();
+	}
 }

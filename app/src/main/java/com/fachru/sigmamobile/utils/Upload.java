@@ -6,6 +6,8 @@ import com.activeandroid.Model;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.model.DoHead;
 import com.fachru.sigmamobile.model.DoItem;
+import com.fachru.sigmamobile.model.IdleTimeAnalysis;
+import com.fachru.sigmamobile.model.OSCManagement;
 import com.fachru.sigmamobile.model.SoHead;
 import com.fachru.sigmamobile.model.SoItem;
 
@@ -19,83 +21,112 @@ import retrofit2.Response;
  */
 public class Upload<T extends Model> {
 
-    private static final String TAG = "SalesOrderActivity";
+	private static final String TAG = "SalesOrderActivity";
 
-    private RestApiManager apiManager;
+	private RestApiManager apiManager;
 
-    public Upload() {
-        apiManager = new RestApiManager();
-    }
+	public Upload() {
+		apiManager = new RestApiManager();
+	}
 
-    public void setData(T data) {
-        call(data).enqueue(new Callback<T>() {
-            @Override
-            public void onResponse(Call<T> call, Response<T> response) {
-                if (response.isSuccess()) saveData(response.body());
-            }
+	public void setData(T data) {
+		call(data).enqueue(new Callback<T>() {
+			@Override
+			public void onResponse(Call<T> call, Response<T> response) {
+				if (response.isSuccessful()) {
+					saveData(response.body());
+				}
+			}
 
-            @Override
-            public void onFailure(Call<T> call, Throwable t) {
-                Log.e(TAG, t.getMessage(), t);
-            }
-        });
-    }
+			@Override
+			public void onFailure(Call<T> call, Throwable t) {
+				Log.e(TAG, t.getMessage(), t);
+			}
+		});
+	}
 
-    private Call<T> call(T data) {
-        if (data instanceof DoHead)
-            return (Call<T>) apiManager.getDoHeadAPI()._Store((DoHead) data);
+	private Call<T> call(T data) {
+		if (data instanceof DoHead)
+			return (Call<T>) apiManager.getDoHeadAPI()._Store((DoHead) data);
 
-        if (data instanceof DoItem)
-            return (Call<T>) apiManager.getDoItemAPI()._Store((DoItem) data);
+		if (data instanceof DoItem)
+			return (Call<T>) apiManager.getDoItemAPI()._Store((DoItem) data);
 
-        if (data instanceof SoHead)
-            return (Call<T>) apiManager.getSoHeadAPI()._Store((SoHead) data);
+		if (data instanceof SoHead)
+			return (Call<T>) apiManager.getSoHeadAPI()._Store((SoHead) data);
 
-        if (data instanceof SoItem)
-            return (Call<T>) apiManager.getSoItemAPI()._Store((SoItem) data);
+		if (data instanceof SoItem)
+			return (Call<T>) apiManager.getSoItemAPI()._Store((SoItem) data);
 
-        return null;
-    }
+		if (data instanceof IdleTimeAnalysis)
+			return (Call<T>) apiManager.getTimeAnalysisAPI()._Store((IdleTimeAnalysis) data);
 
-    private boolean saveData(T t) {
-        if (t instanceof DoItem) {
-            DoItem doItem = DoItem.find(((DoItem) t).docno, ((DoItem) t).noitem);
-            doItem.uploaded = true;
-            doItem.save();
-            return true;
-        }
+		if (data instanceof OSCManagement)
+			return (Call<T>) apiManager.getOscManagementAPI()._Store((OSCManagement) data);
 
-        if (t instanceof SoItem) {
-            SoItem soItem = SoItem.find(((SoItem) t).so, ((SoItem) t).noItem);
-            if (soItem != null) {
-                soItem.uploaded = true;
-                soItem.save();
-            }
+		return null;
+	}
 
-            return true;
-        }
+	private boolean saveData(T t) {
 
-        if (t instanceof SoHead) {
-            SoHead soHead = SoHead.find(((SoHead) t).so);
-            Log.i(TAG, "Uploaded Save Data SoHead");
-            Log.e(TAG, soHead.toString());
-            soHead.uploaded = true;
-            soHead.save();
-            Log.d(TAG, soHead.toString());
-        }
+		Log.e(TAG, "saveData: " + t.toString());
 
-        if (t instanceof DoHead) {
-            DoHead doHead = DoHead.find(((DoHead) t).doc_no);
-            Log.i(TAG, "Uploaded Save Data DoHead");
-            Log.e(TAG, doHead.toString());
-            doHead.uploaded = true;
-            doHead.save();
-            Log.d(TAG, doHead.toString());
-        }
+		if (t instanceof DoItem) {
+			DoItem doItem = DoItem.find(((DoItem) t).docno, ((DoItem) t).noitem);
+			doItem.uploaded = true;
+			doItem.save();
+			return true;
+		}
 
-        return false;
+		if (t instanceof SoItem) {
+			SoItem soItem = SoItem.find(((SoItem) t).so, ((SoItem) t).noItem);
+			if (soItem != null) {
+				soItem.uploaded = true;
+				soItem.save();
+			}
 
-    }
+			return true;
+		}
 
+		if (t instanceof IdleTimeAnalysis) {
+			IdleTimeAnalysis timeAnalysis = IdleTimeAnalysis.find(((IdleTimeAnalysis) t).ita_id);
+			if (timeAnalysis != null) {
+				timeAnalysis.uploaded = true;
+				timeAnalysis.save();
+				Log.d(TAG, timeAnalysis.toString());
+			}
+			return true;
+		}
+
+		if (t instanceof  OSCManagement) {
+			OSCManagement oscManagement = OSCManagement.find(((OSCManagement) t).getOscManagementId());
+			if (oscManagement != null) {
+				oscManagement.uploaded = true;
+				oscManagement.save();
+				Log.e("_OSCM", "saveData: " + oscManagement.toString());
+			}
+		}
+
+		if (t instanceof SoHead) {
+			SoHead soHead = SoHead.find(((SoHead) t).so);
+			Log.i(TAG, "Uploaded Save Data SoHead");
+			Log.e(TAG, soHead.toString());
+			soHead.uploaded = true;
+			soHead.save();
+			Log.d(TAG, soHead.toString());
+		}
+
+		if (t instanceof DoHead) {
+			DoHead doHead = DoHead.find(((DoHead) t).doc_no);
+			Log.i(TAG, "Uploaded Save Data DoHead");
+			Log.e(TAG, doHead.toString());
+			doHead.uploaded = true;
+			doHead.save();
+			Log.d(TAG, doHead.toString());
+		}
+
+		return false;
+
+	}
 
 }

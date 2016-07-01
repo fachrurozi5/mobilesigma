@@ -12,9 +12,9 @@ import retrofit2.http.GET;
  */
 public interface UnitConverterAPI {
 
-    @GET("unit-converter")
-    Call<List<UnitConverter>> _Records();
+	@GET("unit-converter")
+	Call<List<UnitConverter>> _Records();
 
-    @GET("unit-converter/sync")
-    Call<List<UnitConverter>> Sync();
+	@GET("unit-converter/sync")
+	Call<List<UnitConverter>> Sync();
 }

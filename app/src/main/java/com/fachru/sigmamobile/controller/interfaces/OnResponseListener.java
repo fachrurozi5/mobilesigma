@@ -5,14 +5,14 @@ package com.fachru.sigmamobile.controller.interfaces;
  */
 public interface OnResponseListener {
 
-    void onFetchStart();
+	void onFetchStart();
 
-    void onFetchComplete();
+	void onFetchComplete();
 
-    void onStoreStart();
+	void onStoreStart();
 
-    void onStoreComplete();
+	void onStoreComplete();
 
-    void onFetchFailed(Throwable t);
+	void onFetchFailed(Throwable t);
 
 }

@@ -12,34 +12,49 @@ import com.google.gson.annotations.Expose;
 @Table(name = "TableInfos")
 public class TableInfo extends Model {
 
-    private static final String DISCOUNT = "header_discount";
+	private static final String DISCOUNT = "header_discount";
+	private static final String DETAIL_DISCOUNT = "detail_discount";
 
-    @Expose
-    @Column(name = "target_name")
-    public String target_name;
+	@Expose
+	@Column(name = "target_name")
+	public String target_name;
 
-    @Expose
-    @Column(name = "target_id")
-    public String target_id;
+	@Expose
+	@Column(name = "target_id")
+	public String target_id;
 
-    public TableInfo() {
-        super();
-    }
+	@Expose
+	@Column(name = "target_foreign")
+	public String target_foreign;
 
-    public static void save(TableInfo info) {
-        if (info.target_name.equals(DISCOUNT)) {
-            new Delete()
-                    .from(Discount.class)
-                    .where("_id = ?", info.target_id)
-                    .execute();
-        }
-    }
+	public TableInfo() {
+		super();
+	}
 
-    @Override
-    public String toString() {
-        return "TableInfo{" +
-                "target_name='" + target_name + '\'' +
-                ", target_id='" + target_id + '\'' +
-                '}';
-    }
+	public static void save(TableInfo info) {
+		try {
+			if (info.target_name.equals(DISCOUNT)) {
+				new Delete()
+						.from(Discount.class)
+						.where("ita_id = ?", info.target_id)
+						.execute();
+			} else if (info.target_name.equals(DETAIL_DISCOUNT)) {
+				new Delete()
+						.from(DiscountStructure.class)
+						.where("id_disc = ?", info.target_id)
+						.and("noItem = ?", info.target_foreign)
+						.execute();
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "TableInfo{" +
+				"target_name='" + target_name + '\'' +
+				", target_id='" + target_id + '\'' +
+				'}';
+	}
 }

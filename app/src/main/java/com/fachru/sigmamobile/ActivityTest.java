@@ -1,69 +1,93 @@
 package com.fachru.sigmamobile;
 
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.fachru.sigmamobile.controller.Controller;
-import com.fachru.sigmamobile.controller.interfaces.OnFetchListener;
-import com.fachru.sigmamobile.model.Discount;
-import com.fachru.sigmamobile.utils.Constanta;
+import com.fachru.sigmamobile.model.Outlet;
+import com.fachru.sigmamobile.service.RTCService;
+import com.fachru.sigmamobile.service.SigmaSync;
 
-import java.util.List;
+public class ActivityTest extends AppCompatActivity {
 
-public class ActivityTest extends AppCompatActivity implements OnFetchListener<Discount> {
+	Intent intent;
+	private RTCService mService;
+	private boolean mBound = false;
+	/**
+	 * Defines callbacks for service binding, passed to bindService()
+	 */
+	private ServiceConnection connection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			// We've bound to LocalService, cast the IBinder and get LocalService instance
+			RTCService.LocalBinder binder = (RTCService.LocalBinder) service;
+			mService = binder.getService();
+			mService.setActiveOutlet(true);
+			mBound = true;
+		}
 
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mBound = false;
+		}
+	};
 
-    private MaterialDialog dialog;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_activity_test);
+		intent = new Intent(this, RTCService.class);
+		bindService(intent, connection, Context.BIND_AUTO_CREATE);
+		startService(new Intent(this, SigmaSync.class));
+	}
 
-    private Controller controller;
+	@Override
+	protected void onStart() {
+		super.onStart();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activity_test);
-        controller = new Controller(this);
-    }
+	}
 
-    public void onShowPdf(View view) {
+	@Override
+	protected void onResume() {
+		super.onResume();
 
-    }
+	}
 
-    public void onStore(View view) {
-        controller.startFetching();
-    }
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
 
-    @Override
-    public void onFetchStart() {
-        dialog = new MaterialDialog.Builder(this)
-                .title("Geting Discount")
-                .content("Please Wait")
-                .progress(true, 0)
-                .progressIndeterminateStyle(true)
-                .show();
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+//        stopService(new Intent(this, SigmaSync.class));
+		if (mBound) {
+			unbindService(connection);
+			mBound = false;
+		}
+	}
 
-    @Override
-    public void onFetchProgress(Discount discount) {
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		stopService(intent);
+	}
 
-    }
+	public void onShowPdf(View view) {
+		mService.setActiveOutlet(true);
+		Outlet outlet = Outlet.load(Outlet.class, 9);
+		mService.setOutlet_id(outlet.getId());
+	}
 
-    @Override
-    public void onFetchProgress(List<Discount> list) {
-        Log.e(Constanta.TAG, list.toString());
-    }
-
-    @Override
-    public void onFetchComplete() {
-        dialog.dismiss();
-    }
-
-    @Override
-    public void onFetchFailed(Throwable t) {
-        dialog.dismiss();
-        Log.e(Constanta.TAG, t.getMessage(), t);
-    }
+	public void onStore(View view) {
+		mService.setActiveOutlet(false);
+		mService.setOutlet_id(-1);
+	}
 }

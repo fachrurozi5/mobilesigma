@@ -13,32 +13,32 @@ import com.google.gson.annotations.SerializedName;
 @Table(name = "Units")
 public class Unit extends Model {
 
-    @Expose
-    @SerializedName("unitid")
-    @Column(name = "unitId", unique = true, onUniqueConflicts = Column.ConflictAction.REPLACE)
-    public String unitId;
+	@Expose
+	@SerializedName("unitid")
+	@Column(name = "unitId", unique = true, onUniqueConflicts = Column.ConflictAction.REPLACE)
+	public String unitId;
 
-    @Expose
-    @SerializedName("unitname")
-    @Column(name = "unit_name")
-    public String unitName;
+	@Expose
+	@SerializedName("unitname")
+	@Column(name = "unit_name")
+	public String unitName;
 
-    public Unit() {
-        super();
-    }
+	public Unit() {
+		super();
+	}
 
-    public static Unit find(String unitId) {
-        return new Select()
-                .from(Unit.class)
-                .where("unitid = ?", unitId)
-                .executeSingle();
-    }
+	public static Unit find(String unitId) {
+		return new Select()
+				.from(Unit.class)
+				.where("unitId = ?", unitId)
+				.executeSingle();
+	}
 
-    @Override
-    public String toString() {
-        return "Unit{" +
-                "unitId='" + unitId + '\'' +
-                ", unitName='" + unitName + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Unit{" +
+				"unitId='" + unitId + '\'' +
+				", unitName='" + unitName + '\'' +
+				'}';
+	}
 }

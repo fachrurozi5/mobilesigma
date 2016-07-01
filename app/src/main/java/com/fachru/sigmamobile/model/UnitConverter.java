@@ -16,70 +16,70 @@ import java.util.List;
 @Table(name = "UnitConverters")
 public class UnitConverter extends Model {
 
-    @Expose
-    @SerializedName("unitid1")
-    @Column(name = "unitid")
-    public String unitId;
+	@Expose
+	@SerializedName("from_unit")
+	@Column(name = "from_unit")
+	public String unitFrom;
 
-    @Expose
-    @SerializedName("unitid2")
-    @Column(name = "unitCon")
-    public String unitCon;
+	@Expose
+	@SerializedName("to_Unit")
+	@Column(name = "to_Unit")
+	public String toUnit;
 
-    @Expose
-    @SerializedName("factor")
-    @Column(name = "factor")
-    public double factor;
+	@Expose
+	@SerializedName("factor")
+	@Column(name = "factor")
+	public double factor;
 
-    public UnitConverter() {
-        super();
-    }
+	public UnitConverter() {
+		super();
+	}
 
-    public static UnitConverter find(String unitId, String unitCon) {
-        return new Select()
-                .from(UnitConverter.class)
-                .where("unitid =?", unitId)
-                .and("unitCon =?", unitCon)
-                .executeSingle();
-    }
+	public static UnitConverter find(String unitId, String unitCon) {
+		return new Select()
+				.from(UnitConverter.class)
+				.where("from_unit =?", unitId)
+				.and("to_Unit =?", unitCon)
+				.executeSingle();
+	}
 
-    public static List<UnitConverter> getAll() {
-        return new Select()
-                .from(UnitConverter.class)
-                .orderBy("unitid ASC")
-                .execute();
-    }
+	public static List<UnitConverter> getAll() {
+		return new Select()
+				.from(UnitConverter.class)
+				.orderBy("from_unit ASC")
+				.execute();
+	}
 
-    public static List<String> getAllByUnitIdArray(String unitId) {
-        List<String> stringList = new ArrayList<>();
+	public static List<String> getAllByUnitIdArray(String unitId) {
+		List<String> stringList = new ArrayList<>();
 
-        List<UnitConverter> converters = new Select()
-                .from(UnitConverter.class)
-                .where("unitid =?", unitId)
-                .orderBy("unitid ASC")
-                .execute();
+		List<UnitConverter> converters = new Select()
+				.from(UnitConverter.class)
+				.where("from_unit =?", unitId)
+				.orderBy("from_unit ASC")
+				.execute();
 
 
-        for (UnitConverter unitConverter : converters)
-            stringList.add(unitConverter.unitCon);
+		for (UnitConverter unitConverter : converters)
+			stringList.add(unitConverter.toUnit);
 
-        return stringList;
-    }
+		return stringList;
+	}
 
-    public static List<UnitConverter> getAllByUnitId(String unitId) {
-        return new Select()
-                .from(UnitConverter.class)
-                .orderBy("unitid ASC")
-                .where("unitid =?", unitId)
-                .execute();
-    }
+	public static List<UnitConverter> getAllByUnitId(String unitId) {
+		return new Select()
+				.from(UnitConverter.class)
+				.orderBy("from_unit ASC")
+				.where("from_unit =?", unitId)
+				.execute();
+	}
 
-    @Override
-    public String toString() {
-        return "UnitConverter{" +
-                "unitId='" + unitId + '\'' +
-                ", unitCon='" + unitCon + '\'' +
-                ", factor=" + factor +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "UnitConverter{" +
+				"unitFrom='" + unitFrom + '\'' +
+				", toUnit='" + toUnit + '\'' +
+				", factor=" + factor +
+				'}';
+	}
 }

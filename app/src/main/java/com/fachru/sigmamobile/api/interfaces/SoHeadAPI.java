@@ -13,9 +13,9 @@ import retrofit2.http.POST;
  */
 public interface SoHeadAPI {
 
-    @GET("sohead")
-    Call<String> Records();
+	@GET("sohead")
+	Call<String> Records();
 
-    @POST("so/store")
-    Call<SoHead> _Store(@Body SoHead soHead);
+	@POST("so/store")
+	Call<SoHead> _Store(@Body SoHead soHead);
 }

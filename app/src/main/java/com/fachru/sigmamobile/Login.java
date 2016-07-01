@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,13 +21,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.fachru.sigmamobile.api.RestApiManager;
 import com.fachru.sigmamobile.controller.EmployeeController;
 import com.fachru.sigmamobile.controller.interfaces.OnEmployeeCallbackListener;
-import com.fachru.sigmamobile.model.Customer;
 import com.fachru.sigmamobile.model.Discount;
+import com.fachru.sigmamobile.model.DiscountLv1;
 import com.fachru.sigmamobile.model.DiscountStructure;
 import com.fachru.sigmamobile.model.DiscountStructureLPD;
 import com.fachru.sigmamobile.model.DiscountStructureMul;
 import com.fachru.sigmamobile.model.Employee;
+import com.fachru.sigmamobile.model.Outlet;
+import com.fachru.sigmamobile.model.OutletType;
 import com.fachru.sigmamobile.model.Product;
+import com.fachru.sigmamobile.model.Tolerance;
 import com.fachru.sigmamobile.model.Unit;
 import com.fachru.sigmamobile.model.UnitConverter;
 import com.fachru.sigmamobile.model.Warehouse;
@@ -42,776 +46,908 @@ import retrofit2.Response;
 
 public class Login extends AppCompatActivity implements OnClickListener, OnEmployeeCallbackListener {
 
-    public static final String EMPLID = "key_emplid";
-    private static final int INTERVAL = 1000;
-    private static final int KEY_CUSTOMER = 0;
-    private static final int KEY_WAREHOUSE = 1;
-    private static final int KEY_WAREHOUSE_STOCK = 2;
-    private static final int KEY_PRODUCT = 3;
-    private static final int KEY_UNIT_CONVERSION = 4;
-    private static final int KEY_DISCOUNT = 5;
-    private static final int KEY_UNIT = 6;
-    /*
-    * label
+	public static final String TAG = "MyProblemInLogin";
+	public static final String EMPLID = "keyEmployee";
+
+	private RestApiManager apiManager = new RestApiManager();
+	private Context context = this;
+
+	/*
+	* utils
+	* */
+	private SessionManager manager;
+
+	/*
+	* controller
+	* */
+	private EmployeeController controller;
+
+	/*
+	* widget
+	* */
+	private EditText et_username;
+	private EditText et_password;
+	private Button btn_login;
+	private ProgressBar progressBar;
+	private TextView label;
+
+	/*
+	* android.os
     * */
-    String stringLabel;
-    String username;
-    String password;
-    private RestApiManager apiManager = new RestApiManager();
-    private Context context = this;
-    /*
-    * utils
+	private Handler handler = new Handler();
+	private Thread thread;
+
+	/*
+	* label
+	* */
+	private boolean loginProcess;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		manager = new SessionManager(context);
+		controller = new EmployeeController(this);
+		initComp();
+
+		et_username.setText(manager.getUsername());
+
+		et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				boolean handled = false;
+
+				if (actionId == 1001) {
+					goLogin();
+					handled = true;
+				}
+				return handled;
+			}
+		});
+
+		btn_login.setOnClickListener(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		try {
+			thread.interrupt();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.i(TAG, "onDestroy: Login Activity");
+	}
+
+	@Override
+	public void onFetchProgress(Employee employee) {
+		manager.setEmployee(employee.getId());
+	}
+
+	@Override
+	public void onFetchStart() {
+		loginProcess = true;
+		et_username.setVisibility(View.GONE);
+		et_password.setVisibility(View.GONE);
+		btn_login.setVisibility(View.GONE);
+		progressBar.setVisibility(View.VISIBLE);
+		label.setVisibility(View.VISIBLE);
+		thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int progress = 0;
+
+				while (progress < progressBar.getMax() && loginProcess) {
+					progress += 1;
+					final int progressFinal = progress;
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							progressBar.setProgress(progressFinal);
+							progressBar.setSecondaryProgress(progressFinal + 5);
+							label.setText("Login");
+						}
+					});
+
+					try {
+						Thread.sleep(100);
+						Log.i(TAG, "run: " + thread.getId() + " sleep");
+					} catch (InterruptedException e) {
+						thread.interrupt();
+					}
+				}
+			}
+		});
+
+		thread.start();
+		thread.interrupt();
+	}
+
+	@Override
+	public void onFetchComplete() {
+		loginProcess = false;
+		manager.setUsername(et_username.getText().toString());
+		downloadOrContinue();
+	}
+
+	@Override
+	public void onFetchFailed(Throwable t) {
+		Log.e(Constanta.TAG, "FetchFailed", t);
+		thread.interrupt();
+		new MaterialDialog.Builder(this)
+				.title("Error")
+				.iconRes(android.R.drawable.ic_dialog_alert)
+				.content("Server tidak meresponse (timeout) ")
+				.canceledOnTouchOutside(false)
+				.positiveText("OK")
+				.onPositive(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+						et_username.setVisibility(View.VISIBLE);
+						et_password.setVisibility(View.VISIBLE);
+						btn_login.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.GONE);
+						label.setVisibility(View.GONE);
+						dialog.dismiss();
+					}
+				})
+				.show();
+	}
+
+	@Override
+	public void onFailureShowMessage(String message) {
+		thread.interrupt();
+		new MaterialDialog.Builder(this)
+				.title("Login Fail")
+				.iconRes(android.R.drawable.ic_dialog_alert)
+				.content(message)
+				.positiveText("OK")
+				.canceledOnTouchOutside(false)
+				.onPositive(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+						et_password.setText("");
+						et_username.setVisibility(View.VISIBLE);
+						et_password.setVisibility(View.VISIBLE);
+						btn_login.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.GONE);
+						label.setVisibility(View.GONE);
+						materialDialog.dismiss();
+					}
+				})
+				.show();
+	}
+
+	@Override
+	public void onClick(View v) {
+		goLogin();
+	}
+
+	private void initComp() {
+		et_username = (EditText) findViewById(R.id.input_username);
+		et_password = (EditText) findViewById(R.id.input_password);
+		btn_login = (Button) findViewById(R.id.btn_login);
+		progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		label = (TextView) findViewById(R.id.tv_loading_info);
+	}
+
+	private void goLogin() {
+		if (!isMissing()) {
+			String username = et_username.getText().toString();
+			String password = et_password.getText().toString();
+			controller.startFetch(username, password);
+		}
+	}
+
+	private boolean isMissing() {
+		if (et_username.getText().toString().equals("")
+				|| et_username.getText() == null) {
+			et_username.setError("Username tidak boleh kosong");
+			return true;
+		} else if (et_password.getText().toString().equals("")
+				|| et_password.getText() == null) {
+			et_password.setError("Password tidak boleh kosong");
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*************
+	 * Fetching data from server
+	 ******************/
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/outlets
+	 */
+	private void downloadOutlet() {
+		Log.i(TAG, "downloadOutlet: start");
+		Call<List<Outlet>> outletCall = apiManager.getOutletAPI().Records();
+		outletCall.enqueue(new Callback<List<Outlet>>() {
+			@Override
+			public void onResponse(Call<List<Outlet>> call, Response<List<Outlet>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeOutlet(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Outlet", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Outlet>> call, Throwable t) {
+				Log.e(TAG, "On Outlet Failure", t);
+				showError("Outlet", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/outlets/type
+	 */
+	private void downloadOutletType() {
+		Log.i(TAG, "downloadOutletType: start");
+		Call<List<OutletType>> outletTypeCall = apiManager.getOutletAPI().TypeRecords();
+		outletTypeCall.enqueue(new Callback<List<OutletType>>() {
+			@Override
+			public void onResponse(Call<List<OutletType>> call, Response<List<OutletType>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeOutletType(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Outlet Type", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<OutletType>> call, Throwable t) {
+				Log.e(TAG, "On Outlet Failure", t);
+				showError("Outlet Type", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/tolerances
+	 */
+	private void downloadTolerance() {
+		Log.i(TAG, "downloadTolerance: start");
+		Call<List<Tolerance>> toleranceCall = apiManager.getToleranceAPI()._Records();
+		toleranceCall.enqueue(new Callback<List<Tolerance>>() {
+			@Override
+			public void onResponse(Call<List<Tolerance>> call, Response<List<Tolerance>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeTolerance(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Tolerance", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Tolerance>> call, Throwable t) {
+				Log.e(TAG, "On Tolerance Failure", t);
+				showError("Tolerance", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/units
+	 */
+	private void downloadUnit() {
+		Log.i(TAG, "downloadUnit: start");
+		Call<List<Unit>> unitCall = apiManager.getUnitAPI()._Records();
+		unitCall.enqueue(new Callback<List<Unit>>() {
+			@Override
+			public void onResponse(Call<List<Unit>> call, Response<List<Unit>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeUnit(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Unit", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Unit>> call, Throwable t) {
+				Log.e(TAG, "On Unit Failure", t);
+				showError("Unit", t.getMessage());
+			}
+		});
+	}
+
+	/*
+	* http://new-neosolusi.ddns.net:8000/sigmamobile/unit-converter
+	* */
+	private void downloadUnitConversion() {
+		Log.i(TAG, "downloadUnitConversion: start");
+		Call<List<UnitConverter>> unitConverterCall = apiManager.getUnitConverter()._Records();
+		unitConverterCall.enqueue(new Callback<List<UnitConverter>>() {
+			@Override
+			public void onResponse(Call<List<UnitConverter>> call, Response<List<UnitConverter>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeUnitConverter(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Unit Converter", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<UnitConverter>> call, Throwable t) {
+				Log.e(TAG, "On Unit Converter Failure", t);
+				showError("Unit Converter", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/discounts/structures
     * */
-    private SessionManager manager;
-    /*
-    * controller
+	private void downloadDiscount() {
+		Log.i(TAG, "downloadDiscount: start");
+		Call<List<Discount>> discountCall = apiManager.getDiscountAPI()._Records();
+		discountCall.enqueue(new Callback<List<Discount>>() {
+			@Override
+			public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeDiscount(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Discount", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Discount>> call, Throwable t) {
+				Log.e(TAG, "On Discount Failure", t);
+				showError("Discount", t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * http://new-neosolusi.ddns.net:8000/sigmamobile/discountslv1
+	 */
+	private void downloadDiscountLv1() {
+		Log.i(TAG, "downloadDiscountLv1: start");
+		Call<List<DiscountLv1>> discountLv1Call = apiManager.getDiscountAPI().Lv1Records();
+		discountLv1Call.enqueue(new Callback<List<DiscountLv1>>() {
+			@Override
+			public void onResponse(Call<List<DiscountLv1>> call, Response<List<DiscountLv1>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeDiscountLv1(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Discount Lv1", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<DiscountLv1>> call, Throwable t) {
+				Log.e(TAG, "On Discount Lv1 Failure", t);
+				showError("Discount Lv1", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/products/picking
     * */
-    private EmployeeController controller;
-    /*
-    * widget
+	private void downloadProduct() {
+		Log.i(TAG, "downloadProduct: start");
+		Call<List<Product>> productCall = apiManager.getProduct().Records();
+		productCall.enqueue(new Callback<List<Product>>() {
+			@Override
+			public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeProduct(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Prodcut", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Product>> call, Throwable t) {
+				Log.e(TAG, "On Product Failure", t);
+				showError("Prodcut", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/whouses
     * */
-    private EditText et_username;
-    private EditText et_password;
-    private Button btn_login;
-    private MaterialDialog materialDialog;
-    private ProgressBar progressBar;
-    private TextView label;
-    /*
-   * android.os
-   * */
-    private Handler handler = new Handler();
-    private Thread thread;
-    /*
-    * Retrofit Call for Callback
+	private void downloadWarehouse() {
+		Log.i(TAG, "downloadWarehouse: start");
+		Call<List<Warehouse>> whouseCall = apiManager.getWarehouseAPI()._Records();
+		whouseCall.enqueue(new Callback<List<Warehouse>>() {
+			@Override
+			public void onResponse(Call<List<Warehouse>> call, Response<List<Warehouse>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeWarehouse(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Warehouse", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<Warehouse>> call, Throwable t) {
+				Log.e(TAG, "On Warehouse Failure", t);
+				showError("Warehouse", t.getMessage());
+			}
+		});
+	}
+
+	/*
+    * http://new-neosolusi.ddns.net:8000/sigmamobile/whstocks
     * */
-    private Call<List<Discount>> discountCall;
-    private Call<List<Customer>> customerCall;
-    private Call<List<Product>> productCall;
-    private Call<List<WarehouseStock>> whStockCall;
-    private Call<List<Warehouse>> whouseCall;
-    private Call<List<UnitConverter>> unitConverterCall;
-    private Call<List<Unit>> unitCall;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        manager = new SessionManager(context);
-        controller = new EmployeeController(this);
-        initComp();
-
-        et_username.setText(manager.getUsername());
-
-        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-
-                if (actionId == 1001) {
-                    goLogin();
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-
-        btn_login.setOnClickListener(this);
-    }
-
-    @Override
-    public void onFetchProgress(Employee employee) {
-        manager.setEmployee(employee.getId());
-    }
-
-    @Override
-    public void onFetchStart() {
-        showProgressHorizontalIndeterminateDialog();
-    }
-
-    @Override
-    public void onFetchComplete() {
-        manager.setUsername(et_username.getText().toString());
-        materialDialog.dismiss();
-        et_username.setVisibility(View.GONE);
-        et_password.setVisibility(View.GONE);
-        btn_login.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        label.setVisibility(View.VISIBLE);
-        downloadOrContinue();
-    }
-
-    @Override
-    public void onFetchFailed(Throwable t) {
-        Log.e(Constanta.TAG, "FetchFailed", t);
-        materialDialog.dismiss();
-        new MaterialDialog.Builder(this)
-                .title("Error")
-                .iconRes(android.R.drawable.ic_dialog_alert)
-                .content("Server tidak meresponse (timeout) ")
-                .show();
-    }
-
-    @Override
-    public void onFailureShowMessage(String message) {
-        materialDialog.dismiss();
-        new MaterialDialog.Builder(this)
-                .title("Login Fail")
-                .iconRes(android.R.drawable.ic_dialog_alert)
-                .content(message)
-                .positiveText("OK")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        et_password.setText("");
-                    }
-                })
-                .show();
-    }
-
-    @Override
-    public void onClick(View v) {
-        goLogin();
-    }
-
-    private void initComp() {
-        et_username = (EditText) findViewById(R.id.input_username);
-        et_password = (EditText) findViewById(R.id.input_password);
-        btn_login = (Button) findViewById(R.id.btn_login);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        label = (TextView) findViewById(R.id.tv_loading_info);
-    }
-
-    private void goLogin() {
-        if (!isMissing()) {
-            username = et_username.getText().toString();
-            password = et_password.getText().toString();
-            controller.startFetch(username, password);
-        }
-    }
-
-    private boolean isMissing() {
-        if (et_username.getText().toString().equals("")
-                || et_username.getText() == null) {
-            et_username.setError("Username tidak boleh kosong");
-            return true;
-        } else if (et_password.getText().toString().equals("")
-                || et_password.getText() == null) {
-            et_password.setError("Password tidak boleh kosong");
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void setVisibility(boolean visibility) {
-        if (visibility) {
-
-        }
-    }
-
-    public void showProgressHorizontalIndeterminateDialog() {
-        materialDialog = showIndeterminateProgressDialog(true);
-    }
-
-    private MaterialDialog showIndeterminateProgressDialog(boolean horizontal) {
-        return new MaterialDialog.Builder(this)
-                .title("Login")
-                .content("Please Wait")
-                .progress(true, 0)
-                .progressIndeterminateStyle(horizontal)
-                .show();
-    }
-
-    /*
-    * Show progress bar loading with Thread
-    * */
-    private void LoadingThread(final int sleepDuration, final int state, final boolean afterinstall) {
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int progress = 0;
-
-                switch (state) {
-                    case KEY_CUSTOMER:
-                        stringLabel = "Load Customer";
-                        downloadCustomer();
-                        break;
-                    case KEY_WAREHOUSE:
-                        stringLabel = "Load Warehouse";
-                        downloadWarehouse();
-                        break;
-                    case KEY_WAREHOUSE_STOCK:
-                        stringLabel = "Load WarehouseStock";
-                        downloadWarehouseStock();
-                        break;
-                    case KEY_PRODUCT:
-                        stringLabel = "Load Product";
-                        downloadProduct();
-                        break;
-                    case KEY_UNIT_CONVERSION:
-                        stringLabel = "Load Unit Conversion";
-                        downloadUnitConversion();
-                        break;
-                    case KEY_DISCOUNT:
-                        stringLabel = "Load Discount";
-                        downloadDiscount();
-                        break;
-                    case KEY_UNIT:
-                        stringLabel = "Load Unit";
-                        downloadUnit();
-                        break;
-                    default:
-                        stringLabel = "Login";
-                }
-
-                while (progress < progressBar.getMax()) {
-                    progress += 1;
-                    final int progressFinal = progress;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setProgress(progressFinal);
-                            progressBar.setSecondaryProgress(progressFinal + 5);
-                            label.setText(stringLabel);
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(sleepDuration);
-                    } catch (InterruptedException e) {
-                        thread.interrupt();
-                    }
-                }
-
-                if (afterinstall) {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
-                } else {
-                    if (customerCall != null) customerCall.cancel();
-
-                    if (productCall != null) productCall.cancel();
-
-                    if (whStockCall != null) whStockCall.cancel();
-
-                    if (whouseCall != null) whouseCall.cancel();
-
-                    if (unitConverterCall != null) unitConverterCall.cancel();
-
-                    if (discountCall != null) discountCall.cancel();
-                }
-
-            }
-        });
-
-        thread.start();
-    }
-
-
-    /******************
-     * Method Download
-     **************************/
-
-    /*
-    * Download Customer
-    * */
-    private void downloadCustomer() {
-        customerCall = apiManager.getCustomerAPI()._Records();
-        customerCall.enqueue(new Callback<List<Customer>>() {
-            @Override
-            public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    storeCustomer(response.body());
-                } else {
-                    showError("Customer", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Customer>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Customer Failure", t);
-                showError("Customer", t.getMessage());
-            }
-        });
-    }
-
-    /*
-    * Download Discount
-    * */
-    private void downloadDiscount() {
-        discountCall = apiManager.getDiscountAPI()._Records();
-        discountCall.enqueue(new Callback<List<Discount>>() {
-            @Override
-            public void onResponse(Call<List<Discount>> call, Response<List<Discount>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    storeDiscount(response.body());
-                } else {
-                    showError("Discount", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Discount>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Discount Failur", t);
-                showError("Discount", t.getMessage());
-            }
-        });
-    }
-
-    /*
-    * Download Warehouse
-    * */
-    private void downloadWarehouse() {
-        whouseCall = apiManager.getWarehouseAPI()._Records();
-        whouseCall.enqueue(new Callback<List<Warehouse>>() {
-            @Override
-            public void onResponse(Call<List<Warehouse>> call, Response<List<Warehouse>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    storeWarehouse(response.body());
-                } else {
-                    showError("Warehouse", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Warehouse>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Warehouse Failure", t);
-                showError("Warehouse", t.getMessage());
-            }
-        });
-    }
-
-    /*
-    * Download WarehouseStock
-    * */
-    private void downloadWarehouseStock() {
-        whStockCall = apiManager.getWhStock()._Records();
-        whStockCall.enqueue(new Callback<List<WarehouseStock>>() {
-            @Override
-            public void onResponse(Call<List<WarehouseStock>> call, Response<List<WarehouseStock>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    storeWarehouseStock(response.body());
-                } else {
-                    showError("Warehouse Stock", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<WarehouseStock>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Warehouse Stock Failure", t);
-                showError("Warehouse Stock", t.getMessage());
-            }
-        });
-    }
-
-    /*
-    * Download Product
-    * */
-    private void downloadProduct() {
-        productCall = apiManager.getProduct()._Records();
-        productCall.enqueue(new Callback<List<Product>>() {
-            @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    storeProduct(response.body());
-                } else {
-                    showError("Prodcut", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Product Failure", t);
-                showError("Prodcut", t.getMessage());
-            }
-        });
-    }
-
-    /*
-    * Download UnitConversion
-    * */
-    private void downloadUnitConversion() {
-        unitConverterCall = apiManager.getUnitConverter()._Records();
-        unitConverterCall.enqueue(new Callback<List<UnitConverter>>() {
-            @Override
-            public void onResponse(Call<List<UnitConverter>> call, Response<List<UnitConverter>> response) {
-
-                if (response.isSuccess() && response.body() != null) {
-                    storeUnitConverter(response.body());
-                } else {
-                    showError("Unit Converter", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<UnitConverter>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Unit Converter Failure", t);
-                showError("Unit Converter", t.getMessage());
-            }
-        });
-    }
-
-    private void downloadUnit() {
-        unitCall = apiManager.getUnitAPI()._Records();
-        unitCall.enqueue(new Callback<List<Unit>>() {
-            @Override
-            public void onResponse(Call<List<Unit>> call, Response<List<Unit>> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Log.d(Constanta.TAG, response.body().toString());
-                    storeUnit(response.body());
-                } else {
-                    showError("Unit", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Unit>> call, Throwable t) {
-                Log.e(Constanta.TAG, "On Unit Failure", t);
-                showError("Unit Converter", t.getMessage());
-            }
-        });
-    }
-
-    /*****************
-     * METHOD STORE
-     *************************/
-
-    /*
-    * Store Customer into SQLite3
-    * */
-    private void storeCustomer(final List<Customer> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Customer customer : list) {
-                        customer.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Customer");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setCustomerDone(true);
-                downloadOrContinue();
-                /*LoadingThread(1000, KEY_PRODUCT, false);*/
-
-            }
-        }).start();
-    }
-
-    /*
-    * Insert Product into SQLite3
-    * */
-    private void storeProduct(final List<Product> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Product product : list) {
-                        product.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Product");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setProductDone(true);
-                downloadOrContinue();
-                /*LoadingThread(1000, KEY_WAREHOUSE, false);*/
-
-            }
-        }).start();
-    }
-
-    /*
-    * Insert Unit Converter into SQLite3
-    * */
-    private void storeUnitConverter(final List<UnitConverter> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (UnitConverter unitConverter : list) {
-                        unitConverter.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Unit Converter");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setUnitConverterDone(true);
-                downloadOrContinue();
-                /*LoadingThread(1000, KEY_WAREHOUSE, false);*/
-
-            }
-        }).start();
-    }
-
-    private void storeUnit(final List<Unit> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Unit unit : list) {
-                        unit.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Unit");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setUnitDone(true);
-                downloadOrContinue();
-            }
-        }).start();
-    }
-
-    /*
-    * Store discount into SQLite3
-    * */
-    private void storeDiscount(final List<Discount> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Discount discount : list) {
-                        discount.save();
-                        progress++;
-                        for (DiscountStructure discountStructure : discount.structures) {
-                            Log.e(Constanta.TAG, discountStructure.toString());
-                            discountStructure.discount = discount;
-                            discountStructure.save();
-                        }
-
-                        for (DiscountStructureLPD discountStructureLPD : discount.structuresLPD) {
-                            Log.e(Constanta.TAG, discountStructureLPD.toString());
-                            discountStructureLPD.discount = discount;
-                            discountStructureLPD.save();
-                        }
-
-                        for (DiscountStructureMul discountStructureMul : discount.structuresMul) {
-                            Log.e(Constanta.TAG, discountStructureMul.toString());
-                            discountStructureMul.discount = discount;
-                            discountStructureMul.save();
-                        }
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Discount");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setDiscountDone(true);
-                downloadOrContinue();
-            }
-        }).start();
-    }
-
-    /*
-    * Store Warehouse into SQLite3
-    * */
-    private void storeWarehouse(final List<Warehouse> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (Warehouse warehouse : list) {
-                        warehouse.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting Warehouse");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setWarehouseDone(true);
-                downloadOrContinue();
-                /*LoadingThread(1000, KEY_WAREHOUSE_STOCK, false);*/
-
-            }
-        }).start();
-    }
-
-    /*
-    * Store WarehouseStock inti SLQite3
-    * */
-    private void storeWarehouseStock(final List<WarehouseStock> list) {
-        thread.interrupt();
-        progressBar.setProgress(0);
-        final int max = list.size();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ActiveAndroid.beginTransaction();
-                try {
-                    int progress = 0;
-                    for (WarehouseStock warehouseStock : list) {
-                        warehouseStock.product = Product.find(warehouseStock.product_id);
-                        warehouseStock.save();
-                        progress++;
-                        final int finalProgress = progress;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setProgress((finalProgress * 100) / max);
-                                progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
-                                label.setText("Inserting WarehouseStock");
-                            }
-                        });
-                    }
-                    ActiveAndroid.setTransactionSuccessful();
-                } finally {
-                    ActiveAndroid.endTransaction();
-                }
-                manager.setWarehouseStockDone(true);
-                downloadOrContinue();
-                /*startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();*/
-
-            }
-        }).start();
-    }
-
-    /*************
-     * Error Handling
-     ******************/
+	private void downloadWarehouseStock() {
+		Log.i(TAG, "downloadWarehouseStock: start");
+		Call<List<WarehouseStock>> whStockCall = apiManager.getWhStock()._Records();
+		whStockCall.enqueue(new Callback<List<WarehouseStock>>() {
+			@Override
+			public void onResponse(Call<List<WarehouseStock>> call, Response<List<WarehouseStock>> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					storeWarehouseStock(response.body());
+				} else {
+					Log.e(TAG, response.message());
+					showError("Warehouse Stock", response.message());
+				}
+			}
+
+			@Override
+			public void onFailure(Call<List<WarehouseStock>> call, Throwable t) {
+				Log.e(TAG, "On Warehouse Stock Failure", t);
+				showError("Warehouse Stock", t.getMessage());
+			}
+		});
+	}
+
+	/*************
+	 * Store data into sqlite
+	 ******************/
+
+	private void storeOutlet(final List<Outlet> list) {
+		Log.i(TAG, "storeOutlet: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Outlet outlet : list) {
+						outlet.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Outlet");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setOutletDone(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeOutletType(final List<OutletType> list) {
+		Log.i(TAG, "storeOutletType: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (OutletType outletType : list) {
+						outletType.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Outlet Type");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setOutletTypeDone(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeTolerance(final List<Tolerance> list) {
+		Log.i(TAG, "storeTolerance: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Tolerance tolerance : list) {
+						tolerance.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Tolerance");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setToleranceDown(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeUnit(final List<Unit> list) {
+		Log.i(TAG, "storeUnit: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Unit unit : list) {
+						unit.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Unit");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setUnitDone(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeUnitConverter(final List<UnitConverter> list) {
+		Log.i(TAG, "storeUnitConverter: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (UnitConverter unitConverter : list) {
+						unitConverter.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Unit Converter");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setUnitConverterDone(true);
+				downloadOrContinue();
+
+			}
+		}).start();
+	}
+
+	private void storeDiscount(final List<Discount> list) {
+		Log.i(TAG, "storeDiscount: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Discount discount : list) {
+						discount.save();
+						progress++;
+						for (DiscountStructure discountStructure : discount.structures) {
+							discountStructure.discount = discount;
+							discountStructure.save();
+						}
+
+						for (DiscountStructureLPD discountStructureLPD : discount.structuresLPD) {
+							discountStructureLPD.discount = discount;
+							discountStructureLPD.save();
+						}
+
+						for (DiscountStructureMul discountStructureMul : discount.structuresMul) {
+							discountStructureMul.discount = discount;
+							discountStructureMul.save();
+						}
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Discount");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setDiscountDone(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeDiscountLv1(final List<DiscountLv1> list) {
+		Log.i(TAG, "storeDiscountLv1: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (DiscountLv1 discount : list) {
+						discount.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Discount Lv1");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setDiscountLv1Done(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeProduct(final List<Product> list) {
+		Log.i(TAG, "storeProduct: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Product product : list) {
+						product.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Product");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setProductDone(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	private void storeWarehouse(final List<Warehouse> list) {
+		Log.i(TAG, "storeWarehouse: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (Warehouse warehouse : list) {
+						warehouse.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting Warehouse");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setWarehouseDone(true);
+				downloadOrContinue();
+
+			}
+		}).start();
+	}
+
+	private void storeWarehouseStock(final List<WarehouseStock> list) {
+		Log.i(TAG, "storeWarehouseStock: start");
+		thread.interrupt();
+		progressBar.setProgress(0);
+		final int max = list.size();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ActiveAndroid.beginTransaction();
+				try {
+					int progress = 0;
+					for (WarehouseStock warehouseStock : list) {
+						warehouseStock.product = Product.find(warehouseStock.product_id);
+						warehouseStock.save();
+						progress++;
+						final int finalProgress = progress;
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								progressBar.setProgress((finalProgress * 100) / max);
+								progressBar.setSecondaryProgress(((finalProgress * 100) / max) + 5);
+								label.setText("Inserting WarehouseStock");
+							}
+						});
+					}
+					ActiveAndroid.setTransactionSuccessful();
+				} finally {
+					ActiveAndroid.endTransaction();
+				}
+				manager.setWarehouseStockDone(true);
+				downloadOrContinue();
+			}
+		}).start();
+	}
+
+	/*************
+	 * Error Handling
+	 ******************/
 
     /*
     * Show dialog Error
     * */
-    private void showError(String title, String message) {
-        thread.interrupt();
-        new MaterialDialog.Builder(this)
-                .title(title)
-                .iconRes(android.R.drawable.ic_dialog_alert)
-                .content(message)
-                .cancelable(false)
-                .positiveText("Load kembali")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        downloadOrContinue();
-                    }
-                })
-                .negativeText("Keluar")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        finish();
-                    }
-                })
-                .show();
-    }
+	private void showError(String title, String message) {
+		thread.interrupt();
+		new MaterialDialog.Builder(this)
+				.title(title)
+				.iconRes(android.R.drawable.ic_dialog_alert)
+				.content(message)
+				.cancelable(false)
+				.positiveText("Load kembali")
+				.onPositive(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+						downloadOrContinue();
+					}
+				})
+				.negativeText("Keluar")
+				.onNegative(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+						finish();
+					}
+				})
+				.show();
+	}
 
-    /*
-    * method for continue download
-    * */
-    private void downloadOrContinue() {
-        if (!manager.hasCustomer()) {
-            LoadingThread(INTERVAL, KEY_CUSTOMER, false);
-        } else if (!manager.hasProduct()) {
-            LoadingThread(INTERVAL, KEY_PRODUCT, false);
-        } else if (!manager.hasWarehouse()) {
-            LoadingThread(INTERVAL, KEY_WAREHOUSE, false);
-        } else if (!manager.hasWarehouseStock()) {
-            LoadingThread(INTERVAL, KEY_WAREHOUSE_STOCK, false);
-        } else if (!manager.hasUnitConversion()) {
-            LoadingThread(INTERVAL, KEY_UNIT_CONVERSION, false);
-        } else if (!manager.hasDiscount()) {
-            LoadingThread(INTERVAL, KEY_DISCOUNT, false);
-        } else if (!manager.hasUnit()) {
-            LoadingThread(INTERVAL, KEY_UNIT, false);
-        } else {
-            LoadingThread(10, 100, true);
-        }
-    }
+	/*
+	* method for continue download
+	* */
+	private void downloadOrContinue() {
+		Log.e(TAG, "downloadOrContinue: ");
+		if (!manager.hasOutlet()) {
+			downloadOutlet();
+		} else if (!manager.hasOutletType()) {
+			downloadOutletType();
+		} else if (!manager.hasTolerance()) {
+			downloadTolerance();
+		} else if (!manager.hasUnit()) {
+			downloadUnit();
+		} else if (!manager.hasUnitConversion()) {
+			downloadUnitConversion();
+		} else if (!manager.hasDiscount()) {
+			downloadDiscount();
+		} else if (!manager.hasDiscountLv1()) {
+			downloadDiscountLv1();
+		} else if (!manager.hasProduct()) {
+			downloadProduct();
+		} else if (!manager.hasWarehouse()) {
+			downloadWarehouse();
+		} else if (!manager.hasWarehouseStock()) {
+			downloadWarehouseStock();
+		} else {
+			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
+			finish();
+		}
+	}
 
 }

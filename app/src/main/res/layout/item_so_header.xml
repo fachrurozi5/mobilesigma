@@ -4,38 +4,56 @@
 
     <TextView style="@style/DefaultItem"
         android:layout_width="30dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_no"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_so"/>
 
-    <TextView style="@style/DefaultItem"
+    <!--<TextView style="@style/DefaultItem"
         android:layout_width="120dp"
-        android:id="@+id/tv_item_po_date"/>
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:id="@+id/tv_item_po_date"/>-->
 
     <TextView style="@style/DefaultItem"
         android:layout_width="120dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_del_date"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_customer"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_customers_po"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_salesman"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_warehosue"/>
 
     <TextView style="@style/DefaultItem"
-        android:layout_width="150dp"
+        android:layout_width="120dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_type_of_price"/>
 
 </LinearLayout>

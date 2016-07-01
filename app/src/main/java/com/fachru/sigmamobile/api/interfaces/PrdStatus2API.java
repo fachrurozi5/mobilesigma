@@ -7,6 +7,6 @@ import retrofit2.http.GET;
  * Created by fachru on 06/01/16.
  */
 public interface PrdStatus2API {
-    @GET("prstatids")
-    Call<String> Records();
+	@GET("prstatids")
+	Call<String> Records();
 }

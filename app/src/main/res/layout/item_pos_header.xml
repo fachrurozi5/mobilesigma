@@ -4,31 +4,45 @@
 
     <TextView style="@style/DefaultItem"
         android:layout_width="30dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_no"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_doc_no"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="120dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_doc_date" />
 
     <TextView style="@style/DefaultItem"
         android:layout_width="120dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_invoice" />
 
     <TextView style="@style/DefaultItem"
         android:layout_width="300dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_warehosue" />
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_customer"/>
 
     <TextView style="@style/DefaultItem"
         android:layout_width="150dp"
         android:layout_marginRight="0dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
         android:id="@+id/tv_item_salesman"/>
 
     <!--<TextView style="@style/DefaultItem"

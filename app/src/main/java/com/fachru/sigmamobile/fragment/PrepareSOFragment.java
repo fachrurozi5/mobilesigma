@@ -28,89 +28,89 @@ import java.util.List;
  */
 public class PrepareSOFragment extends Fragment implements SearchView.OnQueryTextListener, AdapterView.OnItemLongClickListener {
 
-    protected Activity activity;
-    protected Bundle bundle;
+	protected Activity activity;
+	protected Bundle bundle;
 
-    protected SearchView searchView;
-    protected ListView lv_prepare_so;
+	protected SearchView searchView;
+	protected ListView lv_prepare_so;
 
-    protected SoHead soHead;
+	protected SoHead soHead;
 
-    protected List<SoHead> soHeads;
+	protected List<SoHead> soHeads;
 
-    protected AdapterSoHead adapterSoHeadItem;
+	protected AdapterSoHead adapterSoHeadItem;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activity = getActivity();
-        bundle = getArguments();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		activity = getActivity();
+		bundle = getArguments();
 
-        soHeads = new ArrayList<>();
-        if (SoHead.getAllHasPrint().size() > 0)
-            soHeads = SoHead.getAllHasPrint();
+		soHeads = new ArrayList<>();
+		if (SoHead.getAllHasPrint().size() > 0)
+			soHeads = SoHead.getAllHasPrint();
 
-        adapterSoHeadItem = new AdapterSoHead(activity, soHeads);
-    }
+		adapterSoHeadItem = new AdapterSoHead(activity, soHeads);
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_prepare_so, container, false);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final View view = inflater.inflate(R.layout.fragment_prepare_so, container, false);
 
-        searchView = (SearchView) view.findViewById(R.id.sv_prepare_so);
-        lv_prepare_so = (ListView) view.findViewById(R.id.lv_prepare_so);
+		searchView = (SearchView) view.findViewById(R.id.sv_prepare_so);
+		lv_prepare_so = (ListView) view.findViewById(R.id.lv_prepare_so);
 
-        lv_prepare_so.setAdapter(adapterSoHeadItem);
+		lv_prepare_so.setAdapter(adapterSoHeadItem);
 
-        searchView.setOnQueryTextListener(this);
+		searchView.setOnQueryTextListener(this);
 
-        lv_prepare_so.setOnItemLongClickListener(this);
+		lv_prepare_so.setOnItemLongClickListener(this);
 
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        soHead = (SoHead) parent.getItemAtPosition(position);
-        File file = CommonUtil.getOutputMediaFile(soHead.so);
-        openPDf(file);
-        return false;
-    }
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		soHead = (SoHead) parent.getItemAtPosition(position);
+		File file = CommonUtil.getOutputMediaFile(soHead.so);
+		openPDf(file);
+		return false;
+	}
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		return false;
+	}
 
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        adapterSoHeadItem.getFilter().filter(newText);
-        return false;
-    }
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		adapterSoHeadItem.getFilter().filter(newText);
+		return false;
+	}
 
-    private void openPDf(File file) {
-        if (CommonUtil.canDisplayPdf(activity)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-            startActivity(intent);
-        } else {
-            new MaterialDialog.Builder(activity)
-                    .title("Information")
-                    .content("there's not pdf reader in this device, please install them")
-                    .positiveText(R.string.agree)
-                    .negativeText(R.string.disagree)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                            try {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.adobe.reader")));
-                            } catch (android.content.ActivityNotFoundException anfe) {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.adobe.reader")));
-                            }
-                        }
-                    })
-                    .show();
-        }
-    }
+	private void openPDf(File file) {
+		if (CommonUtil.canDisplayPdf(activity)) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+			startActivity(intent);
+		} else {
+			new MaterialDialog.Builder(activity)
+					.title("Information")
+					.content("there's not pdf reader in this device, please install them")
+					.positiveText(R.string.agree)
+					.negativeText(R.string.disagree)
+					.onPositive(new MaterialDialog.SingleButtonCallback() {
+						@Override
+						public void onClick(MaterialDialog dialog, DialogAction which) {
+							try {
+								startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.adobe.reader")));
+							} catch (android.content.ActivityNotFoundException anfe) {
+								startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.adobe.reader")));
+							}
+						}
+					})
+					.show();
+		}
+	}
 }

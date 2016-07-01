@@ -57,7 +57,7 @@
         android:hint="@string/hint_product_price"
         android:paddingRight="16dp"/>
 
-    <EditText
+    <!--<EditText
         android:id="@+id/et_disc_nusantara"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
@@ -95,14 +95,14 @@
         android:layout_toRightOf="@id/et_disc_principal"
         android:focusable="false"
         android:hint="@string/hint_disc_principal_value"
-        android:paddingRight="16dp"/>
+        android:paddingRight="16dp"/>-->
 
     <Button
         android:id="@+id/btn_add"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/et_disc_principal_value"
+        android:layout_below="@id/et_product_price"
         android:layout_margin="4dp"
         android:background="@drawable/button_add"/>
 
@@ -110,7 +110,7 @@
         android:id="@+id/btn_edit"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_below="@id/et_disc_principal_value"
+        android:layout_below="@id/et_product_price"
         android:layout_margin="4dp"
         android:layout_toLeftOf="@id/btn_add"
         android:background="@drawable/button_edit"/>
@@ -119,7 +119,7 @@
         android:id="@+id/btn_delete"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_below="@id/et_disc_principal_value"
+        android:layout_below="@id/et_product_price"
         android:layout_margin="4dp"
         android:layout_toLeftOf="@id/btn_edit"
         android:background="@drawable/button_delete"/>
@@ -128,7 +128,7 @@
         android:id="@+id/et_sub_total"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_disc_principal"
+        android:layout_below="@id/et_product_price"
         android:layout_toLeftOf="@id/btn_delete"
         android:editable="false"
         android:hint="@string/hint_subtotal"
@@ -201,7 +201,7 @@
                     android:layout_gravity="center"
                     android:text="@string/jumlah" />
 
-                <!--<LinearLayout
+                <LinearLayout
                     android:layout_width="152dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
@@ -212,7 +212,7 @@
                         android:layout_height="24dp"
                         android:layout_marginBottom="2dp"
                         android:gravity="center"
-                        android:text="@string/discountNst"/>
+                        android:text="@string/discount_nusantara"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -247,7 +247,7 @@
                         android:layout_height="24dp"
                         android:layout_marginBottom="2dp"
                         android:gravity="center"
-                        android:text="@string/discountPrinc"/>
+                        android:text="@string/discount_principal"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -268,7 +268,7 @@
 
                     </LinearLayout>
 
-                </LinearLayout>-->
+                </LinearLayout>
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="100dp"

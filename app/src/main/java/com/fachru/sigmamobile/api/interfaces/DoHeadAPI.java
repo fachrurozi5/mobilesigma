@@ -1,6 +1,5 @@
 package com.fachru.sigmamobile.api.interfaces;
 
-import com.activeandroid.Model;
 import com.fachru.sigmamobile.model.DoHead;
 
 import retrofit2.Call;
@@ -14,14 +13,14 @@ import retrofit2.http.POST;
  */
 public interface DoHeadAPI {
 
-    @GET("dohead")
-    Call<String> Records();
+	@GET("dohead")
+	Call<String> Records();
 
-    @POST("dohead/store")
-    Call<String> Store(@Body DoHead doHead);
+	@POST("dohead/store")
+	Call<String> Store(@Body DoHead doHead);
 
-    @POST("do/store")
-    Call<DoHead> _Store(@Body DoHead doHead);
+	@POST("do/store")
+	Call<DoHead> _Store(@Body DoHead doHead);
 
     /*@POST("do/store")
     <T extends Model> Call<T> _Store(T data);*/

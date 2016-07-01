@@ -9,20 +9,39 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context=".PointOfSaleActivity">
 
-    <AutoCompleteTextView
-        android:id="@+id/act_product"
+    <LinearLayout
+        android:id="@+id/linear_layout_products"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/act_product"
-        android:inputType="textPersonName"
-        android:singleLine="true"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_prodcuts"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/button_products"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/act_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/act_product"
+            android:inputType="textPersonName"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"/>
+
+    </LinearLayout>
+
 
     <Spinner
         android:id="@+id/sp_unit_conv"
         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/act_product"
+        android:layout_below="@id/linear_layout_products"
         android:visibility="gone"/>
 
     <EditText
@@ -120,7 +139,7 @@
         android:id="@+id/et_sub_total"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_disc_principal"
+        android:layout_below="@id/et_disc_principal_value"
         android:layout_toLeftOf="@id/btn_delete"
         android:editable="false"
         android:hint="@string/hint_subtotal"
@@ -183,6 +202,8 @@
                     android:layout_width="100dp"
                     android:text="@string/header_unit"/>
 
+
+
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="70dp"
                     android:layout_gravity="center"
@@ -198,7 +219,7 @@
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView style="@style/DefaultHeader"
                         android:layout_width="match_parent"
@@ -234,7 +255,7 @@
                     android:layout_height="48dp"
                     android:layout_marginRight="2dp"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView style="@style/DefaultHeader"
                         android:layout_width="match_parent"

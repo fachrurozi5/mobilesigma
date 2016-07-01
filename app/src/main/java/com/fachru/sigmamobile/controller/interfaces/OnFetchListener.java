@@ -9,14 +9,14 @@ import java.util.List;
  */
 public interface OnFetchListener<T extends Model> {
 
-    void onFetchStart();
+	void onFetchStart();
 
-    void onFetchProgress(T t);
+	void onFetchProgress(T t);
 
-    void onFetchProgress(List<T> list);
+	void onFetchProgress(List<T> list);
 
-    void onFetchComplete();
+	void onFetchComplete();
 
-    void onFetchFailed(Throwable t);
+	void onFetchFailed(Throwable t);
 
 }

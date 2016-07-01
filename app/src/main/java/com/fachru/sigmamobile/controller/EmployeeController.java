@@ -14,35 +14,35 @@ import retrofit2.Response;
  */
 public class EmployeeController {
 
-    private OnEmployeeCallbackListener listener;
-    private RestApiManager apiManager;
+	private OnEmployeeCallbackListener listener;
+	private RestApiManager apiManager;
 
-    public EmployeeController(OnEmployeeCallbackListener listener) {
-        this.listener = listener;
-        apiManager = new RestApiManager();
-    }
+	public EmployeeController(OnEmployeeCallbackListener listener) {
+		this.listener = listener;
+		apiManager = new RestApiManager();
+	}
 
-    public void startFetch(String username, String password) {
-        listener.onFetchStart();
-        Call<Employee> call = apiManager.getEmployeeApi().login(username, password);
-        call.enqueue(new Callback<Employee>() {
-            @Override
-            public void onResponse(Call<Employee> call, Response<Employee> response) {
-                if (response.isSuccess() && response.body() != null) {
-                    Employee employee = response.body();
-                    employee.save();
-                    listener.onFetchProgress(employee);
-                    listener.onFetchComplete();
-                } else {
-                    listener.onFailureShowMessage(response.message());
-                }
-            }
+	public void startFetch(String username, String password) {
+		listener.onFetchStart();
+		Call<Employee> call = apiManager.getEmployeeApi().login(username, password);
+		call.enqueue(new Callback<Employee>() {
+			@Override
+			public void onResponse(Call<Employee> call, Response<Employee> response) {
+				if (response.isSuccessful() && response.body() != null) {
+					Employee employee = response.body();
+					employee.save();
+					listener.onFetchProgress(employee);
+					listener.onFetchComplete();
+				} else {
+					listener.onFailureShowMessage(response.message());
+				}
+			}
 
-            @Override
-            public void onFailure(Call<Employee> call, Throwable t) {
-                listener.onFetchFailed(t);
-            }
-        });
-    }
+			@Override
+			public void onFailure(Call<Employee> call, Throwable t) {
+				listener.onFetchFailed(t);
+			}
+		});
+	}
 
 }

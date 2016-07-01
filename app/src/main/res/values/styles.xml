@@ -6,10 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-
-
-
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -48,7 +44,7 @@
     </style>
 
     <style name="DefaultItem">
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>`
         <item name="android:layout_marginRight">2dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">4dp</item>
@@ -60,4 +56,29 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:maxHeight">20dip</item>
     </style>
+
+    <style name="FullWidthEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:padding">20dp</item>
+        <item name="android:background">#42A5F5</item>
+        <item name="colorControlNormal">#42A5F5</item>
+        <item name="colorControlActivated">#42A5F5</item>
+        <item name="colorControlHighlight">#42A5F5</item>
+    </style>
+
+    <style name="MyRadioButton" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/light_blue</item>
+        <item name="colorControlActivated">@color/colorAccentDialog</item>
+        <item name="colorControlHighlight">@color/light_blue</item>
+    </style>
+
+    <style name="spinner_style" >
+    <item name="android:background">@drawable/spinner_bg</item>
+    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:layout_marginRight">10dp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+    <item name="android:paddingLeft">8dp</item>
+    <item name="android:paddingTop">5dp</item>
+    <item name="android:paddingBottom">5dp</item>
+    </style>
+
 </resources>

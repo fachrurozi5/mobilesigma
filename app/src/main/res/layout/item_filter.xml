@@ -24,7 +24,7 @@
         android:text="Kecap Manis Sachet New 14 ml"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-    <TextView
+    <TextView android:visibility="gone"
         android:id="@+id/tv_stock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         android:text="284"
         android:textColor="#33ff88"/>
 
-    <TextView
+    <TextView android:visibility="gone"
         android:id="@+id/text_sell_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         android:padding="6dp"
         android:text="Price:"/>
 
-    <TextView
+    <TextView android:visibility="gone"
         android:id="@+id/tv_sell_price"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
         android:text="999.999.999"
         android:textColor="#33ff88"/>
 
-    <TextView
+    <TextView android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/simple_list_item_2"

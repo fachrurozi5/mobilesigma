@@ -18,7 +18,7 @@
         android:inputType="textNoSuggestions"
         android:hint="@string/hint_sales_order"/>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/layout_po_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -41,14 +41,14 @@
             android:layout_height="45dp"
             android:background="@drawable/button_date" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
     <LinearLayout
         android:id="@+id/layout_del_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_po_date">
+        android:layout_below="@id/et_doc_no">
 
         <EditText
             android:id="@+id/et_del_date"
@@ -84,7 +84,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_customer"
         android:singleLine="true"
-        android:inputType="textNoSuggestions"
+        android:inputType="textNoSuggestions|textCapCharacters"
+        android:textAllCaps="true"
         android:hint="@string/hint_customer_po"/>
 
     <EditText
@@ -102,8 +103,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_salesman"
+        android:layout_marginBottom="6dp"
         android:singleLine="true"
-        android:hint="@string/hint_warehouse"/>
+        android:hint="@string/hint_warehouse"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
 
     <Spinner
         android:id="@+id/sp_type_of_price"
@@ -111,7 +114,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/sp_warehouse"
         android:singleLine="true"
-        android:hint="@string/hint_warehouse"/>
+        android:hint="@string/hint_warehouse"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
 
     <Button
         android:id="@+id/btn_add"
@@ -163,9 +167,9 @@
                     android:layout_width="150dp"
                     android:text="Sales Order"/>
 
-                <TextView style="@style/DefaultHeader"
+                <!--<TextView style="@style/DefaultHeader"
                     android:layout_width="120dp"
-                    android:text="PO Date" />
+                    android:text="PO Date" />-->
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="120dp"
@@ -189,6 +193,7 @@
 
                 <TextView style="@style/DefaultHeader"
                     android:layout_width="150dp"
+                    android:layout_marginRight="0dp"
                     android:text="Type of Price"/>
             </LinearLayout>
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        android:layout_margin="5dp"
+        android:id="@+id/card_outlet">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_outlet_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="Cung Muk Sen (AKDYC06)"/>
+
+            <TextView
+                android:id="@+id/tv_outlet_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_outlet_id"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:text="Jalan Aria Putra Raya, Ciputat, Banten"/>
+
+            <Button
+                android:id="@+id/btn_pilih"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_outlet_address"
+                android:textColor="#03A9F4"
+                android:text="Pilih"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+            <Button
+                android:id="@+id/btn_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/btn_pilih"
+                android:layout_toLeftOf="@id/btn_pilih"
+                android:layout_below="@id/tv_outlet_address"
+                android:text="Detail"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

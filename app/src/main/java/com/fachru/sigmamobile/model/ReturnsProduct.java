@@ -10,33 +10,33 @@ import com.activeandroid.annotation.Table;
 @Table(name = "retur_produk")
 public class ReturnsProduct extends Model {
 
-    @Column(name = "produk")
-    public String produk;
+	@Column(name = "produk")
+	public String produk;
 
-    @Column(name = "pcs")
-    public String pcs;
+	@Column(name = "pcs")
+	public String pcs;
 
-    @Column(name = "cart")
-    public String cart;
+	@Column(name = "cart")
+	public String cart;
 
-    @Column(name = "status")
-    public boolean status;
+	@Column(name = "status")
+	public boolean status;
 
-    @Column(name = "ket")
-    public String ket;
+	@Column(name = "ket")
+	public String ket;
 
-    public ReturnsProduct() {
-        super();
-    }
+	public ReturnsProduct() {
+		super();
+	}
 
-    @Override
-    public String toString() {
-        return "ReturnsProduct{" +
-                "produk='" + produk + '\'' +
-                ", pcs='" + pcs + '\'' +
-                ", cart='" + cart + '\'' +
-                ", status=" + status +
-                ", ket='" + ket + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ReturnsProduct{" +
+				"produk='" + produk + '\'' +
+				", pcs='" + pcs + '\'' +
+				", cart='" + cart + '\'' +
+				", status=" + status +
+				", ket='" + ket + '\'' +
+				'}';
+	}
 }

@@ -5,12 +5,16 @@ import com.fachru.sigmamobile.api.interfaces.DiscountAPI;
 import com.fachru.sigmamobile.api.interfaces.DoHeadAPI;
 import com.fachru.sigmamobile.api.interfaces.DoItemAPI;
 import com.fachru.sigmamobile.api.interfaces.EmployeeAPI;
+import com.fachru.sigmamobile.api.interfaces.IdleTimeAnalysisAPI;
+import com.fachru.sigmamobile.api.interfaces.OSCManagementAPI;
+import com.fachru.sigmamobile.api.interfaces.OutletAPI;
 import com.fachru.sigmamobile.api.interfaces.PrdStatus2API;
 import com.fachru.sigmamobile.api.interfaces.PrdStatusAPI;
 import com.fachru.sigmamobile.api.interfaces.ProductAPI;
 import com.fachru.sigmamobile.api.interfaces.SoHeadAPI;
 import com.fachru.sigmamobile.api.interfaces.SoItemAPI;
 import com.fachru.sigmamobile.api.interfaces.TableInfoAPI;
+import com.fachru.sigmamobile.api.interfaces.ToleranceAPI;
 import com.fachru.sigmamobile.api.interfaces.UnitAPI;
 import com.fachru.sigmamobile.api.interfaces.UnitConverterAPI;
 import com.fachru.sigmamobile.api.interfaces.WarehouseAPI;
@@ -28,196 +32,233 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit.Retrofit;*/
 
 
-
 /**
  * Created by fachru on 17/12/15.
  */
 public class RestApiManager {
 
-    private GsonBuilder builder;
+	private GsonBuilder builder;
 
-    private DoHeadAPI doHeadAPI;
-    private DoItemAPI doItemAPI;
-    private DiscountAPI discountAPI;
-    private SoHeadAPI soHeadAPI;
-    private SoItemAPI soItemAPI;
-    private CustomerAPI customerAPI;
-    private EmployeeAPI employeeApi;
-    private WhStockAPI whStockAPI;
-    private PrdStatusAPI prdStatusAPI;
-    private PrdStatus2API prdStatus2API;
-    private ProductAPI productAPI;
-    private WarehouseAPI warehouseAPI;
-    private UnitAPI unitAPI;
-    private UnitConverterAPI unitConverterAPI;
-    private TableInfoAPI tableInfoAPI;
+	private DoHeadAPI doHeadAPI;
+	private DoItemAPI doItemAPI;
+	private DiscountAPI discountAPI;
+	private SoHeadAPI soHeadAPI;
+	private SoItemAPI soItemAPI;
+	private CustomerAPI customerAPI;
+	private EmployeeAPI employeeApi;
+	private WhStockAPI whStockAPI;
+	private PrdStatusAPI prdStatusAPI;
+	private PrdStatus2API prdStatus2API;
+	private ProductAPI productAPI;
+	private WarehouseAPI warehouseAPI;
+	private UnitAPI unitAPI;
+	private UnitConverterAPI unitConverterAPI;
+	private TableInfoAPI tableInfoAPI;
+	private IdleTimeAnalysisAPI timeAnalysisAPI;
+	private OutletAPI outletAPI;
+	private ToleranceAPI toleranceAPI;
+	private OSCManagementAPI oscManagementAPI;
 
-    public RestApiManager() {
+	public RestApiManager() {
 
-        BooleanSerializer serializer = new BooleanSerializer();
+		BooleanSerializer serializer = new BooleanSerializer();
 
-        builder = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .registerTypeAdapter(boolean.class, serializer)
-                .registerTypeAdapter(Boolean.class, serializer)
-                .excludeFieldsWithoutExposeAnnotation();
-    }
+		builder = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd HH:mm:ss")
+				.registerTypeAdapter(boolean.class, serializer)
+				.registerTypeAdapter(Boolean.class, serializer)
+				.excludeFieldsWithoutExposeAnnotation();
+	}
 
-    /**
-     * @return DoHeadAPI
-     */
-    public DoHeadAPI getDoHeadAPI() {
-        if (doHeadAPI == null) {
-            doHeadAPI = ServiceGenerator.createService(DoHeadAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
-        return doHeadAPI;
-    }
+	/**
+	 * @return DoHeadAPI
+	 */
+	public DoHeadAPI getDoHeadAPI() {
+		if (doHeadAPI == null) {
+			doHeadAPI = ServiceGenerator.createService(DoHeadAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+		return doHeadAPI;
+	}
 
-    public TableInfoAPI getTableInfoAPI() {
-        if (tableInfoAPI == null)
-            tableInfoAPI = ServiceGenerator.createService(TableInfoAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+	public TableInfoAPI getTableInfoAPI() {
+		if (tableInfoAPI == null)
+			tableInfoAPI = ServiceGenerator.createService(TableInfoAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
 
-        return tableInfoAPI;
-    }
+		return tableInfoAPI;
+	}
 
-    /*
-    *  DoItem Api
-    * */
-    public DoItemAPI getDoItemAPI() {
-        if (doItemAPI == null) {
-            doItemAPI = ServiceGenerator.createService(DoItemAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
-        return doItemAPI;
-    }
+	/*
+	*  DoItem Api
+	* */
+	public DoItemAPI getDoItemAPI() {
+		if (doItemAPI == null) {
+			doItemAPI = ServiceGenerator.createService(DoItemAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+		return doItemAPI;
+	}
 
-    public DiscountAPI getDiscountAPI() {
-        if (discountAPI == null) {
-            discountAPI = ServiceGenerator.createService(DiscountAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-//                    retrofit().create(DiscountAPI.class);
-        }
+	public DiscountAPI getDiscountAPI() {
+		if (discountAPI == null) {
+			discountAPI = ServiceGenerator.createService(DiscountAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
 
-        return discountAPI;
-    }
+		return discountAPI;
+	}
 
-    /*
-    * DoHead API
-    * */
-    public SoHeadAPI getSoHeadAPI() {
-        if (soHeadAPI == null) {
-            soHeadAPI = ServiceGenerator.createService(SoHeadAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
-        return soHeadAPI;
-    }
+	public OutletAPI getOutletAPI() {
+		if (outletAPI == null) {
+			outletAPI = ServiceGenerator.createService(OutletAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
 
-    /*
-    *  SoItem Api
-    * */
-    public SoItemAPI getSoItemAPI() {
-        if (soItemAPI == null) {
-            soItemAPI = ServiceGenerator.createService(SoItemAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
-        return soItemAPI;
-    }
+		return outletAPI;
+	}
 
-    /*
-    * Customer/Outlet API
-    * */
-    public CustomerAPI getCustomerAPI() {
-        if (customerAPI == null) {
-            customerAPI = ServiceGenerator.createService(CustomerAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
-        return customerAPI;
-    }
+	public OSCManagementAPI getOscManagementAPI() {
+		if (oscManagementAPI == null) {
+			oscManagementAPI = ServiceGenerator.createService(OSCManagementAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
 
-    /*
-    * Employee/Salesman API
-    * */
-    public EmployeeAPI getEmployeeApi() {
-        if (employeeApi == null) {
-            employeeApi = ServiceGenerator.createService(EmployeeAPI.class, "000000000000000");
-        }
+		return oscManagementAPI;
+	}
 
-        return employeeApi;
-    }
+	/*
+		* DoHead API
+		* */
+	public SoHeadAPI getSoHeadAPI() {
+		if (soHeadAPI == null) {
+			soHeadAPI = ServiceGenerator.createService(SoHeadAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+		return soHeadAPI;
+	}
 
-    /*
-    * WarehouseStock API
-    * */
-    public WhStockAPI getWhStock() {
-        if (whStockAPI == null) {
-            whStockAPI = ServiceGenerator.createService(WhStockAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
+	/*
+	*  SoItem Api
+	* */
+	public SoItemAPI getSoItemAPI() {
+		if (soItemAPI == null) {
+			soItemAPI = ServiceGenerator.createService(SoItemAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+		return soItemAPI;
+	}
 
-        return whStockAPI;
-    }
+	/*
+	* Customer/Outlet API
+	* */
+	public CustomerAPI getCustomerAPI() {
+		if (customerAPI == null) {
+			customerAPI = ServiceGenerator.createService(CustomerAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+		return customerAPI;
+	}
 
-    /*
-    * Product Status API
-    * */
-    public PrdStatusAPI getPrstat() {
-        if (prdStatusAPI == null) {
-            prdStatusAPI = retrofit().create(PrdStatusAPI.class);
-        }
-        return prdStatusAPI;
-    }
+	/*
+	* Employee/Salesman API
+	* */
+	public EmployeeAPI getEmployeeApi() {
+		if (employeeApi == null) {
+			employeeApi = ServiceGenerator.createService(EmployeeAPI.class, "000000000000000");
+		}
 
-    /**
-     * @return UnitAPI
-     */
-    public UnitAPI getUnitAPI() {
-        if (unitAPI == null)
-            unitAPI = ServiceGenerator.createService(UnitAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		return employeeApi;
+	}
 
-        return unitAPI;
-    }
+	/*
+	* WarehouseStock API
+	* */
+	public WhStockAPI getWhStock() {
+		if (whStockAPI == null) {
+			whStockAPI = ServiceGenerator.createService(WhStockAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
 
-    /*
-    * Unit Converter API
-    * */
-    public UnitConverterAPI getUnitConverter() {
-        if (unitConverterAPI == null) {
-            unitConverterAPI = ServiceGenerator.createService(UnitConverterAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
-        return unitConverterAPI;
-    }
+		return whStockAPI;
+	}
 
-    /*
-    * Product Status 2 API
-    * */
-    public PrdStatus2API getPrstat2() {
-        if (prdStatus2API == null) {
-            prdStatus2API = retrofit().create(PrdStatus2API.class);
-        }
-        return prdStatus2API;
-    }
+	public ToleranceAPI getToleranceAPI() {
+		if (toleranceAPI == null) {
+			toleranceAPI = ServiceGenerator.createService(ToleranceAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
 
-    /*
-    * Product API
-    * */
-    public ProductAPI getProduct() {
-        if (productAPI == null) {
-            productAPI = ServiceGenerator.createService(ProductAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
+		return toleranceAPI;
+	}
 
-        return productAPI;
-    }
+	/*
+	* Product Status API
+	* */
+	public PrdStatusAPI getPrstat() {
+		if (prdStatusAPI == null) {
+			prdStatusAPI = retrofit().create(PrdStatusAPI.class);
+		}
+		return prdStatusAPI;
+	}
 
-    /*
-    * Warehouse
-    * */
-    public WarehouseAPI getWarehouseAPI() {
-        if (warehouseAPI == null) {
-            warehouseAPI = ServiceGenerator.createService(WarehouseAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
-        }
+	/**
+	 * @return UnitAPI
+	 */
+	public UnitAPI getUnitAPI() {
+		if (unitAPI == null)
+			unitAPI = ServiceGenerator.createService(UnitAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
 
-        return warehouseAPI;
-    }
+		return unitAPI;
+	}
 
-    private Retrofit retrofit() {
-        return new Retrofit.Builder()
-                .baseUrl(Constanta.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(builder.create()))
-                .build();
-    }
+	/*
+	* Unit Converter API
+	* */
+	public UnitConverterAPI getUnitConverter() {
+		if (unitConverterAPI == null) {
+			unitConverterAPI = ServiceGenerator.createService(UnitConverterAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+		return unitConverterAPI;
+	}
+
+	/**
+	 * @return
+	 */
+	public IdleTimeAnalysisAPI getTimeAnalysisAPI() {
+		if (timeAnalysisAPI == null) {
+			timeAnalysisAPI = ServiceGenerator.createService(IdleTimeAnalysisAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+
+		return timeAnalysisAPI;
+	}
+
+	/*
+	* Product Status 2 API
+	* */
+	public PrdStatus2API getPrstat2() {
+		if (prdStatus2API == null) {
+			prdStatus2API = retrofit().create(PrdStatus2API.class);
+		}
+		return prdStatus2API;
+	}
+
+	/*
+	* Product API
+	* */
+	public ProductAPI getProduct() {
+		if (productAPI == null) {
+			productAPI = ServiceGenerator.createService(ProductAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+
+		return productAPI;
+	}
+
+	/*
+	* Warehouse
+	* */
+	public WarehouseAPI getWarehouseAPI() {
+		if (warehouseAPI == null) {
+			warehouseAPI = ServiceGenerator.createService(WarehouseAPI.class, SessionManager.pref().getString(SessionManager.KEY_TOKEN, ""));
+		}
+
+		return warehouseAPI;
+	}
+
+	private Retrofit retrofit() {
+		return new Retrofit.Builder()
+				.baseUrl(Constanta.BASE_URL)
+				.addConverterFactory(GsonConverterFactory.create(builder.create()))
+				.build();
+	}
 
 }

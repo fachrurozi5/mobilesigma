@@ -16,187 +16,221 @@ import java.util.List;
 @Table(name = "DoItems")
 public class DoItem extends Model {
 
-    @Expose
-    @SerializedName("DOCNO")
-    @Column(name = "docno")
-    public String docno;
+	@Expose
+	@SerializedName("DOCNO")
+	@Column(name = "docno")
+	public String docno;
 
-    @Expose
-    @SerializedName("NOITEM")
-    @Column(name = "noItem")
-    public String noitem;
+	@Expose
+	@SerializedName("NOITEM")
+	@Column(name = "noItem")
+	public String noitem;
 
-    @Expose
-    @SerializedName("PRODID")
-    @Column(name = "productId")
-    public String product_id;
+	@Expose
+	@SerializedName("PRODID")
+	@Column(name = "productId")
+	public String product_id;
 
-    @Expose
-    @SerializedName("UNITID")
-    @Column(name = "unitid")
-    public String unit_id;
+	@Expose
+	@SerializedName("UNITID")
+	@Column(name = "unitId")
+	public String unit_id;
 
-    @Expose
-    @SerializedName("QUANTITY")
-    @Column(name = "qty")
-    public int qty;
+	@Expose
+	@SerializedName("QUANTITY")
+	@Column(name = "qty")
+	public int qty;
 
-    @Expose
-    @SerializedName("PRICELIST")
-    @Column(name = "priceList")
-    public double pricelist;
+	@Expose
+	@SerializedName("PRICELIST")
+	@Column(name = "priceList")
+	public double pricelist;
 
-    @Expose
-    @SerializedName("pricelst2")
-    @Column(name = "pricelst2")
-    public double pricelist2;
+	@Expose
+	@SerializedName("pricelst2")
+	@Column(name = "pricelst2")
+	public double pricelist2;
 
-    @Expose
-    @SerializedName("UNITPRICE")
-    @Column(name = "unitprice")
-    public double unitprice;
+	@Expose
+	@SerializedName("UNITPRICE")
+	@Column(name = "unitprice")
+	public double unitprice;
 
-    @Expose
-    @SerializedName("nilai")
-    @Column(name = "nilai")
-    public double nilai;
+	@Expose
+	@SerializedName("nilai")
+	@Column(name = "nilai")
+	public double nilai;
 
-    @Column(name = "subTotal")
-    public double sub_total;
+	@Column(name = "subTotal")
+	public double sub_total;
 
-    @Expose
-    @SerializedName("DATECREATE")
-    @Column(name = "createdAt")
-    public Date createdAt = new Date();
+	@Column(name = "p_disc")
+	public double discountPrinc;
 
-    @Expose
-    @SerializedName("DATEUPDATE")
-    @Column(name = "updatedAt")
-    public Date updatedAt = new Date();
+	@Column(name = "n_disc")
+	public double discountNst;
 
-    @Expose
-    @SerializedName("uploaded")
-    @Column(name = "uploaded")
-    public boolean uploaded = false;
+	@Column(name = "bonus")
+	public int mulBonus = 0;
 
-    public DoItem() {
-        super();
-    }
+	@Expose
+	@SerializedName("DATECREATE")
+	@Column(name = "createdAt")
+	public Date createdAt = new Date();
 
-    public DoItem(Builder builder) {
-        super();
-        docno = builder.docno;
-        product_id = builder.product_id;
-        pricelist = builder.price_list;
-        qty = builder.qty;
-        sub_total = builder.sub_total;
-        unit_id = builder.unitid;
-    }
+	@Expose
+	@SerializedName("DATEUPDATE")
+	@Column(name = "updatedAt")
+	public Date updatedAt = new Date();
 
-    public static List<DoItem> getAllNotUpload() {
-        return new Select()
-                .from(DoItem.class)
-                .where("uploaded =?", false)
-                .execute();
-    }
+	@Expose
+	@SerializedName("uploaded")
+	@Column(name = "uploaded")
+	public boolean uploaded = false;
 
-    public static boolean hasDataToUpload() {
-        return DoItem.getAllNotUpload().size() > 0;
-    }
+	public DoItem() {
+		super();
+	}
 
-    public static DoItem find(String docno) {
-        return new Select()
-                .from(DoItem.class)
-                .where("docno =? ", docno)
-                .executeSingle();
-    }
+	public DoItem(Builder builder) {
+		super();
+		docno = builder.docno;
+		product_id = builder.product_id;
+		pricelist = builder.price_list;
+		qty = builder.qty;
+		qty = builder.qty;
+		mulBonus = builder.bonus;
+		discountPrinc = builder.discountPrinc;
+		discountNst = builder.discountNst;
+		sub_total = builder.sub_total;
+		unit_id = builder.unitid;
+	}
 
-    public static DoItem find(String docno, String noitem) {
-        return new Select()
-                .from(DoItem.class)
-                .where("docno = ? ", docno)
-                .and("noItem = ? ", noitem)
-                .executeSingle();
-    }
+	public static List<DoItem> getAllNotUpload() {
+		return new Select()
+				.from(DoItem.class)
+				.where("uploaded =?", false)
+				.execute();
+	}
 
-    public static int count(String docno) {
-        return new Select()
-                .from(DoItem.class)
-                .where("docno = ?", docno)
-                .count();
-    }
+	public static boolean hasDataToUpload() {
+		return DoItem.getAllNotUpload().size() > 0;
+	}
 
-    public List<DoItem> allWhereDoHead(String docno) {
-        return new Select()
-                .from(DoItem.class)
-                .where("docno =? ", docno)
-                .execute();
-    }
+	public static DoItem find(String docno) {
+		return new Select()
+				.from(DoItem.class)
+				.where("docno =? ", docno)
+				.executeSingle();
+	}
 
-    @Override
-    public String toString() {
-        return "DoItem{" +
-                "docno='" + docno + '\'' +
-                ", noItem='" + noitem + '\'' +
-                ", productId='" + product_id + '\'' +
-                ", qty=" + qty +
-                ", priceList=" + pricelist +
-                ", pricelist2=" + pricelist2 +
-                ", unitprice=" + unitprice +
-                ", nilai=" + nilai +
-                ", subTotal=" + sub_total +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", uploaded=" + uploaded +
-                '}';
-    }
+	public static DoItem find(String docno, String noitem) {
+		return new Select()
+				.from(DoItem.class)
+				.where("docno = ? ", docno)
+				.and("noItem = ? ", noitem)
+				.executeSingle();
+	}
 
-    public static class Builder {
-        public String docno;
+	public static int count(String docno) {
+		return new Select()
+				.from(DoItem.class)
+				.where("docno = ?", docno)
+				.count();
+	}
 
-        public String product_id;
+	public List<DoItem> allWhereDoHead(String docno) {
+		return new Select()
+				.from(DoItem.class)
+				.where("docno =? ", docno)
+				.execute();
+	}
 
-        public String unitid;
+	@Override
+	public String toString() {
+		return "DoItem{" +
+				"docno='" + docno + '\'' +
+				", noItem='" + noitem + '\'' +
+				", productId='" + product_id + '\'' +
+				", qty=" + qty +
+				", priceList=" + pricelist +
+				", pricelist2=" + pricelist2 +
+				", unitprice=" + unitprice +
+				", nilai=" + nilai +
+				", subTotal=" + sub_total +
+				", createdAt=" + createdAt +
+				", updatedAt=" + updatedAt +
+				", uploaded=" + uploaded +
+				'}';
+	}
 
-        public double price_list;
+	public static class Builder {
+		public String docno;
 
-        public int qty;
+		public String product_id;
 
-        public double sub_total;
+		public String unitid;
+
+		public double price_list;
+
+		public int qty;
+
+		public int bonus;
+
+		public double discountNst;
+
+		public double discountPrinc;
+
+		public double sub_total;
 
 
-        public Builder setDocno(String docno) {
-            this.docno = docno;
-            return Builder.this;
-        }
+		public Builder setDocno(String docno) {
+			this.docno = docno;
+			return Builder.this;
+		}
 
-        public Builder setUnitId(String unitId) {
-            this.unitid = unitId;
-            return Builder.this;
-        }
+		public Builder setUnitId(String unitId) {
+			this.unitid = unitId;
+			return Builder.this;
+		}
 
-        public Builder setProductId(String product_id) {
-            this.product_id = product_id;
-            return Builder.this;
-        }
+		public Builder setProductId(String product_id) {
+			this.product_id = product_id;
+			return Builder.this;
+		}
 
-        public Builder setPriceList(double price_list) {
-            this.price_list = price_list;
-            return Builder.this;
-        }
+		public Builder setPriceList(double price_list) {
+			this.price_list = price_list;
+			return Builder.this;
+		}
 
-        public Builder setQty(int qty) {
-            this.qty = qty;
-            return Builder.this;
-        }
+		public Builder setQty(int qty) {
+			this.qty = qty;
+			return Builder.this;
+		}
 
-        public Builder setSubTotal(double sub_total) {
-            this.sub_total = sub_total;
-            return Builder.this;
-        }
+		public Builder setBonus(int bonus) {
+			this.bonus = bonus;
+			return Builder.this;
+		}
 
-        public DoItem build() {
-            return new DoItem(Builder.this);
-        }
-    }
+		public Builder setDiscountNst(double discountNst) {
+			this.discountNst = discountNst;
+			return Builder.this;
+		}
+
+		public Builder setDiscountPrinc(double discountPrinc) {
+			this.discountPrinc = discountPrinc;
+			return Builder.this;
+		}
+
+		public Builder setSubTotal(double sub_total) {
+			this.sub_total = sub_total;
+			return Builder.this;
+		}
+
+		public DoItem build() {
+			return new DoItem(Builder.this);
+		}
+	}
 }

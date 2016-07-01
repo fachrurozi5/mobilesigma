@@ -17,53 +17,53 @@ import com.venmo.android.pin.Validator;
 
 public class PinActivity extends Activity implements PinFragment.Listener {
 
-    private Context context = this;
-    private SessionManager manager;
+	private Context context = this;
+	private SessionManager manager;
 
-    private String lastApp;
+	private String lastApp;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pin);
-        manager = new SessionManager(context);
-        lastApp = getIntent().getStringExtra("extra");
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_pin);
+		manager = new SessionManager(context);
+		lastApp = getIntent().getStringExtra("extra");
 
-        PinFragmentConfiguration config =
-                new PinFragmentConfiguration(context)
-                        .pinSaver(new PinSaver() {
-                            @Override
-                            public void save(String s) {
-                                Log.d(Constanta.TAG, "Save " + s);
-                                manager.savePin(s);
-                            }
-                        }).validator(new Validator() {
-                    public boolean isValid(String submission) {
-                        return manager.getPin().equals(submission);
-                    }
-                });
+		PinFragmentConfiguration config =
+				new PinFragmentConfiguration(context)
+						.pinSaver(new PinSaver() {
+							@Override
+							public void save(String s) {
+								Log.d(Constanta.TAG, "Save " + s);
+								manager.savePin(s);
+							}
+						}).validator(new Validator() {
+					public boolean isValid(String submission) {
+						return manager.getPin().equals(submission);
+					}
+				});
 
-        Fragment toShow = manager.isPinSaved() ?
-                PinFragment.newInstanceForVerification(config) :
-                PinFragment.newInstanceForCreation(config);
+		Fragment toShow = manager.isPinSaved() ?
+				PinFragment.newInstanceForVerification(config) :
+				PinFragment.newInstanceForCreation(config);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.root, toShow)
-                .commit();
+		getFragmentManager().beginTransaction()
+				.replace(R.id.root, toShow)
+				.commit();
 
-    }
+	}
 
-    @Override
-    public void onValidated() {
-        manager.saveLastAppPn(lastApp);
-        recreate();
-        Intent intent = getPackageManager().getLaunchIntentForPackage(lastApp);
-        startActivity(intent);
-    }
+	@Override
+	public void onValidated() {
+		manager.saveLastAppPn(lastApp);
+		recreate();
+		Intent intent = getPackageManager().getLaunchIntentForPackage(lastApp);
+		startActivity(intent);
+	}
 
-    @Override
-    public void onPinCreated() {
-        Toast.makeText(this, "Created PIN!", Toast.LENGTH_SHORT).show();
-        recreate();
-    }
+	@Override
+	public void onPinCreated() {
+		Toast.makeText(this, "Created PIN!", Toast.LENGTH_SHORT).show();
+		recreate();
+	}
 }

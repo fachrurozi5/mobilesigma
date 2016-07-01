@@ -13,13 +13,13 @@ import retrofit2.http.GET;
  */
 public interface WarehouseAPI {
 
-    @GET("whouse")
-    Call<String> Records();
+	@GET("whouse")
+	Call<String> Records();
 
-    @GET("whouses")
-    Call<List<Warehouse>> _Records();
+	@GET("whouses")
+	Call<List<Warehouse>> _Records();
 
-    @GET("whouses/sync")
-    Call<List<Warehouse>> Sync();
+	@GET("whouses/sync")
+	Call<List<Warehouse>> Sync();
 
 }
